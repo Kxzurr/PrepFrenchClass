@@ -1,0 +1,55 @@
+[data-sidebar-colors="dark"] {
+    --color-sidebar:                var(--color-slate-800);
+    --color-sidebar-border:         var(--color-slate-800);
+    --color-sidebar-divider:        #31394c;
+    --color-menu-title:             var(--color-slate-500);
+    --color-sidebar-text:           var(--color-slate-400);
+    --color-sidebar-bg:             var(--color-primary-500);
+    --color-sidebar-text-hover:     var(--color-slate-50);
+    --color-sidebar-bg-hover:       var(--color-primary-200);
+    --color-sidebar-text-active:    var(--color-slate-50);
+    --color-sidebar-bg-active:      var(--color-slate-200);
+    --color-effect:                 var(--color-slate-800);
+}
+
+[data-sidebar-colors="brand"] {
+    --color-sidebar:                #1a57d4;
+    --color-sidebar-border:         #1a57d4;
+    --color-sidebar-divider:        #6391f1;
+    --color-menu-title:             #bcc5e6;
+    --color-sidebar-text:           #c0c8f8;
+    --color-sidebar-bg:             var(--color-primary-500);
+    --color-sidebar-text-hover:     #ffffff;
+    --color-sidebar-bg-hover:       var(--color-primary-50);
+    --color-sidebar-text-active:    #ffffff;
+    --color-sidebar-bg-active:      var(--color-primary-50);
+    --color-effect:                 #1a57d4;
+}
+
+[data-sidebar-colors="purple"] {
+    --color-sidebar:                var(--color-purple-950);
+    --color-sidebar-border:         var(--color-purple-950);
+    --color-sidebar-divider:        #5a1e85;
+    --color-menu-title:             #b98fd7;
+    --color-sidebar-text:           #b98fd7;
+    --color-sidebar-bg:             var(--color-purple-950);
+    --color-sidebar-text-hover:     #dfd3eb;
+    --color-sidebar-bg-hover:       var(--color-purple-50);
+    --color-sidebar-text-active:    #dfd3eb;
+    --color-sidebar-bg-active:      var(--color-purple-50);
+    --color-effect:                 var(--color-purple-950);
+}
+
+[data-sidebar-colors="sky"] {
+    --color-sidebar:                var(--color-sky-900);
+    --color-sidebar-border:         var(--color-sky-900);
+    --color-sidebar-divider:        #2d5983;
+    --color-menu-title:             #8ea2b5;
+    --color-sidebar-text:           #8ea2b5;
+    --color-sidebar-bg:             var(--color-sky-900);
+    --color-sidebar-text-hover:     var(--color-sky-50);
+    --color-sidebar-bg-hover:       var(--color-sky-50);
+    --color-sidebar-text-active:    var(--color-sky-50);
+    --color-sidebar-bg-active:      var(--color-sky-50);
+    --color-effect:                 var(--color-sky-900);
+}

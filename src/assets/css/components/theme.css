@@ -1,0 +1,119 @@
+@theme {
+    /* //font-family */
+    --font-sans:                    "Satoshi-Variable", sans-serif;
+    --font-body:                    "Satoshi-Variable", sans-serif;
+    --font-heading:                "ClashDisplay-Semibold", sans-serif;  
+    --font-remix:                   remixicon;
+    --font-secondary:             "Macondo Swash Caps", cursive;
+    /* //font-size */
+    --text-11:                      0.6875rem;
+    --text-13:                      0.8125rem;
+    --text-14:                      0.875rem;
+    --text-15:                      0.9375rem;
+    --text-base:                    1.0625rem;
+    --text-16:                      1rem;
+    --text-17:                      1.0625rem;
+    --text-card-title:              0.9375rem;
+    /* //colors */
+    --color-body:                   var(--color-white);
+
+        --color-primary-50: oklch(97.5% .025 265);
+        --color-primary-100: oklch(94.8% .05 265);
+        --color-primary-200: oklch(89.6% .1 265);
+        --color-primary-300: oklch(79.4% .15 265);
+        --color-primary-400: oklch(64.2% .18 265);
+        --color-primary-500: oklch(49% .19 265);
+        --color-primary-600: oklch(40% .17 265);
+        --color-primary-700: oklch(32% .15 265);
+        --color-primary-800: oklch(26% .13 265);
+        --color-primary-900: oklch(21% .11 265);
+        --color-primary-950: oklch(16% .09 265);
+    /* //dark mode colors */
+    --color-dark-50:                var(--color-zinc-50);
+    --color-dark-100:               var(--color-zinc-100);
+    --color-dark-200:               var(--color-zinc-200);
+    --color-dark-300:               var(--color-zinc-300);
+    --color-dark-400:               var(--color-zinc-400);
+    --color-dark-500:               var(--color-zinc-500);
+    --color-dark-600:               var(--color-zinc-600);
+    --color-dark-700:               var(--color-zinc-700);
+    --color-dark-800:               var(--color-zinc-800);
+    --color-dark-850:               oklch(23.13% 0.0399 270.37);
+    --color-dark-900:               var(--color-zinc-900);
+    --color-dark-950:               var(--color-zinc-950);
+    
+    --color-sidebar:                var(--color-white);
+    --color-sidebar-border:         var(--color-gray-200);
+    --color-sidebar-divider:        var(--color-gray-200);
+    --color-menu-title:             var(--color-gray-600);
+    --color-sidebar-text:           var(--color-gray-500);
+    --color-sidebar-bg:             var(--color-primary-500);
+    --color-sidebar-text-hover:     var(--color-primary-500);
+    --color-sidebar-bg-hover:       var(--color-gray-400);
+    --color-sidebar-text-active:    var(--color-primary-500);
+    --color-sidebar-bg-active:      var(--color-primary-500);
+    --color-effect:                 var(--color-gray-100);
+    --color-topbar:                 var(--color-gray-500);
+
+    /* border-radius */
+    --radius-modern:                30% 70% 70% 30% / 30% 30% 70% 70%;
+    --radius-creative:              47% 53% 70% 30% / 49% 63% 37% 51%;
+    
+    /* shadow */
+    --shadow-lg:                    0px 8px 24px var(--tw-shadow-color);
+
+    --ease-effect:                  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* animation */
+    --animate-shimmer: shimmer 3s ease-out infinite;
+    --animate-jvm-line: jvm-line 10s linear forwards infinite;
+    --animate-marquee: marquee 15s linear forwards infinite;
+    --animate-float: float 5s ease-in-out infinite;
+    --animate-slide-up: slideUp 0.5s ease-out;
+
+    @keyframes shimmer {
+        100% {
+            transform: translate(0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes jvm-line {
+        from {
+            stroke-dashoffset: 250;
+        }
+    }
+
+    @keyframes marquee {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes slideUp {
+        0% {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+}
+

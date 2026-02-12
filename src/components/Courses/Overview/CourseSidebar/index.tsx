@@ -1,0 +1,249 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image, { StaticImageData } from 'next/image';
+import Link from 'next/link';
+import {
+    RiPlayFill,
+    RiCloseLine,
+    RiShoppingCartLine,
+    RiBankCardLine,
+    RiTimeLine,
+    RiVideoLine,
+    RiBookOpenLine,
+    RiAwardLine,
+    RiUserLine,
+    RiInfinityLine,
+    RiStackLine,
+    RiGlobalLine,
+    RiCalendarLine,
+    RiHeadphoneLine,
+    RiShareLine,
+} from '@remixicon/react';
+
+interface CourseSidebarProps {
+    previewImage: StaticImageData | string;
+    previewImageAlt: string;
+    videoUrl: string;
+    price: string;
+    originalPrice: string;
+    duration: string;
+    lessons: string;
+    studyFiles: string;
+    certificate: string;
+    instructor: string;
+    access: string;
+    level: string;
+    language: string;
+    nextBatch: string;
+    accessOn: string;
+    includesItems?: string[];
+}
+
+export default function CourseSidebar({
+    previewImage,
+    previewImageAlt,
+    videoUrl,
+    price,
+    originalPrice,
+    duration,
+    lessons,
+    studyFiles,
+    certificate,
+    instructor,
+    access,
+    level,
+    language,
+    nextBatch,
+    accessOn,
+    includesItems,
+}: CourseSidebarProps) {
+    const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+    const [promoCode, setPromoCode] = useState('');
+
+    useEffect(() => {
+        if (isVideoModalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isVideoModalOpen]);
+
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setIsVideoModalOpen(false);
+            }
+        };
+
+        if (isVideoModalOpen) {
+            window.addEventListener('keydown', handleEscape);
+        }
+
+        return () => {
+            window.removeEventListener('keydown', handleEscape);
+        };
+    }, [isVideoModalOpen]);
+
+    const handleRedeem = () => {
+        // Handle promo code redemption
+        console.log('Redeeming promo code:', promoCode);
+    };
+
+    return (
+        <>
+            <div className="sticky top-21 bg-white dark:bg-dark-950 p-4 rounded-xl shadow-md dark:shadow-dark-800/50">
+                <div className="relative">
+                    <Image
+                        src={previewImage}
+                        alt={previewImageAlt}
+                        className="rounded-xl w-full h-auto"
+                        width={400}
+                        height={250}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <button
+                            onClick={() => setIsVideoModalOpen(true)}
+                            className="bg-white/80 hover:bg-white text-primary-600 rounded-full p-4 transition shadow-lg"
+                            aria-label="Play video"
+                        >
+                            <RiPlayFill className="w-7 h-7" />
+                        </button>
+                    </div>
+                </div>
+
+                <div className="p-5">
+                    <div className="flex items-end gap-2 mb-4">
+                        <h3>{price}</h3>
+                        <p className="text-gray-600 dark:text-dark-400 line-through">{originalPrice}</p>
+                    </div>
+
+                    <Link
+                        href="#!"
+                        className="btn btn-primary rounded-lg w-full mb-3 flex items-center justify-center gap-2"
+                    >
+                        <RiShoppingCartLine className="w-5 h-5" />
+                        Add To Cart
+                    </Link>
+
+                    <Link
+                        href="#!"
+                        className="btn btn-outline-primary rounded-lg w-full flex items-center justify-center gap-2"
+                    >
+                        <RiBankCardLine className="w-5 h-5" />
+                        Buy Course Now
+                    </Link>
+
+                    <h5 className="mb-4 mt-5">This course includes:</h5>
+
+                    {[
+                        { icon: RiTimeLine, label: 'Duration:', value: duration },
+                        { icon: RiVideoLine, label: 'Lessons:', value: lessons },
+                        { icon: RiBookOpenLine, label: 'Study Files:', value: studyFiles },
+                        { icon: RiAwardLine, label: 'Certificate:', value: certificate },
+                        { icon: RiUserLine, label: 'Instructor:', value: instructor },
+                        { icon: RiInfinityLine, label: 'Access:', value: access },
+                        { icon: RiStackLine, label: 'Level:', value: level },
+                        { icon: RiGlobalLine, label: 'Language:', value: language },
+                        { icon: RiCalendarLine, label: 'Next Batch:', value: nextBatch },
+                        { icon: RiHeadphoneLine, label: 'Access On:', value: accessOn },
+                    ].map((item, index) => {
+                        const IconComponent = item.icon;
+                        return (
+                            <div
+                                key={index}
+                                className="border-b border-black/10 dark:border-white/10 py-5 flex items-center justify-between gap-2 last:border-0"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <IconComponent className="text-primary-500 w-5 h-5" />
+                                    <p className="text-gray-600 dark:text-dark-400">{item.label}</p>
+                                </div>
+                                <p className="text-gray-600 dark:text-dark-400">{item.value}</p>
+                            </div>
+                        );
+                    })}
+
+                    {/* Additional Includes from Backend */}
+                    {includesItems && includesItems.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-black/10 dark:border-white/10">
+                            <h6 className="font-medium mb-3 text-gray-900 dark:text-white">Also Included:</h6>
+                            <ul className="space-y-2">
+                                {includesItems.map((item, index) => (
+                                    <li key={index} className="text-gray-600 dark:text-dark-400 text-sm flex items-start gap-2">
+                                        <span className="text-primary-500 mt-1">✓</span>
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    <div className="flex items-center justify-between mt-6 mb-3">
+                        <Link href="#!" className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 transition">
+                            <RiShareLine className="w-4 h-4" />
+                            <span className="text-sm font-medium">Share this offer</span>
+                        </Link>
+
+                        <Link
+                            href="#!"
+                            className="text-sm font-medium text-orange-500 hover:text-orange-600 border-b border-orange-500"
+                        >
+                            Redeem discount
+                        </Link>
+                    </div>
+
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Enter Promo Code"
+                            value={promoCode}
+                            onChange={(e) => setPromoCode(e.target.value)}
+                            className="w-full border border-gray-300 dark:border-gray-800 ltr:rounded-l-md rtl:rounded-r-md px-3 py-3 text-sm focus:outline-none focus:border-primary-500"
+                        />
+                        <button
+                            onClick={handleRedeem}
+                            className="bg-primary-500 absolute ltr:right-0 rtl:left-0 top-0 h-full text-white px-5 py-2 ltr:rounded-r-md rtl:rounded-l-md text-sm font-medium hover:bg-primary-800 transition"
+                        >
+                            Redeem
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Video Modal */}
+            {isVideoModalOpen && (
+                <div
+                    className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+                    onClick={() => setIsVideoModalOpen(false)}
+                >
+                    <div
+                        className="bg-white rounded-xl overflow-hidden relative w-[90%] max-w-3xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            onClick={() => setIsVideoModalOpen(false)}
+                            className="absolute top-3 right-3 text-white bg-black/60 rounded-full p-2 hover:bg-black/80 z-10"
+                            aria-label="Close video"
+                        >
+                            <RiCloseLine className="w-5 h-5" />
+                        </button>
+                        <div className="aspect-video">
+                            <iframe
+                                src={videoUrl}
+                                className="w-full h-full"
+                                title="Course Preview"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+}
+

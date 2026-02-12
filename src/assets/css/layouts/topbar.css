@@ -1,0 +1,51 @@
+@layer components {
+    .navbar-light {
+        @apply fixed top-0 inset-x-0 px-4 lg:px-10 h-20 z-50 transition-all duration-300;
+
+        .navbar-brand {
+            @apply flex items-center space-x-2 text-white text-xl;
+        }
+
+        .navbar-nav {
+            @apply hidden lg:flex space-x-12 font-medium;
+
+            .navbar-link {
+                @apply text-white hover:text-primary-300 flex items-center gap-1 h-20;
+
+                i {
+                    @apply text-sm transition-transform group-hover:rotate-180;
+                }
+            }
+
+            .dropdown-menu {
+                @apply absolute top-full left-0 w-48 bg-white rounded-b-lg shadow-lg border-t-2 border-t-primary-500 shadow-lg shadow-gray-200/80 group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50;
+
+                ul {
+                    @apply py-3 **:transition **:duration-300 **:ease-linear **:block text-15;
+
+                    a {
+                        @apply px-5 py-2 text-primary-950 hover:text-primary-600;
+                    }
+                }
+            }
+        }
+
+        &.nav-sticky {
+
+            @apply bg-white/80 backdrop-blur-md shadow-lg shadow-gray-500/20 dark:bg-dark-950/80;
+
+            .navbar-brand {
+                @apply text-primary-950;
+            }
+
+            .navbar-nav {
+                @apply hidden lg:flex space-x-12 font-medium;
+
+                .navbar-link {
+                    @apply text-primary-950 hover:text-primary-600;
+                }
+            }
+        }
+
+    }
+}

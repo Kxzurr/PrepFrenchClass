@@ -1,0 +1,279 @@
+@layer base {
+    .animate-shimmer {
+        animation: shimmer 3s ease-out infinite;
+    }
+
+    @keyframes shimmer {
+        100% {
+            transform: translateX(0%);
+            opacity: 0;
+        }
+    }
+}
+
+@layer utilities {
+    @keyframes btn {
+        100% {
+            background-size: 2.375em 2.375em, 0.1em 0.1em;
+        }
+    }
+}
+
+@layer components {
+    @keyframes floatLR {
+
+        0%,
+        100% {
+            transform: translateX(0px);
+        }
+
+        50% {
+            transform: translateX(20px);
+        }
+    }
+
+    .animate-floatLR {
+        animation: floatLR 6s ease-in-out infinite;
+    }
+
+    @keyframes float-up {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    @keyframes float-down {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(20px);
+        }
+    }
+
+    @keyframes float-left {
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(-20px);
+        }
+    }
+
+    @keyframes float-right {
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(20px);
+        }
+    }
+
+    @keyframes float-diagonal {
+
+        0%,
+        100% {
+            transform: translate(0, 0);
+        }
+
+        50% {
+            transform: translate(15px, -15px);
+        }
+    }
+
+    @keyframes float-rotate {
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(5deg);
+        }
+    }
+
+    /* Animation utilities for Tailwind */
+    .animate-float-up {
+        animation: float-up 8s ease-in-out infinite;
+    }
+
+    .animate-float-down {
+        animation: float-down 9s ease-in-out infinite;
+    }
+
+    .animate-float-left {
+        animation: float-left 10s ease-in-out infinite;
+    }
+
+    .animate-float-right {
+        animation: float-right 11s ease-in-out infinite;
+    }
+
+    .animate-float-diagonal {
+        animation: float-diagonal 12s ease-in-out infinite;
+    }
+
+    .animate-float-rotate {
+        animation: float-rotate 13s ease-in-out infinite;
+    }
+
+    @keyframes highlight-brush {
+        0% {
+            transform: scaleX(0);
+            opacity: 0.4;
+            transform-origin: left;
+        }
+
+        40% {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        80% {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scaleX(0);
+            opacity: 0;
+            transform-origin: right;
+        }
+    }
+
+    .animation-title {
+        animation: highlight-brush 3.8s infinite ease-in-out;
+        transform-origin: left;
+        display: inline-block;
+    }
+
+    @keyframes marquee-left {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+
+    @keyframes marquee-right {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .animate-marquee-left {
+        animation: marquee-left 17s linear infinite;
+    }
+
+    .animate-marquee-right {
+        animation: marquee-right 17s linear infinite;
+    }
+
+    @keyframes wave1 {
+        0% {
+            transform: scale(1);
+            opacity: 0.7;
+        }
+
+        100% {
+            transform: scale(1.8);
+            opacity: 0;
+        }
+    }
+
+    @keyframes wave2 {
+        0% {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+
+        100% {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+
+    @keyframes wave3 {
+        0% {
+            transform: scale(1);
+            opacity: 0.3;
+        }
+
+        100% {
+            transform: scale(2.2);
+            opacity: 0;
+        }
+    }
+
+    .animate-wave1 {
+        animation: wave1 4s ease-out infinite;
+    }
+
+    .animate-wave2 {
+        animation: wave2 5s ease-out infinite;
+    }
+
+    .animate-wave3 {
+        animation: wave3 6s ease-out infinite;
+    }
+
+    @keyframes pulseGlow {
+        0% {
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        }
+
+        50% {
+            box-shadow: 0 0 14px rgb(53, 83, 14);
+        }
+
+        100% {
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    .animate-pulse-glow {
+        animation: pulseGlow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes circle {
+        0% {
+            opacity: 1;
+        }
+
+        40% {
+            opacity: 1;
+        }
+
+        100% {
+            width: 200%;
+            height: 200%;
+            opacity: 0;
+        }
+    }
+
+    .animate-circle {
+        animation: circle .75s forwards;
+    }    
+}

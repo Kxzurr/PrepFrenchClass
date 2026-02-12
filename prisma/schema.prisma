@@ -1,0 +1,346 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role      @default(STUDENT)
+  password      String? // hashed password for local auth
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  instructor    Instructor?
+  accounts      Account[]
+  sessions      Session[]
+  purchases     CourseEnrollment[]
+  reviews       CourseReview[]
+
+  @@map("users")
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationTokens")
+}
+
+// Category model
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  description String?
+  image     String?
+  iconKey   String? // key for frontend icon mapping
+  gradientFrom String? // tailwind from-* class for homepage
+  gradientTo   String? // tailwind to-* class for homepage
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  courses   Course[]
+
+  @@map("categories")
+}
+
+// Instructor model
+model Instructor {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  firstName   String
+  lastName    String
+  bio         String?
+  avatar      String?
+  expertise   String? // comma-separated skills
+  socialLinks Json? // {linkedin, twitter, website, etc}
+  
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  courses     Course[]
+  reviews     CourseReview[]
+
+  @@map("instructors")
+}
+
+// Course model
+model Course {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  description   String   @db.Text
+  shortDescription String?
+  image         String   // course thumbnail
+  
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id])
+  
+  instructorId  String
+  instructor    Instructor @relation(fields: [instructorId], references: [id])
+  
+  // Pricing
+  pricing       CoursePrice @relation("CoursePrice", fields: [pricingId], references: [id])
+  pricingId     String @unique
+  
+  // Course details
+  level         Level @default(BEGINNER) // BEGINNER, INTERMEDIATE, ADVANCED
+  language      String @default("English")
+  duration      Float? // in hours
+  lessonsCount  Int @default(0)
+  studentsCount Int @default(0)
+  rating        Float @default(0)
+  
+  // SEO
+  seo           CourseSEO? @relation("CourseSEO")
+
+  // Rich content / overview
+  content       CourseContent? @relation("CourseContent")
+  
+  // Status
+  status        CourseStatus @default(DRAFT)
+  featured      Boolean @default(false)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  lessons       CourseLesson[]
+  enrollments   CourseEnrollment[]
+  reviews       CourseReview[]
+  faqs          CourseFAQ[]
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([instructorId])
+  @@map("courses")
+}
+
+// Course Pricing (separate for flexibility)
+model CoursePrice {
+  id              String   @id @default(cuid())
+  originalPrice   Float
+  discountedPrice Float?
+  discountPercentage Int @default(0)
+  currency        String @default("USD")
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  course          Course? @relation("CoursePrice")
+
+  @@map("course_prices")
+}
+
+// Course SEO metadata
+model CourseSEO {
+  id              String   @id @default(cuid())
+  courseId        String   @unique
+  course          Course   @relation("CourseSEO", fields: [courseId], references: [id], onDelete: Cascade)
+  
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String? // comma-separated
+  ogImage         String?
+  ogTitle         String?
+  ogDescription   String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("course_seo")
+}
+
+// Course long-form overview content (for Course Overview tab)
+model CourseContent {
+  id              String   @id @default(cuid())
+  courseId        String   @unique
+  course          Course   @relation("CourseContent", fields: [courseId], references: [id], onDelete: Cascade)
+
+  // Arrays of bullet points stored as JSON string arrays
+  whatYouWillLearn Json?
+  courseFeatures   Json?
+  keyBenefits      Json?
+  toolsResources   Json?
+  prerequisites    Json?
+  objectives       Json?
+  highlights       Json?
+  includes         Json?
+
+  // Free text sections
+  whoThisIsFor     String?
+  highlightTip     String?
+  closingMessage   String?
+
+  // Sidebar content
+  sidebarImage     String?
+  videoUrl         String?
+
+  // Fee structure
+  feeOneTitle      String?
+  feeOneDesc       String?
+  feeTwoTitle      String?
+  feeTwoDesc       String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("course_content")
+}
+
+// Course Lessons
+model CourseLesson {
+  id              String   @id @default(cuid())
+  courseId        String
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  title           String
+  description     String?
+  videoUrl        String?
+  duration        Float? // in minutes
+  order           Int @default(0)
+  published       Boolean @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([courseId])
+  @@map("course_lessons")
+}
+
+// Course FAQs (for FAQ tab)
+model CourseFAQ {
+  id              String   @id @default(cuid())
+  courseId        String
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  question        String
+  answer          String
+  order           Int      @default(0)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([courseId])
+  @@map("course_faqs")
+}
+
+// Course Enrollment (Student purchases/enrollments)
+model CourseEnrollment {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  courseId        String
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  status          EnrollmentStatus @default(ACTIVE)
+  progress        Int @default(0) // percentage
+  certificateUrl  String?
+  
+  enrolledAt      DateTime @default(now())
+  completedAt     DateTime?
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@map("course_enrollments")
+}
+
+// Course Reviews
+model CourseReview {
+  id              String   @id @default(cuid())
+  courseId        String
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  instructorId    String
+  instructor      Instructor @relation(fields: [instructorId], references: [id])
+  
+  rating          Int // 1-5
+  title           String?
+  comment         String?
+  helpful         Int @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@map("course_reviews")
+}
+
+// Enums
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}

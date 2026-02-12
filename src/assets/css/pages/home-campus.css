@@ -1,0 +1,14 @@
+@layer components {
+    .campus-blog-card::before {
+        @apply absolute top-1/2 left-1/2 z-20 block bg-white/20 rounded-full opacity-0;
+        content: '';
+        width: 0;
+        height: 0;
+        transform: translate(-50%, -50%);
+    }
+
+    .campus-blog-card:hover::before {
+        animation: circle .75s forwards;
+    }
+
+}
