@@ -10,8 +10,7 @@ interface Props {
 
 async function getCourse(slug: string) {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-        const response = await fetch(`${baseUrl}/api/courses/${slug}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/courses/${slug}`, {
             cache: 'no-store',
         });
 
