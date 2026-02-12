@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/blog",
-        destination: "https://darkseagreen-turtle-359545.hostingersite.com",
+        destination:
+          "https://darkseagreen-turtle-359545.hostingersite.com",
       },
       {
         source: "/blog/:path*",
