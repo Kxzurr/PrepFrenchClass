@@ -39,27 +39,7 @@ export default function PageHead({
         <section
             className={`py-40 pb-25 bg-gradient-to-r ${gradientFrom} ${gradientVia} ${gradientTo} ${darkGradientFrom} ${darkGradientVia} ${darkGradientTo} relative`}
         >
-            {/* Decorative Shapes */}
-            <Image
-                src={bannerShape3}
-                alt="shape"
-                className="absolute bottom-0 ltr:right-0 rtl:left-0 ltr:rotate-[180deg] rtl:rotate-[-180deg] dark:invert"
-            />
-            <Image
-                src={bannerShape1}
-                alt="shape"
-                className="absolute ltr:left-0 rtl:right-0 rtl:scale-x-[-1] hidden md:block dark:invert"
-            />
-            <Image
-                src={bannerShape2}
-                alt="shape"
-                className="absolute ltr:left-1/4 rtl:right-1/4 bottom-30 ltr:rotate-[-23deg] rtl:rotate-[23deg] animate-float-up delay-60 hidden md:block dark:invert"
-            />
-            <Image
-                src={bannerShape4}
-                alt="shape"
-                className="absolute ltr:right-1/4 rtl:left-1/4 top-20 ltr:rotate-[23deg] rtl:rotate-[-23deg] opacity-30 animate-float-down delay-600 hidden md:block dark:invert"
-            />
+            
 
             <div className="container">
                 <div className="text-center">
@@ -68,7 +48,7 @@ export default function PageHead({
                         {title}
                     </h2>
 
-                    {/* Breadcrumb Navigation */}
+                    {/* Breadcrumb Navigation 
                     <div className="flex gap-2 items-center justify-center mb-8 text-gray-600 dark:text-dark-400 flex-wrap">
                         {breadcrumbs.map((item, index) => (
                             <div key={index} className="flex items-center gap-2">
@@ -85,7 +65,7 @@ export default function PageHead({
                                 )}
                             </div>
                         ))}
-                    </div>
+                    </div>*/}
 
                     {/* Bouncing Chevron Icon */}
                     {showChevron && (

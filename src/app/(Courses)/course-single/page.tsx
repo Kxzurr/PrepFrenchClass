@@ -16,8 +16,8 @@ export default function CourseSinglePage() {
     // In production, you might want to:
     // 1. Fetch first course from API
     // 2. Redirect to /course/{slug}
-    // For now, redirect to course-list-view
-    router.push('/course-list-view');
+    // For now, redirect to courses
+    router.push('/courses');
   }, [router]);
 
   return (

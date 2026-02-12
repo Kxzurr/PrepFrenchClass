@@ -9,6 +9,8 @@ import { sortOptions } from '@/src/data/courseFilters';
 
 interface CourseListWithLoadingProps extends CourseListProps {
   loading?: boolean;
+  selectedSort: string;
+  onSortChange: (option: string) => void;
 }
 
 export default function CourseList({
@@ -20,14 +22,14 @@ export default function CourseList({
   showingTo,
   onPageChange,
   loading = false,
+  selectedSort,
+  onSortChange,
 }: CourseListWithLoadingProps) {
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState('Newest First');
 
   const handleSortSelect = (option: string) => {
-    setSelectedSort(option);
+    onSortChange(option);
     setSortDropdownOpen(false);
-    // TODO: Implement actual sorting logic
   };
 
   if (loading) {

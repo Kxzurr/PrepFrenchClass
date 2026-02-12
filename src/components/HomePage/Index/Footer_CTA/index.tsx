@@ -17,7 +17,7 @@ export default function CTASection() {
                         </p>
                     </div>
                     <Button
-                        href="#!"
+                        href="contact"
                         variant="primary"
                         className="relative overflow-hidden bg-white text-primary-950 border-white rounded-full shrink-0 w-full sm:w-auto text-center"
                         iconElement={<RiArrowRightLongLine className="align-middle ltr:ml-1 rtl:mr-1" />}

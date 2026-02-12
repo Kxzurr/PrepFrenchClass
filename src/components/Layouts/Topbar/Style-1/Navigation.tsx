@@ -45,12 +45,12 @@ export default function Navigation() {
         },
           {
             label: 'Courses',
-            href: '/course-list-view',
+            href: '/courses',
             
         },
           {
             label: 'Blog',
-            href: '/blog',
+            href: 'https://prepfrenchclass.com/blog/',
             
         },
         

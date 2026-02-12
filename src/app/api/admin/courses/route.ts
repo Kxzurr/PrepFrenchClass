@@ -35,7 +35,11 @@ export async function GET(request: NextRequest) {
     const courses = await prisma.course.findMany({
       where,
       include: {
-        category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
         instructor: {
           include: {
             user: {
@@ -94,8 +98,9 @@ export async function POST(request: NextRequest) {
       slug,
       description,
       shortDescription,
+      Homedescription,
       image,
-      categoryId,
+      categoryIds,
       instructorId,
       level,
       language,
@@ -107,7 +112,7 @@ export async function POST(request: NextRequest) {
       featured,
     } = body;
 
-    if (!title || !slug || !description || !categoryId || !instructorId) {
+    if (!title || !slug || !description || !categoryIds || categoryIds.length === 0 || !instructorId) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }
@@ -136,15 +141,15 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Create course
+    // Create course with categories
     const course = await prisma.course.create({
       data: {
         title,
         slug,
         description,
         shortDescription,
+        Homedescription,
         image,
-        categoryId,
         instructorId,
         level: level || "BEGINNER",
         language: language || "English",
@@ -153,9 +158,18 @@ export async function POST(request: NextRequest) {
         status: status || "DRAFT",
         featured: !!featured,
         pricingId: coursePrice.id,
+        categories: {
+          create: categoryIds.map((catId: string) => ({
+            categoryId: catId,
+          })),
+        },
       },
       include: {
-        category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
         instructor: true,
         pricing: true,
       },

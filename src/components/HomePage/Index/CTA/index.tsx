@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { RiArrowRightUpLine } from '@remixicon/react';
-import lngBg from '../../../../assets/images/language/lng-bg.jpg';
+import lngBg from '../../../../assets/images/language/cta.jpg';
 
 export default function LanguageCTASection() {
     return (
@@ -26,7 +26,7 @@ export default function LanguageCTASection() {
                             or Canada PR, our programs are designed to deliver measurable progress at every level.
                         </p>
                         <Link
-                            href="#!"
+                            href="contact"
                             className="btn btn-primary inline-flex items-center gap-3 rounded-full p-2 ps-7 relative group z-10 overflow-hidden"
                         >
                             Book a Free Demo Class

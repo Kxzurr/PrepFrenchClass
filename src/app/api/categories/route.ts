@@ -7,20 +7,36 @@ export async function GET() {
       include: {
         _count: {
           select: {
-            courses: {
-              where: {
-                status: "PUBLISHED",
-              },
-            },
+            courses: true,
           },
         },
       },
       orderBy: { name: "asc" },
     });
 
+    // Filter and map to count only published courses
+    const categoriesWithCount = await Promise.all(
+      categories.map(async (category) => {
+        const publishedCount = await prisma.$queryRaw<[{count: bigint}]>`
+          SELECT COUNT(*) as count
+          FROM course_categories cc
+          INNER JOIN courses c ON cc."courseId" = c.id
+          WHERE cc."categoryId" = ${category.id}
+          AND c.status = 'PUBLISHED'
+        `;
+        
+        return {
+          ...category,
+          _count: {
+            courses: Number(publishedCount[0]?.count || 0),
+          },
+        };
+      })
+    );
+
     return NextResponse.json({
       success: true,
-      data: categories,
+      data: categoriesWithCount,
     });
   } catch (error) {
     console.error("Error fetching categories:", error);

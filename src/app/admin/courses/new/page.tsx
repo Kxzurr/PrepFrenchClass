@@ -45,13 +45,23 @@ export default function NewCoursePage() {
         answer: '',
         order: '',
     });
+    const [lessons, setLessons] = useState<
+        { id: string; title: string; duration: string; order: number; published: boolean }[]
+    >([]);
+    const [lessonForm, setLessonForm] = useState({
+        title: '',
+        duration: '',
+        order: '',
+        published: true,
+    });
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
         description: '',
         shortDescription: '',
+        Homedescription: '',
         image: '',
-        categoryId: '',
+        categoryIds: [] as string[],
         instructorId: '',
         level: 'BEGINNER',
         language: 'English',
@@ -106,6 +116,12 @@ export default function NewCoursePage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (formData.categoryIds.length === 0) {
+            alert('Please select at least one category');
+            return;
+        }
+        
         setLoading(true);
 
         try {
@@ -168,19 +184,32 @@ export default function NewCoursePage() {
                         }),
                     });
 
-                    if (faqForm.question.trim() && faqForm.answer.trim()) {
+                    for (const lesson of lessons) {
+                        await fetch(`/api/admin/courses/${created.id}/lessons`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                title: lesson.title,
+                                duration: lesson.duration ? Number(lesson.duration) : null,
+                                order: lesson.order,
+                                published: lesson.published,
+                            }),
+                        });
+                    }
+
+                    for (const faq of faqs) {
                         await fetch(`/api/admin/courses/${created.id}/faqs`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                question: faqForm.question,
-                                answer: faqForm.answer,
-                                order: faqForm.order ? Number(faqForm.order) : 1,
+                                question: faq.question,
+                                answer: faq.answer,
+                                order: faq.order,
                             }),
                         });
                     }
                 } catch (err) {
-                    console.error('Error saving overview/FAQ for new course:', err);
+                    console.error('Error saving course extras for new course:', err);
                 }
 
                 router.push('/admin/courses');
@@ -276,6 +305,24 @@ export default function NewCoursePage() {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Home Description (For Home Page Display)
+                            </label>
+                            <textarea
+                                value={formData.Homedescription}
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        Homedescription: e.target.value,
+                                    })
+                                }
+                                rows={3}
+                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                placeholder="Description to display on the home page"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Full Description *
                             </label>
                             <textarea
@@ -333,25 +380,38 @@ export default function NewCoursePage() {
                         Course Details
                     </h2>
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
+                        <div className="col-span-2">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Category *
+                                Categories * (Select one or more)
                             </label>
-                            <select
-                                required
-                                value={formData.categoryId}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, categoryId: e.target.value })
-                                }
-                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                            >
-                                <option value="">Select a category</option>
+                            <div className="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
                                 {categories.map((cat) => (
-                                    <option key={cat.id} value={cat.id}>
-                                        {cat.name}
-                                    </option>
+                                    <label key={cat.id} className="flex items-center gap-2 py-2 hover:bg-gray-50 px-2 rounded cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.categoryIds.includes(cat.id)}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setFormData({
+                                                        ...formData,
+                                                        categoryIds: [...formData.categoryIds, cat.id],
+                                                    });
+                                                } else {
+                                                    setFormData({
+                                                        ...formData,
+                                                        categoryIds: formData.categoryIds.filter((id) => id !== cat.id),
+                                                    });
+                                                }
+                                            }}
+                                            className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                        />
+                                        <span className="text-gray-900">{cat.name}</span>
+                                    </label>
                                 ))}
-                            </select>
+                            </div>
+                            {formData.categoryIds.length === 0 && (
+                                <p className="text-xs text-red-600 mt-1">Please select at least one category</p>
+                            )}
                         </div>
 
                         <div>
@@ -529,6 +589,210 @@ export default function NewCoursePage() {
                             />
                         </div>
                     </div>
+                </div>
+
+                {/* Curriculum / Lessons */}
+                <div className="mb-8">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Curriculum</h2>
+                    <div className="space-y-4 mb-6">
+                        <div className="grid grid-cols-4 gap-4">
+                            <div className="col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Lesson Title
+                                </label>
+                                <input
+                                    type="text"
+                                    value={lessonForm.title}
+                                    onChange={(e) =>
+                                        setLessonForm({ ...lessonForm, title: e.target.value })
+                                    }
+                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    placeholder="Introduction to French Alphabet"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Duration (minutes)
+                                </label>
+                                <input
+                                    type="number"
+                                    value={lessonForm.duration}
+                                    onChange={(e) =>
+                                        setLessonForm({ ...lessonForm, duration: e.target.value })
+                                    }
+                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    placeholder="25"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Order
+                                </label>
+                                <input
+                                    type="number"
+                                    value={lessonForm.order}
+                                    onChange={(e) =>
+                                        setLessonForm({ ...lessonForm, order: e.target.value })
+                                    }
+                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    placeholder={String(lessons.length + 1)}
+                                />
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <label className="inline-flex items-center text-sm text-gray-700">
+                                <input
+                                    type="checkbox"
+                                    checked={lessonForm.published}
+                                    onChange={(e) =>
+                                        setLessonForm({ ...lessonForm, published: e.target.checked })
+                                    }
+                                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                />
+                                <span className="ml-2">Published</span>
+                            </label>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (!lessonForm.title.trim()) {
+                                        alert('Lesson title is required');
+                                        return;
+                                    }
+                                    const nextOrder = lessonForm.order
+                                        ? Number(lessonForm.order)
+                                        : lessons.length + 1;
+                                    setLessons((prev) => [
+                                        ...prev,
+                                        {
+                                            id: `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+                                            title: lessonForm.title,
+                                            duration: lessonForm.duration,
+                                            order: nextOrder,
+                                            published: lessonForm.published,
+                                        },
+                                    ]);
+                                    setLessonForm({
+                                        title: '',
+                                        duration: '',
+                                        order: '',
+                                        published: true,
+                                    });
+                                }}
+                                className="rounded-md bg-indigo-600 px-4 py-2 text-white text-sm font-medium hover:bg-indigo-700"
+                            >
+                                Add Lesson
+                            </button>
+                        </div>
+                    </div>
+
+                    {lessons.length === 0 ? (
+                        <p className="text-sm text-gray-600">No lessons yet. Add your first lesson above.</p>
+                    ) : (
+                        <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                            <thead className="bg-gray-50 border-b border-gray-200">
+                                <tr>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Order
+                                    </th>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Title
+                                    </th>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Duration (min)
+                                    </th>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Published
+                                    </th>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                {lessons.map((lesson) => (
+                                    <tr key={lesson.id} className="bg-white">
+                                        <td className="px-4 py-2 align-middle">
+                                            <input
+                                                type="number"
+                                                value={lesson.order}
+                                                onChange={(e) =>
+                                                    setLessons((prev) =>
+                                                        prev.map((l) =>
+                                                            l.id === lesson.id
+                                                                ? { ...l, order: Number(e.target.value || 0) }
+                                                                : l
+                                                        )
+                                                    )
+                                                }
+                                                className="w-20 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 align-middle">
+                                            <input
+                                                type="text"
+                                                value={lesson.title}
+                                                onChange={(e) =>
+                                                    setLessons((prev) =>
+                                                        prev.map((l) =>
+                                                            l.id === lesson.id
+                                                                ? { ...l, title: e.target.value }
+                                                                : l
+                                                        )
+                                                    )
+                                                }
+                                                className="w-full rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 align-middle">
+                                            <input
+                                                type="number"
+                                                value={lesson.duration}
+                                                onChange={(e) =>
+                                                    setLessons((prev) =>
+                                                        prev.map((l) =>
+                                                            l.id === lesson.id
+                                                                ? { ...l, duration: e.target.value }
+                                                                : l
+                                                        )
+                                                    )
+                                                }
+                                                className="w-24 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 align-middle">
+                                            <input
+                                                type="checkbox"
+                                                checked={lesson.published}
+                                                onChange={(e) =>
+                                                    setLessons((prev) =>
+                                                        prev.map((l) =>
+                                                            l.id === lesson.id
+                                                                ? { ...l, published: e.target.checked }
+                                                                : l
+                                                        )
+                                                    )
+                                                }
+                                                className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 align-middle">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setLessons((prev) =>
+                                                        prev.filter((l) => l.id !== lesson.id)
+                                                    )
+                                                }
+                                                className="text-red-600 hover:text-red-900 font-medium text-xs"
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
 
                 {/* Course Overview Content (for Overview tab) */}
@@ -830,8 +1094,8 @@ export default function NewCoursePage() {
                 <div className="mb-8">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">FAQs</h2>
                     <p className="text-sm text-gray-600 mb-4">
-                        Optionally add a first FAQ for this course. You can add more
-                        later from the Edit Course page.
+                        Manage common questions for this course. These appear in the FAQ
+                        tab.
                     </p>
                     <div className="space-y-4 mb-6">
                         <div className="grid grid-cols-3 gap-4">
@@ -875,7 +1139,122 @@ export default function NewCoursePage() {
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
                             />
                         </div>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (!faqForm.question.trim() || !faqForm.answer.trim()) {
+                                    alert('Question and answer are required');
+                                    return;
+                                }
+                                const nextOrder = faqForm.order
+                                    ? Number(faqForm.order)
+                                    : faqs.length + 1;
+                                setFaqs((prev) => [
+                                    ...prev,
+                                    {
+                                        id: `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+                                        question: faqForm.question,
+                                        answer: faqForm.answer,
+                                        order: nextOrder,
+                                    },
+                                ]);
+                                setFaqForm({ question: '', answer: '', order: '' });
+                            }}
+                            className="rounded-md bg-indigo-600 px-4 py-2 text-white text-sm font-medium hover:bg-indigo-700"
+                        >
+                            Add FAQ
+                        </button>
                     </div>
+
+                    {faqs.length === 0 ? (
+                        <p className="text-sm text-gray-600">
+                            No FAQs yet. Add your first FAQ above.
+                        </p>
+                    ) : (
+                        <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                            <thead className="bg-gray-50 border-b border-gray-200">
+                                <tr>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Order
+                                    </th>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Question
+                                    </th>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Answer
+                                    </th>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                {faqs.map((faq) => (
+                                    <tr key={faq.id} className="bg-white">
+                                        <td className="px-4 py-2 align-middle">
+                                            <input
+                                                type="number"
+                                                value={faq.order}
+                                                onChange={(e) =>
+                                                    setFaqs((prev) =>
+                                                        prev.map((f) =>
+                                                            f.id === faq.id
+                                                                ? { ...f, order: Number(e.target.value || 0) }
+                                                                : f
+                                                        )
+                                                    )
+                                                }
+                                                className="w-20 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 align-middle">
+                                            <input
+                                                type="text"
+                                                value={faq.question}
+                                                onChange={(e) =>
+                                                    setFaqs((prev) =>
+                                                        prev.map((f) =>
+                                                            f.id === faq.id
+                                                                ? { ...f, question: e.target.value }
+                                                                : f
+                                                        )
+                                                    )
+                                                }
+                                                className="w-full rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 align-middle">
+                                            <textarea
+                                                rows={2}
+                                                value={faq.answer}
+                                                onChange={(e) =>
+                                                    setFaqs((prev) =>
+                                                        prev.map((f) =>
+                                                            f.id === faq.id
+                                                                ? { ...f, answer: e.target.value }
+                                                                : f
+                                                        )
+                                                    )
+                                                }
+                                                className="w-full rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 align-middle">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setFaqs((prev) => prev.filter((f) => f.id !== faq.id))
+                                                }
+                                                className="text-red-600 hover:text-red-900 font-medium text-xs"
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
 
                 {/* SEO */}

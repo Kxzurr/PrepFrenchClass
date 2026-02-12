@@ -28,7 +28,11 @@ export async function GET(
     const course = await prisma.course.findUnique({
       where: { id },
       include: {
-        category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
         instructor: {
           include: {
             user: {
@@ -78,8 +82,9 @@ export async function PUT(
       slug,
       description,
       shortDescription,
+      Homedescription,
       image,
-      categoryId,
+      categoryIds,
       instructorId,
       level,
       language,
@@ -148,6 +153,22 @@ export async function PUT(
       }
     }
 
+    // Update categories if provided
+    if (categoryIds && Array.isArray(categoryIds)) {
+      // Delete existing category relations
+      await prisma.courseCategory.deleteMany({
+        where: { courseId: id },
+      });
+
+      // Create new category relations
+      await prisma.courseCategory.createMany({
+        data: categoryIds.map((catId: string) => ({
+          courseId: id,
+          categoryId: catId,
+        })),
+      });
+    }
+
     // Update course
     const updatedCourse = await prisma.course.update({
       where: { id },
@@ -156,8 +177,8 @@ export async function PUT(
         ...(slug && { slug }),
         ...(description && { description }),
         ...(shortDescription && { shortDescription }),
+        ...(Homedescription && { Homedescription }),
         ...(image && { image }),
-        ...(categoryId && { categoryId }),
         ...(instructorId && { instructorId }),
         ...(level && { level }),
         ...(language && { language }),
@@ -168,7 +189,11 @@ export async function PUT(
         ...(pricingId && { pricingId }),
       },
       include: {
-        category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
         instructor: true,
         pricing: true,
       },

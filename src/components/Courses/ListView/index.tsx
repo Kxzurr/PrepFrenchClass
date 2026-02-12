@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import PageHead from '@/src/common/PageHead';
 import Filter from './Filter';
 import CourseList from './CourseList';
 import { transformApiCourseToUI } from '@/src/lib/courseTransform';
 import { COURSES_PER_PAGE_LIST } from '@/src/constants/course';
-import { Course } from '@/src/types/course';
 
 interface Category {
   id: string;
@@ -20,8 +20,16 @@ interface CourseFilter {
 }
 
 const courseLevels = ['Beginner', 'Intermediate', 'Advanced', 'Professional'];
+const levelMap: Record<string, string> = {
+  Beginner: 'BEGINNER',
+  Intermediate: 'INTERMEDIATE',
+  Advanced: 'ADVANCED',
+};
 
 export default function CourseListView() {
+  const searchParams = useSearchParams();
+  const categorySlug = searchParams.get('category');
+  
   const breadcrumbs = [
     { label: 'Home Page', href: '/' },
     { label: 'Courses' },
@@ -29,13 +37,14 @@ export default function CourseListView() {
   ];
 
   // State
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [rawCourses, setRawCourses] = useState<any[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedSort, setSelectedSort] = useState('Newest First');
 
   // Fetch categories
   useEffect(() => {
@@ -46,6 +55,14 @@ export default function CourseListView() {
           const data = await response.json();
           const cats = Array.isArray(data?.data) ? data.data : data;
           setCategories(cats);
+          
+          // If URL has category slug, set it as selected
+          if (categorySlug && cats.length > 0) {
+            const matchedCategory = cats.find((cat: any) => cat.slug === categorySlug);
+            if (matchedCategory) {
+              setSelectedCategories([matchedCategory.id]);
+            }
+          }
         }
       } catch (err) {
         console.error('Error fetching categories:', err);
@@ -53,7 +70,7 @@ export default function CourseListView() {
     };
 
     fetchCategories();
-  }, []);
+  }, [categorySlug]);
 
   // Fetch courses
   useEffect(() => {
@@ -70,15 +87,17 @@ export default function CourseListView() {
         }
 
         if (selectedLevels.length > 0) {
-          params.append('level', selectedLevels[0]); // API supports single level
+          const apiLevel = levelMap[selectedLevels[0]];
+          if (apiLevel) {
+            params.append('level', apiLevel); // API supports single level
+          }
         }
 
         const response = await fetch(`/api/courses?${params.toString()}`);
         if (response.ok) {
           const data = await response.json();
           const rawCourses = Array.isArray(data.data) ? data.data : data.courses || [];
-          const transformedCourses = rawCourses.map(transformApiCourseToUI);
-          setCourses(transformedCourses);
+          setRawCourses(rawCourses);
           setError(null);
         } else {
           throw new Error('Failed to fetch courses');
@@ -93,6 +112,33 @@ export default function CourseListView() {
 
     fetchCourses();
   }, [selectedCategories, selectedLevels]);
+
+  const getCoursePrice = (course: any) =>
+    course.pricing?.discountedPrice ?? course.pricing?.originalPrice ?? 0;
+
+  const sortedRawCourses = (() => {
+    const list = [...rawCourses];
+    switch (selectedSort) {
+      case 'Most Popular':
+        return list.sort(
+          (a, b) => (b._count?.enrollments || 0) - (a._count?.enrollments || 0)
+        );
+      case 'Top Rated':
+        return list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      case 'Price (Low - High)':
+        return list.sort((a, b) => getCoursePrice(a) - getCoursePrice(b));
+      case 'Price (High - Low)':
+        return list.sort((a, b) => getCoursePrice(b) - getCoursePrice(a));
+      case 'Newest First':
+      default:
+        return list.sort(
+          (a, b) =>
+            new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+        );
+    }
+  })();
+
+  const courses = sortedRawCourses.map(transformApiCourseToUI);
 
   // Filter and pagination calculations
   const { totalCourses, totalPages, showingFrom, showingTo, displayedCourses } = (() => {
@@ -142,7 +188,7 @@ export default function CourseListView() {
 
   return (
     <>
-      <PageHead title="Course list view" breadcrumbs={breadcrumbs} />
+      <PageHead title="French Courses for Canada PR | TEF & TCF Preparation Classes" breadcrumbs={breadcrumbs} />
 
       {/* Course list section */}
       <section className="lg:py-24 py-20">
@@ -181,6 +227,8 @@ export default function CourseListView() {
               showingTo={showingTo}
               onPageChange={handlePageChange}
               loading={loading}
+              selectedSort={selectedSort}
+              onSortChange={setSelectedSort}
             />
           </div>
         </div>

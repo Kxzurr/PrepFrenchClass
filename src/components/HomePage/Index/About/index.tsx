@@ -46,7 +46,7 @@ export default function LanguageAboutSection() {
                             real conversation practice, and measurable progress at every level.
                         </p>
                         <Link
-                            href="#!"
+                            href="about-us"
                             className="btn btn-primary inline-flex items-center gap-3 rounded-full p-2 ps-7 relative group z-10 overflow-hidden"
                         >
                             Discover Our Approach

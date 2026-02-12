@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RiPhoneLine, RiMailLine, RiMapPinLine, RiSendPlaneLine } from '@remixicon/react';
 
 export default function ContactSection() {
@@ -9,12 +9,19 @@ export default function ContactSection() {
         email: '',
         subject: '',
         phone: '',
+        course: '',
         message: '',
     });
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [courses, setCourses] = useState<Array<{ id: string; title: string }>>([]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [submitMessage, setSubmitMessage] = useState('');
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -22,25 +29,62 @@ export default function ContactSection() {
         }));
     };
 
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await fetch('/api/courses?limit=1000');
+                if (!response.ok) return;
+                const data = await response.json();
+                const list = Array.isArray(data.data) ? data.data : data.courses || [];
+                setCourses(
+                    list
+                        .filter((course: any) => course?.id && course?.title)
+                        .map((course: any) => ({ id: course.id, title: course.title }))
+                );
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+            }
+        };
+
+        fetchCourses();
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setSubmitStatus('idle');
+        setSubmitMessage('');
         
-        // Handle form submission
-        console.log('Form submitted:', formData);
-        
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitting(false);
-            alert('Message sent successfully!');
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result?.success) {
+                throw new Error(result?.error || 'Failed to send message.');
+            }
+
+            setSubmitStatus('success');
+            setSubmitMessage('Message sent successfully!');
             setFormData({
                 name: '',
                 email: '',
                 subject: '',
                 phone: '',
+                course: '',
                 message: '',
             });
-        }, 1000);
+        } catch (error) {
+            console.error('Contact form error:', error);
+            setSubmitStatus('error');
+            setSubmitMessage('Failed to send message. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -49,12 +93,16 @@ export default function ContactSection() {
                 <div className="grid grid-cols-12 gap-6 lg:gap-1 items-center">
                     {/* Left Column - Contact Info & Map */}
                     <div className="col-span-12 lg:col-span-5">
-                        <p className="text-gray-600 dark:text-dark-400 mb-6 max-w-2xl">
-                            We&apos;d love to hear from you! Whether you have questions about our services, need support, or
-                            just want to connect — our team is here to help you every step of the way. Reach out to us
-                            anytime for inquiries, partnership opportunities, or feedback about your experience. We aim
-                            to respond within 24 hours and ensure you get the right assistance quickly and efficiently.
+                       <p className="text-gray-600 dark:text-dark-400 mb-6 max-w-2xl">
+                            Have questions about our French courses, TEF Canada or TCF Canada preparation programs? 
+                            Whether you're learning French for Canada PR, career growth, or personal development, 
+                            our team is here to guide you every step of the way. 
+
+                            Reach out to us for course details, batch schedules, fee structure, demo classes, 
+                            or personalized study plans. We typically respond within 24 hours to ensure you get 
+                            the support you need quickly and efficiently.
                         </p>
+
 
                         <div className="space-y-3 mb-8">
                             <div className="flex items-center gap-2">
@@ -65,17 +113,17 @@ export default function ContactSection() {
                             <div className="flex items-center gap-2">
                                 <RiMailLine className="w-5 h-5 shrink-0 text-primary-600" />
                                 <a
-                                    href="mailto:info@classes.com"
+                                    href="mailto:info@prepfrenchclasses.com"
                                     className="text-md text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors"
                                 >
-                                    info@classes.com
+                                    info@prepfrenchclasses.com
                                 </a>
                             </div>
 
                             <div className="flex items-center gap-2">
                                 <RiMapPinLine className="w-5 h-5 shrink-0 text-primary-600" />
                                 <p className="text-gray-700 dark:text-gray-300">
-                                    123 Business Avenue, Downtown City, NY 10001, USA
+                                    Mississauga, Ontario, Canada
                                 </p>
                             </div>
                         </div>
@@ -84,7 +132,7 @@ export default function ContactSection() {
                             Find Our Location
                         </h3>
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d230326.86842593085!2d-74.05718218491116!3d40.66810284241583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1761817060688!5m2!1sen!2sin"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d184985.77678765866!2d-79.49434774999999!3d43.57732645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882b469fe76b05b7%3A0x3146cbed75966db!2sMississauga%2C%20ON%2C%20Canada!5e0!3m2!1sen!2sin!4v1770889977153!5m2!1sen!2sin"
                             width="100%"
                             height="330"
                             className="rounded-xl"
@@ -105,6 +153,17 @@ export default function ContactSection() {
                             </p>
 
                             <form onSubmit={handleSubmit} className="space-y-5">
+                                {submitStatus !== 'idle' && (
+                                    <div
+                                        className={`rounded-lg border px-4 py-3 text-sm ${
+                                            submitStatus === 'success'
+                                                ? 'border-green-200 bg-green-50 text-green-700'
+                                                : 'border-red-200 bg-red-50 text-red-700'
+                                        }`}
+                                    >
+                                        {submitMessage}
+                                    </div>
+                                )}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label
@@ -178,7 +237,30 @@ export default function ContactSection() {
                                             placeholder="Your contact number"
                                             className="w-full border border-gray-300 dark:border-gray-800 rounded-xl px-4 py-3 bg-white dark:bg-dark-950 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all duration-300"
                                         />
-                                    </div>
+                                        </div>
+
+                                        <div className="md:col-span-2">
+                                            <label
+                                                htmlFor="course"
+                                                className="block text-gray-700 dark:text-gray-300 font-semibold mb-2"
+                                            >
+                                                Select Course
+                                            </label>
+                                            <select
+                                                id="course"
+                                                name="course"
+                                                value={formData.course}
+                                                onChange={handleChange}
+                                                className="w-full border border-gray-300 dark:border-gray-800 rounded-xl px-4 py-3 bg-white dark:bg-dark-950 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all duration-300"
+                                            >
+                                                <option value="">Select a course</option>
+                                                {courses.map((course) => (
+                                                    <option key={course.id} value={course.title}>
+                                                        {course.title}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
                                 </div>
 
                                 <div>
@@ -196,6 +278,7 @@ export default function ContactSection() {
                                         onChange={handleChange}
                                         placeholder="Write your message here..."
                                         className="w-full border border-gray-300 dark:border-gray-800 rounded-xl px-4 py-3 bg-white dark:bg-dark-950 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all duration-300 resize-none"
+                                        required
                                     />
                                 </div>
 

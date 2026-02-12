@@ -5,12 +5,20 @@ import { Course } from "@/src/types/course";
  * Maps database fields to the format expected by UI components
  */
 export function transformApiCourseToUI(apiCourse: any): Course {
+  // Handle both old (single category) and new (multiple categories) formats
+  const firstCategory = apiCourse.category 
+    ? apiCourse.category 
+    : apiCourse.categories?.[0]?.category;
+  
+  const categoryName = firstCategory?.name || "Uncategorized";
+  const categoryId = firstCategory?.id || "";
+
   return {
     id: apiCourse.id,
     image: apiCourse.image || "/images/placeholder-course.jpg",
     imageAlt: apiCourse.title,
-    category: apiCourse.category?.name || "Uncategorized",
-    categoryColor: getCategoryColor(apiCourse.category?.id || ""),
+    category: categoryName,
+    categoryColor: getCategoryColor(categoryId),
     rating: apiCourse.rating || 0,
     reviewCount: apiCourse._count?.reviews || 0,
     title: apiCourse.title,

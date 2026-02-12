@@ -84,7 +84,7 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  courses   Course[]
+  courses   CourseCategory[]
 
   @@map("categories")
 }
@@ -119,10 +119,10 @@ model Course {
   slug          String   @unique
   description   String   @db.Text
   shortDescription String?
+  Homedescription String? @db.Text
   image         String   // course thumbnail
   
-  categoryId    String
-  category      Category @relation(fields: [categoryId], references: [id])
+  categories    CourseCategory[]
   
   instructorId  String
   instructor    Instructor @relation(fields: [instructorId], references: [id])
@@ -159,9 +159,25 @@ model Course {
   faqs          CourseFAQ[]
 
   @@index([slug])
-  @@index([categoryId])
   @@index([instructorId])
   @@map("courses")
+}
+
+// Course-Category Join Table (Many-to-Many)
+model CourseCategory {
+  id         String   @id @default(cuid())
+  courseId   String
+  categoryId String
+  
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  createdAt  DateTime @default(now())
+
+  @@unique([courseId, categoryId])
+  @@index([courseId])
+  @@index([categoryId])
+  @@map("course_categories")
 }
 
 // Course Pricing (separate for flexibility)

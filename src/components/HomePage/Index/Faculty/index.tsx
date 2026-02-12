@@ -59,9 +59,9 @@ export default function LanguageFacultySection() {
         },
         {
             image: lngTeacher4,
-            name: 'Vikram Singh',
+            name: 'Ritwik Singh',
             title: 'French Pronunciation & Fluency Mentor',
-            alt: 'Vikram Singh, French Fluency Mentor',
+            alt: 'Ritwik Singh, French Fluency Mentor',
             socialLinks: [
                 { icon: <RiLinkedinFill className="size-5" />, href: '#!' },
                 { icon: <RiTwitterXLine className="size-5" />, href: '#!' },

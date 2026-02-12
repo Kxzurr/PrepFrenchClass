@@ -17,6 +17,11 @@ interface Category {
 }
 
 const courseLevels = ['Beginner', 'Intermediate', 'Advanced', 'Professional'];
+const levelMap: Record<string, string> = {
+  Beginner: 'BEGINNER',
+  Intermediate: 'INTERMEDIATE',
+  Advanced: 'ADVANCED',
+};
 
 export default function CourseGridView() {
   const breadcrumbs = [
@@ -66,7 +71,10 @@ export default function CourseGridView() {
         }
 
         if (selectedLevels.length > 0) {
-          params.append('level', selectedLevels[0]);
+          const apiLevel = levelMap[selectedLevels[0]];
+          if (apiLevel) {
+            params.append('level', apiLevel);
+          }
         }
 
         const response = await fetch(`/api/courses?${params.toString()}`);

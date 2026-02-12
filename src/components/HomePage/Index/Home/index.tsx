@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { RiArrowRightUpLine } from '@remixicon/react';
-import lngHomeGirl from '../../../../assets/images/language/lng-home-girl.png';
+import lngHomeGirl from '../../../../assets/images/language/1.jpg';
 import lngHomeMan from '../../../../assets/images/language/lng-home-man.png';
 import lngHandwriting from '../../../../assets/images/language/lng-handwriting.png';
 
@@ -14,12 +14,8 @@ export default function LanguageHomeSection() {
                 <div className="grid grid-cols-12 2xl:gap-10 gap-6">
                     {/* Left Column - Girl Image */}
                     <div className="col-span-12 lg:col-span-3">
-                        <div className="-mt-30 hidden lg:block">
-                            <Image
-                                src={lngHomeGirl}
-                                alt="student preparing for TEF Canada exam"
-                                className="w-full h-auto"
-                            />
+                        <div className="-mt-20 hidden lg:block">
+                            
                         </div>
                     </div>
 
@@ -46,7 +42,7 @@ export default function LanguageHomeSection() {
                             </p>
 
                             <Link
-                                href="#!"
+                                href="contact"
                                 className="btn btn-primary inline-flex items-center gap-3 rounded-full p-2 ps-7 relative group z-10 overflow-hidden"
                             >
                                 Book Free TEF/TCF Demo Class
@@ -60,13 +56,7 @@ export default function LanguageHomeSection() {
 
                     {/* Right Column - Man Image */}
                     <div className="col-span-12 lg:col-span-3">
-                        <div className="mt-30 hidden lg:block">
-                            <Image
-                                src={lngHomeMan}
-                                alt="student attending online French class for Canada PR"
-                                className="w-full h-auto"
-                            />
-                        </div>
+                        
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RiArrowRightUpLine, RiTimeLine, RiBookOpenLine, RiUserLine } from '@remixicon/react';
-import lngCourseGirl from '../../../../assets/images/language/lng-course-girl.png';
+import lngCourseGirl from '../../../../assets/images/language/2.jpg';
 
 interface ApiCourse {
     id: string;
@@ -12,6 +12,7 @@ interface ApiCourse {
     slug: string;
     description: string;
     shortDescription?: string | null;
+    Homedescription?: string | null;
     image: string;
     level: string;
     language: string;
@@ -128,8 +129,9 @@ export default function LanguageCoursesSection() {
                         <Image
                             src={lngCourseGirl}
                             alt="Student learning French online"
-                            className="w-52 mx-auto"
-                        />
+                            className="w-122 mx-auto rounded-2xl p-2"
+                            />
+
                         <div className="rounded-xl p-6 bg-primary-500/10">
                             <h5 className="mb-2">
                                 {primaryCourse ? (
@@ -147,11 +149,11 @@ export default function LanguageCoursesSection() {
                             </h5>
                             <p className="text-gray-600 dark:text-dark-400 mb-5 mt-2">
                                 {primaryCourse
-                                    ? primaryCourse.shortDescription || primaryCourse.description
+                                    ? primaryCourse.Homedescription || primaryCourse.shortDescription
                                     : 'Build a strong foundation in French with structured lessons, real-life practice, and expert guidance for every stage of your journey.'}
                             </p>
                             <Link
-                                href={primaryCourse ? `/course/${primaryCourse.slug}` : '/course-list-view'}
+                                href={primaryCourse ? `/course/${primaryCourse.slug}` : '/courses'}
                                 className="btn btn-primary inline-flex items-center gap-3 rounded-full p-2 ps-7 relative group z-10 overflow-hidden"
                             >
                                 Explore Program
@@ -191,18 +193,18 @@ export default function LanguageCoursesSection() {
                                     </div>
                                     <p className="text-gray-600 dark:text-dark-400 mb-2">
                                         {secondaryCourse
-                                            ? secondaryCourse.shortDescription || secondaryCourse.description
+                                            ? secondaryCourse.shortDescription
                                             : 'Prepare with structured modules, mock tests, and guided feedback to reach your target score.'}
                                     </p>
                                     <p className="text-gray-600 dark:text-dark-400 mb-5">
                                         {secondaryCourse
-                                            ? secondaryCourse.description
+                                            ? secondaryCourse.Homedescription
                                             : 'Designed for learners working towards academic, professional, or immigration goals with French.'}
                                     </p>
                                     <div className="flex justify-between items-center flex-wrap gap-2">
                                         <h3 className="text-primary-500">{formatPrice(secondaryCourse)}</h3>
                                         <Link
-                                            href={secondaryCourse ? `/course/${secondaryCourse.slug}` : '/course-list-view'}
+                                            href={secondaryCourse ? `/course/${secondaryCourse.slug}` : '/courses'}
                                             className="btn btn-outline-primary inline-flex items-center gap-3 rounded-full p-2 ps-7 relative group z-10 overflow-hidden"
                                         >
                                             View Course
@@ -264,18 +266,18 @@ export default function LanguageCoursesSection() {
                                     </div>
                                     <p className="text-gray-600 dark:text-dark-400 mb-2">
                                         {tertiaryCourse
-                                            ? tertiaryCourse.shortDescription || tertiaryCourse.description
+                                            ? tertiaryCourse.shortDescription
                                             : 'Deepen your skills with structured lessons, practice, and expert guidance to reach higher proficiency.'}
                                     </p>
                                     <p className="text-gray-600 dark:text-dark-400 mb-5">
                                         {tertiaryCourse
-                                            ? tertiaryCourse.description
+                                            ? tertiaryCourse.Homedescription
                                             : 'Ideal for learners aiming for advanced communication, exams, or professional fluency.'}
                                     </p>
                                     <div className="flex justify-between items-center flex-wrap gap-2">
                                         <h3 className="text-primary-500">{formatPrice(tertiaryCourse)}</h3>
                                         <Link
-                                            href={tertiaryCourse ? `/course/${tertiaryCourse.slug}` : '/course-list-view'}
+                                            href={tertiaryCourse ? `/course/${tertiaryCourse.slug}` : '/courses'}
                                             className="btn btn-outline-primary inline-flex items-center gap-3 rounded-full p-2 ps-7 relative group z-10 overflow-hidden"
                                         >
                                             View Course

@@ -9,7 +9,7 @@ interface Course {
     title: string;
     slug: string;
     status: string;
-    category: { name: string };
+    categories: { category: { name: string } }[];
     instructor: { user: { name: string } };
     pricing: { originalPrice: number; discountedPrice?: number };
     _count: { enrollments: number };
@@ -118,7 +118,16 @@ export default function CoursesPage() {
                                         {course.title}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-500">
-                                        {course.category.name}
+                                        <div className="flex flex-wrap gap-1">
+                                            {course.categories.map((cat) => (
+                                                <span
+                                                    key={cat.category.name}
+                                                    className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs"
+                                                >
+                                                    {cat.category.name}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-500">
                                         {course.instructor.user.name}

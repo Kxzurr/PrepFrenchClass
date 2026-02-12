@@ -27,8 +27,9 @@ interface CourseResponse {
   slug: string;
   description: string;
   shortDescription?: string | null;
+  Homedescription?: string | null;
   image: string;
-  categoryId: string;
+  categories: { categoryId: string; category: { id: string; name: string } }[];
   instructorId: string;
   level: string;
   language: string;
@@ -101,8 +102,9 @@ export default function EditCoursePage() {
     slug: '',
     description: '',
     shortDescription: '',
+    Homedescription: '',
     image: '',
-    categoryId: '',
+    categoryIds: [] as string[],
     instructorId: '',
     level: 'BEGINNER',
     language: 'English',
@@ -220,8 +222,9 @@ export default function EditCoursePage() {
           slug: course.slug,
           description: course.description,
           shortDescription: course.shortDescription || '',
+          Homedescription: course.Homedescription || '',
           image: course.image,
-          categoryId: course.categoryId,
+          categoryIds: course.categories.map((cat) => cat.categoryId),
           instructorId: course.instructorId,
           level: course.level,
           language: course.language,
@@ -409,6 +412,24 @@ export default function EditCoursePage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
+                Home Description (For Home Page Display)
+              </label>
+              <textarea
+                value={formData.Homedescription}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    Homedescription: e.target.value,
+                  })
+                }
+                rows={3}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                placeholder="Description to display on the home page"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Description *
               </label>
               <textarea
@@ -462,23 +483,38 @@ export default function EditCoursePage() {
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Course Details</h2>
           <div className="grid grid-cols-2 gap-4">
-            <div>
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category *
+                Categories * (Select one or more)
               </label>
-              <select
-                required
-                value={formData.categoryId}
-                onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              >
-                <option value="">Select a category</option>
+              <div className="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
+                  <label key={cat.id} className="flex items-center gap-2 py-2 hover:bg-gray-50 px-2 rounded cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.categoryIds.includes(cat.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFormData({
+                            ...formData,
+                            categoryIds: [...formData.categoryIds, cat.id],
+                          });
+                        } else {
+                          setFormData({
+                            ...formData,
+                            categoryIds: formData.categoryIds.filter((id) => id !== cat.id),
+                          });
+                        }
+                      }}
+                      className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    />
+                    <span className="text-gray-900">{cat.name}</span>
+                  </label>
                 ))}
-              </select>
+              </div>
+              {formData.categoryIds.length === 0 && (
+                <p className="text-xs text-red-600 mt-1">Please select at least one category</p>
+              )}
             </div>
 
             <div>

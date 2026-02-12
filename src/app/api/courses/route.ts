@@ -21,7 +21,11 @@ export async function GET(request: NextRequest) {
     };
 
     if (categoryId) {
-      where.categoryId = categoryId;
+      where.categories = {
+        some: {
+          categoryId: categoryId,
+        },
+      };
     }
 
     if (search) {
@@ -46,7 +50,11 @@ export async function GET(request: NextRequest) {
     const courses = await prisma.course.findMany({
       where,
       include: {
-        category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
         instructor: {
           include: {
             user: {

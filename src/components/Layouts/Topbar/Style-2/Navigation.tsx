@@ -51,7 +51,7 @@ export default function Navigation() {
         {
             label: 'Courses',
             children: [
-                { label: 'Course List View', href: '/course-list-view' },
+                { label: 'Course List View', href: '/courses' },
                 { label: 'Course Grid View', href: '/course-grid-view' },
                 { label: 'Course Category', href: '/course-category' },
             ],

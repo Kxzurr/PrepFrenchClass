@@ -23,7 +23,7 @@ async function main() {
     // Create homepage categories matching frontend design
     const categories = await Promise.all([
         prisma.category.upsert({
-            where: { slug: "beginner-french-a1-a2" },
+            where: { name: "Beginner French (A1–A2)" },
             update: {},
             create: {
                 name: "Beginner French (A1–A2)",
@@ -36,7 +36,7 @@ async function main() {
             },
         }),
         prisma.category.upsert({
-            where: { slug: "intermediate-french-b1-b2" },
+            where: { name: "Intermediate French (B1–B2)" },
             update: {},
             create: {
                 name: "Intermediate French (B1–B2)",
@@ -49,7 +49,7 @@ async function main() {
             },
         }),
         prisma.category.upsert({
-            where: { slug: "advanced-french-c1-level" },
+            where: { name: "Advanced French (C1 Level)" },
             update: {},
             create: {
                 name: "Advanced French (C1 Level)",
@@ -62,7 +62,7 @@ async function main() {
             },
         }),
         prisma.category.upsert({
-            where: { slug: "tef-canada-preparation" },
+            where: { name: "TEF Canada Preparation" },
             update: {},
             create: {
                 name: "TEF Canada Preparation",
@@ -75,7 +75,7 @@ async function main() {
             },
         }),
         prisma.category.upsert({
-            where: { slug: "tcf-canada-coaching" },
+            where: { name: "TCF Canada Coaching" },
             update: {},
             create: {
                 name: "TCF Canada Coaching",
@@ -88,7 +88,7 @@ async function main() {
             },
         }),
         prisma.category.upsert({
-            where: { slug: "french-for-professionals" },
+            where: { name: "French for Professionals" },
             update: {},
             create: {
                 name: "French for Professionals",
@@ -130,6 +130,92 @@ async function main() {
     });
     console.log("✓ Instructor created:", instructor.id);
 
+    const defaultPricing = {
+        originalPrice: 199.99,
+        discountedPrice: 149.99,
+        discountPercentage: 25,
+        currency: "USD",
+    };
+    const defaultImage = "/images/courses/french-default.jpg";
+    const featuredSlugs = new Set([
+        "tcf-canada-full-clb7",
+        "tef-canada-full-clb7",
+        "french-a1-beginner",
+    ]);
+
+    const createCourseWithContent = async (data: {
+        title: string;
+        slug: string;
+        description: string;
+        shortDescription: string;
+        homedescription?: string;
+        categoryId: string;
+        level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+        duration: number | null;
+        lessonsCount?: number;
+        content?: {
+            whatYouWillLearn?: string[];
+            courseFeatures?: string[];
+            keyBenefits?: string[];
+            toolsResources?: string[];
+            prerequisites?: string[];
+            objectives?: string[];
+            highlights?: string[];
+            includes?: string[];
+            whoThisIsFor?: string | null;
+            highlightTip?: string | null;
+            closingMessage?: string | null;
+            sidebarImage?: string | null;
+            videoUrl?: string | null;
+            feeOneTitle?: string | null;
+            feeOneDesc?: string | null;
+            feeTwoTitle?: string | null;
+            feeTwoDesc?: string | null;
+        };
+    }) => {
+        const pricing = await prisma.coursePrice.create({
+            data: defaultPricing,
+        });
+
+        const course = await prisma.course.upsert({
+            where: { slug: data.slug },
+            update: {},
+            create: {
+                title: data.title,
+                slug: data.slug,
+                description: data.description,
+                shortDescription: data.shortDescription,
+                Homedescription: data.homedescription || null,
+                image: defaultImage,
+                instructorId: instructor.id,
+                pricingId: pricing.id,
+                level: data.level,
+                language: "English",
+                duration: data.duration,
+                lessonsCount: data.lessonsCount || 0,
+                rating: 0,
+                status: "PUBLISHED",
+                featured: featuredSlugs.has(data.slug),
+                categories: {
+                    create: [{ categoryId: data.categoryId }],
+                },
+            },
+        });
+
+        if (data.content) {
+            await prisma.courseContent.upsert({
+                where: { courseId: course.id },
+                update: data.content,
+                create: {
+                    courseId: course.id,
+                    ...data.content,
+                },
+            });
+        }
+
+        return course;
+    };
+
     // Create sample courses
     const courses = await Promise.all([
         (async () => {
@@ -152,7 +238,6 @@ async function main() {
                         "Master the fundamentals of French language including grammar, vocabulary, and pronunciation. Perfect for absolute beginners.",
                     shortDescription: "Learn French from scratch with our comprehensive beginner course",
                     image: "/images/courses/french-basics.jpg",
-                    categoryId: categories[0].id, // Beginner French (A1–A2)
                     instructorId: instructor.id,
                     pricingId: pricing.id,
                     level: "BEGINNER",
@@ -162,6 +247,9 @@ async function main() {
                     rating: 4.8,
                     status: "PUBLISHED",
                     featured: true,
+                    categories: {
+                        create: [{ categoryId: categories[0].id }],
+                    },
                 },
             });
         })(),
@@ -184,7 +272,6 @@ async function main() {
                     description: "Comprehensive preparation program for TEF Canada exam with practice tests, speaking sessions, and vocabulary building.",
                     shortDescription: "Complete guide to passing TEF Canada with high scores",
                     image: "/images/courses/tef-canada.jpg",
-                    categoryId: categories[3].id, // TEF Canada Preparation
                     instructorId: instructor.id,
                     pricingId: pricing.id,
                     level: "INTERMEDIATE",
@@ -194,6 +281,9 @@ async function main() {
                     rating: 4.9,
                     status: "PUBLISHED",
                     featured: true,
+                    categories: {
+                        create: [{ categoryId: categories[3].id }],
+                    },
                 },
             });
         })(),
@@ -216,7 +306,6 @@ async function main() {
                     description: "Take your French fluency to the next level with advanced conversation techniques and cultural insights.",
                     shortDescription: "Master advanced French speaking and listening skills",
                     image: "/images/courses/advanced-french.jpg",
-                    categoryId: categories[2].id, // Advanced French (C1 Level)
                     instructorId: instructor.id,
                     pricingId: pricing.id,
                     level: "ADVANCED",
@@ -226,9 +315,387 @@ async function main() {
                     rating: 4.7,
                     status: "PUBLISHED",
                     featured: false,
+                    categories: {
+                        create: [{ categoryId: categories[2].id }],
+                    },
                 },
             });
         })(),
+        createCourseWithContent({
+            title: "9-10 Month Full TCF Canada (CLB 7)",
+            slug: "tcf-canada-full-clb7",
+            description:
+                "A 9-10 month intensive program that prepares learners for the TCF Canada exam with a CLB 7 target. Covers A1 to B2 skills, exam strategies, and mock tests with live online classes five days per week and recorded sessions for review.",
+            shortDescription: "Full TCF Canada prep to reach CLB 7 (B2) with live classes and mock exams.",
+            categoryId: categories[4].id,
+            level: "INTERMEDIATE",
+            duration: 200,
+            content: {
+                whatYouWillLearn: [
+                    "Listening, speaking, reading, and writing to B2 (CLB 7)",
+                    "Core grammar and vocabulary from A1 to B2",
+                    "TCF Canada exam format and question strategies",
+                    "Confidence through mock tests and feedback",
+                ],
+                courseFeatures: [
+                    "Beginner to upper-intermediate progression (A1-B2)",
+                    "Live online classes 5 days per week",
+                    "Recorded sessions for review",
+                    "Ongoing mock exams and feedback",
+                ],
+                prerequisites: [
+                    "Open to beginners",
+                    "Commitment to daily practice",
+                ],
+                objectives: [
+                    "Develop all four skills to an upper-intermediate B2 level",
+                    "Master essential grammar and vocabulary for formal topics",
+                    "Learn TCF Canada task formats and test strategies",
+                    "Express complex ideas clearly in French",
+                ],
+                highlights: [
+                    "Exam-focused speaking and writing practice",
+                    "Full-length mock tests with feedback",
+                ],
+                includes: [
+                    "Live classes",
+                    "Recorded sessions",
+                    "Mock exams",
+                    "Personalized feedback",
+                ],
+                whoThisIsFor: "Learners aiming for Canadian PR with a CLB 7 requirement.",
+                highlightTip: "Plan daily practice outside class for steady progress.",
+            },
+        }),
+        createCourseWithContent({
+            title: "6 Month TCF Canada (CLB 5)",
+            slug: "tcf-canada-6-month-clb5",
+            description:
+                "A 6-month accelerated program targeting CLB 5 (B1) for TCF Canada. Covers A1 to B1 content, essential exam practice, and live online classes five days per week with recordings available.",
+            shortDescription: "Accelerated TCF Canada course targeting CLB 5 (B1).",
+            categoryId: categories[4].id,
+            level: "INTERMEDIATE",
+            duration: 120,
+            content: {
+                whatYouWillLearn: [
+                    "Core French skills up to B1",
+                    "Everyday communication for work and daily life",
+                    "TCF Canada question types and timing",
+                ],
+                courseFeatures: [
+                    "A1 to B1 coverage in 6 months",
+                    "Live online classes 5 days per week",
+                    "Recorded sessions for review",
+                ],
+                prerequisites: [
+                    "Open to beginners; basic French helps",
+                    "Extra self-study recommended due to pace",
+                ],
+                objectives: [
+                    "Reach intermediate B1 proficiency",
+                    "Improve listening and reading for common topics",
+                    "Build practical speaking and writing skills",
+                    "Prepare for TCF Canada CLB 5 targets",
+                ],
+                highlights: [
+                    "Focused exam practice for CLB 5",
+                    "Time management strategies for test sections",
+                ],
+                includes: [
+                    "Live classes",
+                    "Recorded sessions",
+                    "Mock exam practice",
+                ],
+                whoThisIsFor: "Learners preparing for work permit extension with CLB 5 goals.",
+            },
+        }),
+        createCourseWithContent({
+            title: "9-10 Month Full TEF Canada (CLB 7)",
+            slug: "tef-canada-full-clb7",
+            description:
+                "A 9-10 month TEF Canada preparation program targeting CLB 7. Covers A1 to B2 content, TEF-specific exam strategies, and live online classes five days per week with recordings.",
+            shortDescription: "Comprehensive TEF Canada prep to reach CLB 7 (B2).",
+            categoryId: categories[3].id,
+            level: "INTERMEDIATE",
+            duration: 200,
+            content: {
+                whatYouWillLearn: [
+                    "French proficiency from A1 to B2",
+                    "TEF Canada exam structure and strategies",
+                    "Advanced speaking and writing techniques",
+                ],
+                courseFeatures: [
+                    "Step-by-step A1 to B2 progression",
+                    "TEF-specific listening and reading practice",
+                    "Writing tasks and speaking interview drills",
+                ],
+                prerequisites: [
+                    "Open to beginners",
+                    "Consistent practice outside class",
+                ],
+                objectives: [
+                    "Reach upper-intermediate B2 proficiency",
+                    "Master TEF task formats and timing",
+                    "Build confidence with mock exams",
+                ],
+                highlights: [
+                    "Focused training on TEF writing and speaking",
+                    "Mock TEF exams with detailed feedback",
+                ],
+                includes: [
+                    "Live classes",
+                    "Recorded sessions",
+                    "Mock exams",
+                    "Personalized feedback",
+                ],
+                whoThisIsFor: "Learners targeting Canadian PR with TEF CLB 7 goals.",
+            },
+        }),
+        createCourseWithContent({
+            title: "6 Month TEF Canada (CLB 5)",
+            slug: "tef-canada-6-month-clb5",
+            description:
+                "A 6-month accelerated TEF Canada course for CLB 5 goals. Covers A1 to B1 essentials, TEF-specific exam practice, and live online classes five days per week with recordings.",
+            shortDescription: "Accelerated TEF Canada prep targeting CLB 5 (B1).",
+            categoryId: categories[3].id,
+            level: "INTERMEDIATE",
+            duration: 120,
+            content: {
+                whatYouWillLearn: [
+                    "Practical French skills up to B1",
+                    "TEF listening and reading strategies",
+                    "Exam-ready speaking and writing basics",
+                ],
+                courseFeatures: [
+                    "A1 to B1 focus in a fast-track format",
+                    "TEF role-play and opinion practice",
+                    "Timed reading and listening drills",
+                ],
+                prerequisites: [
+                    "A1 foundation recommended",
+                    "Intensive pace requires steady attendance",
+                ],
+                objectives: [
+                    "Reach B1 proficiency for CLB 5 targets",
+                    "Improve exam timing and accuracy",
+                    "Build confidence for TEF speaking tasks",
+                ],
+                highlights: [
+                    "Full mock TEF exam near course end",
+                    "Detailed feedback on writing and speaking",
+                ],
+                includes: [
+                    "Live classes",
+                    "Recorded sessions",
+                    "Mock exams",
+                ],
+                whoThisIsFor: "Learners preparing for TEF CLB 5 for work permit extension.",
+            },
+        }),
+        createCourseWithContent({
+            title: "French A1 - Beginner French (2 months)",
+            slug: "french-a1-beginner",
+            description:
+                "A 2-month beginner course for absolute beginners. Covers pronunciation, basic grammar, essential vocabulary, and everyday conversation with live online classes five days per week and recordings.",
+            shortDescription: "Beginner French foundations with speaking practice from day one.",
+            categoryId: categories[0].id,
+            level: "BEGINNER",
+            duration: 40,
+            content: {
+                whatYouWillLearn: [
+                    "French alphabet and pronunciation basics",
+                    "Present tense of common verbs",
+                    "Everyday greetings and simple questions",
+                ],
+                courseFeatures: [
+                    "Grammar foundations and basic sentence structure",
+                    "Core vocabulary for daily life",
+                    "Interactive speaking practice",
+                ],
+                prerequisites: ["No prior French required"],
+                objectives: [
+                    "Build a solid A1 foundation",
+                    "Communicate in simple everyday situations",
+                    "Understand basic spoken French",
+                ],
+                includes: [
+                    "Live classes",
+                    "Recorded sessions",
+                    "Practice activities",
+                ],
+                whoThisIsFor: "Absolute beginners starting French from scratch.",
+            },
+        }),
+        createCourseWithContent({
+            title: "French A2 - Elementary French (2 months)",
+            slug: "french-a2-elementary",
+            description:
+                "A 2-month A2 course for learners who completed A1. Focuses on past and future tenses, expanded vocabulary, and everyday communication through live online classes and recordings.",
+            shortDescription: "Expand your French skills with A2 grammar and speaking practice.",
+            categoryId: categories[0].id,
+            level: "BEGINNER",
+            duration: 40,
+            content: {
+                whatYouWillLearn: [
+                    "Passe compose, imparfait, and near future",
+                    "Daily-life vocabulary for travel and shopping",
+                    "Short conversations and messages",
+                ],
+                courseFeatures: [
+                    "Grammar expansion beyond A1",
+                    "Role-plays for common situations",
+                    "Reading and listening practice",
+                ],
+                prerequisites: ["A1 level or equivalent"],
+                objectives: [
+                    "Handle routine tasks in French",
+                    "Describe past and future events",
+                    "Write short messages and emails",
+                ],
+                includes: [
+                    "Live classes",
+                    "Recorded sessions",
+                    "Structured practice",
+                ],
+                whoThisIsFor: "Learners progressing beyond A1 to A2 proficiency.",
+            },
+        }),
+        createCourseWithContent({
+            title: "French B1 - Intermediate French (3 months)",
+            slug: "french-b1-intermediate",
+            description:
+                "A 3-month intermediate course for A2 graduates. Builds confidence in conversation, expands grammar to all common tenses, and develops reading and writing skills with live online classes and recordings.",
+            shortDescription: "Gain independence in French with B1 speaking and writing skills.",
+            categoryId: categories[1].id,
+            level: "INTERMEDIATE",
+            duration: 60,
+            content: {
+                whatYouWillLearn: [
+                    "Confident use of past, present, and future tenses",
+                    "Intermediate vocabulary for work and daily life",
+                    "Structured speaking and writing",
+                ],
+                courseFeatures: [
+                    "Listening with longer dialogues",
+                    "Role-plays and discussions",
+                    "Writing letters and short essays",
+                ],
+                prerequisites: ["A2 level or equivalent"],
+                objectives: [
+                    "Handle most everyday situations",
+                    "Explain opinions with reasons",
+                    "Write coherent short texts",
+                ],
+                includes: [
+                    "Live classes",
+                    "Recorded sessions",
+                    "Feedback on speaking and writing",
+                ],
+                whoThisIsFor: "Learners aiming for independent B1 use of French.",
+            },
+        }),
+        createCourseWithContent({
+            title: "French B2 - Upper-Intermediate French (3 months)",
+            slug: "french-b2-upper-intermediate",
+            description:
+                "A 3-month upper-intermediate course for B1 learners. Covers advanced grammar, richer vocabulary, and fluency in speaking and writing with authentic materials and live online classes.",
+            shortDescription: "Reach B2 fluency with advanced grammar and real-world practice.",
+            categoryId: categories[1].id,
+            level: "INTERMEDIATE",
+            duration: 60,
+            content: {
+                whatYouWillLearn: [
+                    "Advanced grammar including subjunctive and conditionals",
+                    "Fluent discussion of complex topics",
+                    "Structured essays and reports",
+                ],
+                courseFeatures: [
+                    "Authentic reading and listening materials",
+                    "Debates, presentations, and discussions",
+                    "Advanced writing with cohesion",
+                ],
+                prerequisites: ["B1 level or equivalent"],
+                objectives: [
+                    "Communicate fluently on complex topics",
+                    "Write clear, detailed texts",
+                    "Understand most spoken French in context",
+                ],
+                includes: [
+                    "Live classes",
+                    "Recorded sessions",
+                    "Detailed feedback",
+                ],
+                whoThisIsFor: "Learners targeting strong B2 proficiency for work or study.",
+            },
+        }),
+        createCourseWithContent({
+            title: "1 Month TCF Canada Exam Prep (Intensive)",
+            slug: "tcf-canada-1-month-prep",
+            description:
+                "A 1-month intensive TCF Canada preparation course focused on exam strategies, timed practice, and feedback for all sections: listening, reading, writing, and speaking.",
+            shortDescription: "Intensive TCF exam strategies and mock tests in 1 month.",
+            categoryId: categories[4].id,
+            level: "INTERMEDIATE",
+            duration: 20,
+            content: {
+                whatYouWillLearn: [
+                    "TCF exam format, timing, and scoring",
+                    "Strategies for listening and reading",
+                    "Writing task structure and speaking techniques",
+                ],
+                courseFeatures: [
+                    "Full mock exams under timed conditions",
+                    "Targeted feedback on writing and speaking",
+                    "Question-type drills and strategy reviews",
+                ],
+                prerequisites: ["Intermediate French (B1/B2) recommended"],
+                objectives: [
+                    "Maximize TCF scores with exam strategies",
+                    "Improve speed and accuracy",
+                    "Build confidence for test day",
+                ],
+                includes: [
+                    "Mock exams",
+                    "Personalized feedback",
+                    "Strategy workshops",
+                ],
+                whoThisIsFor: "Learners close to target level who need focused TCF prep.",
+            },
+        }),
+        createCourseWithContent({
+            title: "1 Month TEF Canada Exam Prep (Intensive)",
+            slug: "tef-canada-1-month-prep",
+            description:
+                "A 1-month intensive TEF Canada preparation course focused on exam format, strategies, timed practice, and feedback for listening, reading, writing, and speaking.",
+            shortDescription: "Intensive TEF exam strategies and mock tests in 1 month.",
+            categoryId: categories[3].id,
+            level: "INTERMEDIATE",
+            duration: 20,
+            content: {
+                whatYouWillLearn: [
+                    "TEF exam structure and timing",
+                    "Listening and reading tactics for speed",
+                    "Writing task planning and speaking drills",
+                ],
+                courseFeatures: [
+                    "Timed practice for all sections",
+                    "Mock TEF exam with review",
+                    "Feedback on speaking and writing",
+                ],
+                prerequisites: ["High B1 or B2 level recommended"],
+                objectives: [
+                    "Strengthen exam performance quickly",
+                    "Apply time management strategies",
+                    "Improve confidence and accuracy",
+                ],
+                includes: [
+                    "Mock exams",
+                    "Personalized feedback",
+                    "Strategy sessions",
+                ],
+                whoThisIsFor: "Learners preparing for TEF Canada with limited time.",
+            },
+        }),
     ]);
     console.log("✓ Courses created:", courses.length);
 

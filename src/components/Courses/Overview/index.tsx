@@ -20,7 +20,8 @@ interface CourseData {
     shortDescription?: string;
     image: string;
     rating: number;
-    category: { id: string; name: string };
+    category?: { id: string; name: string };
+    categories?: { category: { id: string; name: string } }[];
     instructor: {
         user?: { name: string; image: string };
         firstName?: string;
@@ -202,7 +203,9 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                             {/* Category */}
                             <div>
                                 <p className="text-sm text-gray-600 dark:text-gray-300">Category</p>
-                                <h5 className="font-medium text-gray-900 dark:text-white">{course.category.name}</h5>
+                                <h5 className="font-medium text-gray-900 dark:text-white">
+                                    {course.category?.name || course.categories?.[0]?.category?.name || 'Uncategorized'}
+                                </h5>
                             </div>
 
                             {/* Rating */}
@@ -248,7 +251,7 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                                     height={450}
                                 />
                                 <span className="absolute top-4 ltr:right-4 rtl:left-4 bg-primary-500 text-white text-xs font-semibold uppercase px-4 py-2 rounded-full shadow-md">
-                                    {course.category.name}
+                                    {course.category?.name || course.categories?.[0]?.category?.name || 'Uncategorized'}
                                 </span>
                             </div>
 
@@ -347,7 +350,6 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                                     level={course.level}
                                     language={course.language}
                                     nextBatch="Nov 15, 2025"
-                                    accessOn="Mobile, Tablet & PC"
                                     includesItems={parseStringArray(course.content?.includes)}
                                 />
                             </div>

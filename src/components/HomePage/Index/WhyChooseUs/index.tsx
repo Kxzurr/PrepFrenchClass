@@ -24,7 +24,7 @@ export default function LanguageWhyChooseSection() {
                     </div>
                     <div className="col-span-12 lg:col-span-7 flex lg:justify-end">
                         <Link
-                            href="#!"
+                            href="courses"
                             className="btn btn-primary rounded-full inline-flex items-center gap-2 px-6 py-3"
                         >
                             Explore Our Programs

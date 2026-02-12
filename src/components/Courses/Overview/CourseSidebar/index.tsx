@@ -6,7 +6,6 @@ import Link from 'next/link';
 import {
     RiPlayFill,
     RiCloseLine,
-    RiShoppingCartLine,
     RiBankCardLine,
     RiTimeLine,
     RiVideoLine,
@@ -123,19 +122,11 @@ export default function CourseSidebar({
                     </div>
 
                     <Link
-                        href="#!"
-                        className="btn btn-primary rounded-lg w-full mb-3 flex items-center justify-center gap-2"
-                    >
-                        <RiShoppingCartLine className="w-5 h-5" />
-                        Add To Cart
-                    </Link>
-
-                    <Link
-                        href="#!"
-                        className="btn btn-outline-primary rounded-lg w-full flex items-center justify-center gap-2"
+                        href="/contact"
+                        className="btn btn-primary rounded-lg w-full flex items-center justify-center gap-2"
                     >
                         <RiBankCardLine className="w-5 h-5" />
-                        Buy Course Now
+                        Inquiry Now
                     </Link>
 
                     <h5 className="mb-4 mt-5">This course includes:</h5>
@@ -150,7 +141,6 @@ export default function CourseSidebar({
                         { icon: RiStackLine, label: 'Level:', value: level },
                         { icon: RiGlobalLine, label: 'Language:', value: language },
                         { icon: RiCalendarLine, label: 'Next Batch:', value: nextBatch },
-                        { icon: RiHeadphoneLine, label: 'Access On:', value: accessOn },
                     ].map((item, index) => {
                         const IconComponent = item.icon;
                         return (
@@ -182,35 +172,6 @@ export default function CourseSidebar({
                         </div>
                     )}
 
-                    <div className="flex items-center justify-between mt-6 mb-3">
-                        <Link href="#!" className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 transition">
-                            <RiShareLine className="w-4 h-4" />
-                            <span className="text-sm font-medium">Share this offer</span>
-                        </Link>
-
-                        <Link
-                            href="#!"
-                            className="text-sm font-medium text-orange-500 hover:text-orange-600 border-b border-orange-500"
-                        >
-                            Redeem discount
-                        </Link>
-                    </div>
-
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Enter Promo Code"
-                            value={promoCode}
-                            onChange={(e) => setPromoCode(e.target.value)}
-                            className="w-full border border-gray-300 dark:border-gray-800 ltr:rounded-l-md rtl:rounded-r-md px-3 py-3 text-sm focus:outline-none focus:border-primary-500"
-                        />
-                        <button
-                            onClick={handleRedeem}
-                            className="bg-primary-500 absolute ltr:right-0 rtl:left-0 top-0 h-full text-white px-5 py-2 ltr:rounded-r-md rtl:rounded-l-md text-sm font-medium hover:bg-primary-800 transition"
-                        >
-                            Redeem
-                        </button>
-                    </div>
                 </div>
             </div>
 

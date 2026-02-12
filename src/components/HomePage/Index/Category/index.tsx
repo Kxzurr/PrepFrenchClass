@@ -75,7 +75,7 @@ export default function LanguageCategorySection() {
                     </h2>
                     <p className="text-gray-700 dark:text-dark-300">
                         Discover structured French programs designed for learners at every level — from complete beginners
-                        to advanced speakers. Whether you're learning for career growth, academics, travel, or Canada PR,
+                        to advanced speakers. Whether you&apos;re learning for career growth, academics, travel, or Canada PR,
                         choose the path that fits your goals and start building real confidence in French.
                     </p>
                 </div>
@@ -109,13 +109,13 @@ export default function LanguageCategorySection() {
                                         {getIcon(category.iconKey, index)}
                                     </div>
                                     <h3 className="mb-4">
-                                        <Link href="#!" className="hover:text-primary-600 transition-colors">
+                                        <Link href={`/courses?category=${category.slug}`} className="hover:text-primary-600 transition-colors">
                                             {category.name}
                                         </Link>
                                     </h3>
                                     <p className="text-gray-700 dark:text-dark-300 mb-5">{category.description}</p>
                                     <Link
-                                        href="#!"
+                                        href={`/courses?category=${category.slug}`}
                                         className="btn border border-black/60 dark:border-white/60 inline-flex items-center gap-3 rounded-full p-2 ps-7 relative group z-10 overflow-hidden hover:text-white"
                                     >
                                         {(category._count?.courses ?? 0)} Programs
