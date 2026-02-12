@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
@@ -85,5 +85,27 @@ const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,
 } as any;
 
-export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
+const handler = NextAuth(authConfig);
+
+// Helper function to get session with proper typing
+export async function auth(): Promise<any> {
+  try {
+    const session = await getServerSession(authConfig as any);
+    return session || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function signIn(provider: string, options?: any) {
+  // This is a placeholder - actual implementation would redirect
+  throw new Error("signIn must be called from client or use redirect");
+}
+
+export async function signOut(options?: any) {
+  // This is a placeholder - actual implementation would redirect
+  throw new Error("signOut must be called from client or use redirect");
+}
+
+export default handler;
 

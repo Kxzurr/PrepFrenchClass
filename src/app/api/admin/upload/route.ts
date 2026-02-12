@@ -4,8 +4,8 @@ import fs from "fs/promises";
 import path from "path";
 
 async function checkAdminAccess() {
-  const session = await auth();
-  if (!session?.user || (session.user as any)?.role !== "ADMIN") {
+  const session = await auth() as any;
+  if (!session?.user || session?.user?.role !== "ADMIN") {
     return false;
   }
   return true;

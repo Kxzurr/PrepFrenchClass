@@ -3,8 +3,8 @@ import { prisma } from "@/src/lib/prisma";
 import { auth } from "@/src/lib/auth";
 
 async function checkAdminAccess() {
-  const session = await auth();
-  if (!session?.user || (session.user as any)?.role !== "ADMIN") {
+  const session = await auth() as any;
+  if (!session?.user || session?.user?.role !== "ADMIN") {
     return false;
   }
   return true;

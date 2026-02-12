@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RiArrowRightUpLine, RiTimeLine, RiBookOpenLine, RiUserLine } from '@remixicon/react';
@@ -44,9 +44,9 @@ function formatPrice(course?: ApiCourse): string {
 }
 
 function buildMeta(course?: ApiCourse) {
-    if (!course) return [] as { icon: JSX.Element; text: string }[];
+    if (!course) return [] as { icon: React.JSX.Element; text: string }[];
 
-    const meta: { icon: JSX.Element; text: string }[] = [];
+    const meta: { icon: React.JSX.Element; text: string }[] = [];
 
     meta.push({
         icon: <RiTimeLine className="w-4 h-4" />,
