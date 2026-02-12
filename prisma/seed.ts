@@ -212,10 +212,14 @@ async function main() {
                 rating: 0,
                 status: "PUBLISHED",
                 featured: featuredSlugs.has(data.slug),
-                categories: {
-                    create: [{ categoryId: data.categoryId }],
-                },
             },
+        });
+
+        // Create course category relationship separately
+        await prisma.courseCategory.upsert({
+            where: { courseId_categoryId: { courseId: course.id, categoryId: data.categoryId } },
+            update: {},
+            create: { courseId: course.id, categoryId: data.categoryId },
         });
 
         if (data.content) {
@@ -244,7 +248,7 @@ async function main() {
                 },
             });
 
-            return prisma.course.upsert({
+            const course = await prisma.course.upsert({
                 where: { slug: "french-basics-for-beginners" },
                 update: {},
                 create: {
@@ -263,11 +267,16 @@ async function main() {
                     rating: 4.8,
                     status: "PUBLISHED",
                     featured: true,
-                    categories: {
-                        create: [{ categoryId: categories[0].id }],
-                    },
                 },
             });
+
+            await prisma.courseCategory.upsert({
+                where: { courseId_categoryId: { courseId: course.id, categoryId: categories[0].id } },
+                update: {},
+                create: { courseId: course.id, categoryId: categories[0].id },
+            });
+
+            return course;
         })(),
         (async () => {
             const pricing = await prisma.coursePrice.create({
@@ -279,7 +288,7 @@ async function main() {
                 },
             });
 
-            return prisma.course.upsert({
+            const course = await prisma.course.upsert({
                 where: { slug: "tef-canada-complete-preparation" },
                 update: {},
                 create: {
@@ -297,11 +306,16 @@ async function main() {
                     rating: 4.9,
                     status: "PUBLISHED",
                     featured: true,
-                    categories: {
-                        create: [{ categoryId: categories[3].id }],
-                    },
                 },
             });
+
+            await prisma.courseCategory.upsert({
+                where: { courseId_categoryId: { courseId: course.id, categoryId: categories[3].id } },
+                update: {},
+                create: { courseId: course.id, categoryId: categories[3].id },
+            });
+
+            return course;
         })(),
         (async () => {
             const pricing = await prisma.coursePrice.create({
@@ -313,7 +327,7 @@ async function main() {
                 },
             });
 
-            return prisma.course.upsert({
+            const course = await prisma.course.upsert({
                 where: { slug: "advanced-french-conversation" },
                 update: {},
                 create: {
@@ -331,11 +345,16 @@ async function main() {
                     rating: 4.7,
                     status: "PUBLISHED",
                     featured: false,
-                    categories: {
-                        create: [{ categoryId: categories[2].id }],
-                    },
                 },
             });
+
+            await prisma.courseCategory.upsert({
+                where: { courseId_categoryId: { courseId: course.id, categoryId: categories[2].id } },
+                update: {},
+                create: { courseId: course.id, categoryId: categories[2].id },
+            });
+
+            return course;
         })(),
         createCourseWithContent({
             title: "9-10 Month Full TCF Canada (CLB 7)",
