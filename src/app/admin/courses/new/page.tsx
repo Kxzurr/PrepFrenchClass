@@ -38,7 +38,7 @@ export default function NewCoursePage() {
         feeTwoDesc: '',
     });
     const [faqs, setFaqs] = useState<
-        { id: string; question: string; answer: string; order: number }
+        { id: string; question: string; answer: string; order: number }[]
     >([]);
     const [faqForm, setFaqForm] = useState({
         question: '',
