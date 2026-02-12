@@ -4,8 +4,9 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function SignIn() {
+function SignInForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [email, setEmail] = useState('');
@@ -106,5 +107,13 @@ export default function SignIn() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function SignIn() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <SignInForm />
+        </Suspense>
     );
 }
