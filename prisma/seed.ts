@@ -166,7 +166,7 @@ async function main() {
         slug: string;
         description: string;
         shortDescription: string;
-        categoryId: string;
+        categoryId?: string;
         level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
         duration: number | null;
         lessonsCount?: number;
@@ -215,12 +215,14 @@ async function main() {
             },
         });
 
-        // Create course category relationship separately
-        await prisma.courseCategory.upsert({
-            where: { courseId_categoryId: { courseId: course.id, categoryId: data.categoryId } },
-            update: {},
-            create: { courseId: course.id, categoryId: data.categoryId },
-        });
+        // Create course category relationship separately if categoryId provided
+        if (data.categoryId) {
+            await prisma.courseCategory.upsert({
+                where: { courseId_categoryId: { courseId: course.id, categoryId: data.categoryId } },
+                update: {},
+                create: { courseId: course.id, categoryId: data.categoryId },
+            });
+        }
 
         if (data.content) {
             await prisma.courseContent.upsert({
