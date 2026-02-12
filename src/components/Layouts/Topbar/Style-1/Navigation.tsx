@@ -50,7 +50,7 @@ export default function Navigation() {
         },
           {
             label: 'Blog',
-            href: 'https://prepfrenchclass.com/blog/',
+            href: 'https://blog.prepfrenchclass.com/',
             
         },
         
@@ -202,17 +202,7 @@ export default function Navigation() {
                 }`}
             >
                 <div className="flex h-full flex-col">
-                    <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-6">
-                        <Link href="/" className="dark:hidden" onClick={closeMobileMenu}>
-                            <Image src={logo} alt="logo" width={120} height={28} className="h-7 w-auto" />
-                        </Link>
-                        <Link href="/" className="hidden dark:block" onClick={closeMobileMenu}>
-                            <Image src={lightLogo} alt="logo" width={120} height={28} className="h-7 w-auto" />
-                        </Link>
-                        <button onClick={closeMobileMenu} aria-label="Close mobile menu">
-                            <RiCloseLine className="text-2xl text-gray-900 dark:text-white" />
-                        </button>
-                    </div>
+                    
 
                     <nav className="flex-1 overflow-y-auto py-6 dark:bg-dark-950">
                         <ul className="space-y-2 px-6">
