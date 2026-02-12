@@ -50,7 +50,7 @@ export default function Navigation() {
         },
           {
             label: 'Blog',
-            href: 'https://blog.prepfrenchclass.com/',
+            href: 'https://prepfrenchclass.com/blog',
             
         },
         
