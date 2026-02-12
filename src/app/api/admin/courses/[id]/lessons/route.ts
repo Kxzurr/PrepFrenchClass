@@ -53,7 +53,7 @@ export async function POST(
   }
 
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const { title, description, videoUrl, duration, order, published } = body;
 
