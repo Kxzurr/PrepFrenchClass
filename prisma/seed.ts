@@ -136,7 +136,25 @@ async function main() {
         discountPercentage: 25,
         currency: "USD",
     };
-    const defaultImage = "/images/courses/french-default.jpg";
+    
+    // Map course slugs to uploaded images
+    const courseImageMap: Record<string, string> = {
+        "french-basics-for-beginners": "/uploads/courses/1770888567942-group-of-international-people-listening-to-teacher-2026-01-08-23-19-46-utc.jpg.jpg",
+        "tef-canada-complete-preparation": "/uploads/courses/1770888613964-rear-side-of-audiences-sitting-and-listening-the-s-2026-01-05-06-07-16-utc.jpg.jpg",
+        "advanced-french-conversation": "/uploads/courses/1770888625462-photo-of-multiethnic-group-of-concentrated-young-s-2026-01-09-14-38-25-utc.jpg.jpg",
+        "tcf-canada-full-clb7": "/uploads/courses/1770888639071-portrait-of-an-attractive-young-female-student-sta-2026-01-09-10-53-41-utc.jpg.jpg",
+        "tcf-canada-6-month-clb5": "/uploads/courses/1770888644631-middle-aged-female-student-preparing-for-exam-in-p-2026-01-08-06-40-21-utc.jpg.jpg",
+        "tef-canada-full-clb7": "/uploads/courses/1770888702192-group-of-students-listening-to-their-teacher-2026-01-08-07-57-29-utc.jpg.jpg",
+        "tef-canada-6-month-clb5": "/uploads/courses/1770888714209-female-university-student-writing-an-exam-in-the-c-2026-01-07-02-28-32-utc.jpg.jpg",
+        "french-a1-beginner": "/uploads/courses/1770888747799-black-senior-student-man-writing-while-attending-a-2026-01-06-10-27-26-utc.jpg.jpg",
+        "french-a2-elementary": "/uploads/courses/1770888817779-young-businesswoman-writing-notes-while-participat-2026-01-07-00-09-31-utc.jpg.jpg",
+        "french-b1-intermediate": "/uploads/courses/1770888834131-university-hallway-and-portrait-of-man-and-studen-2026-01-09-09-21-29-utc.jpg.jpg",
+        "french-b2-upper-intermediate": "/uploads/courses/1770888910350-teacher-explaining-individually-to-university-stud-2026-01-07-02-22-20-utc.jpg.jpg",
+        "tcf-canada-1-month-prep": "/uploads/courses/1770888921169-class-of-university-students-using-laptops-in-lect-2026-01-05-22-56-50-utc.jpg.jpg",
+        "tef-canada-1-month-prep": "/uploads/courses/1770888931764-writing-lecture-2026-01-09-08-17-22-utc.jpg.jpg",
+    };
+    
+    const defaultImage = "/uploads/courses/1770888940919-group-of-students-listening-to-teacher-at-lecture-2026-01-08-06-24-47-utc.jpg.jpg";
     const featuredSlugs = new Set([
         "tcf-canada-full-clb7",
         "tef-canada-full-clb7",
@@ -148,7 +166,7 @@ async function main() {
         slug: string;
         description: string;
         shortDescription: string;
-        homedescription?: string;
+        Homedescription?: string;
         categoryId: string;
         level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
         duration: number | null;
@@ -185,8 +203,8 @@ async function main() {
                 slug: data.slug,
                 description: data.description,
                 shortDescription: data.shortDescription,
-                Homedescription: data.homedescription || null,
-                image: defaultImage,
+                Homedescription: data.Homedescription || null,
+                image: courseImageMap[data.slug] || defaultImage,
                 instructorId: instructor.id,
                 pricingId: pricing.id,
                 level: data.level,
@@ -237,7 +255,7 @@ async function main() {
                     description:
                         "Master the fundamentals of French language including grammar, vocabulary, and pronunciation. Perfect for absolute beginners.",
                     shortDescription: "Learn French from scratch with our comprehensive beginner course",
-                    image: "/images/courses/french-basics.jpg",
+                    image: courseImageMap["french-basics-for-beginners"],
                     instructorId: instructor.id,
                     pricingId: pricing.id,
                     level: "BEGINNER",
@@ -271,7 +289,7 @@ async function main() {
                     slug: "tef-canada-complete-preparation",
                     description: "Comprehensive preparation program for TEF Canada exam with practice tests, speaking sessions, and vocabulary building.",
                     shortDescription: "Complete guide to passing TEF Canada with high scores",
-                    image: "/images/courses/tef-canada.jpg",
+                    image: courseImageMap["tef-canada-complete-preparation"],
                     instructorId: instructor.id,
                     pricingId: pricing.id,
                     level: "INTERMEDIATE",
@@ -305,7 +323,7 @@ async function main() {
                     slug: "advanced-french-conversation",
                     description: "Take your French fluency to the next level with advanced conversation techniques and cultural insights.",
                     shortDescription: "Master advanced French speaking and listening skills",
-                    image: "/images/courses/advanced-french.jpg",
+                    image: courseImageMap["advanced-french-conversation"],
                     instructorId: instructor.id,
                     pricingId: pricing.id,
                     level: "ADVANCED",
