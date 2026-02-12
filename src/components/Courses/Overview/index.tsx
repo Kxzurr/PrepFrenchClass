@@ -347,6 +347,7 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                                     certificate="Included"
                                     instructor={instructorName}
                                     access="Lifetime"
+                                    accessOn="Immediate"
                                     level={course.level}
                                     language={course.language}
                                     nextBatch="Nov 15, 2025"

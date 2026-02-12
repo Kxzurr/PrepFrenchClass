@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import CourseListView from "@/src/components/Courses/ListView";
 
 export const metadata = {
@@ -6,7 +7,11 @@ export const metadata = {
 };
 
 export default function CourseListViewPage() {
-  return <CourseListView />;
+  return (
+    <Suspense fallback={<div>Loading courses...</div>}>
+      <CourseListView />
+    </Suspense>
+  );
 }
 
 
