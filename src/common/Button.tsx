@@ -50,7 +50,7 @@ export default function Button({
         red: 'btn-red',
         green: 'btn-green',
         blue: 'btn-blue',
-    };
+     };
 
     const sizeClasses: Record<string, string> = {
         xs: 'btn-xs',
