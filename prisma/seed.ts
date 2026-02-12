@@ -166,7 +166,6 @@ async function main() {
         slug: string;
         description: string;
         shortDescription: string;
-        Homedescription?: string;
         categoryId: string;
         level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
         duration: number | null;
@@ -203,7 +202,6 @@ async function main() {
                 slug: data.slug,
                 description: data.description,
                 shortDescription: data.shortDescription,
-                Homedescription: data.Homedescription || null,
                 image: courseImageMap[data.slug] || defaultImage,
                 instructorId: instructor.id,
                 pricingId: pricing.id,
