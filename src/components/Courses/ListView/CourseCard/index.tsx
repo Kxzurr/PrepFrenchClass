@@ -107,15 +107,7 @@ export default function CourseCard({
 
                         {/* Instructor */}
                         <div className="flex items-center gap-2 mt-4 border-b border-black/10 dark:border-white/10 pb-4 mb-4">
-                            <div className="size-10 relative">
-                                <Image
-                                    src={avatarSource}
-                                    alt={instructorAvatarAlt}
-                                    fill
-                                    className="object-cover rounded-full"
-                                    sizes="40px"
-                                />
-                            </div>
+                            
                             <p className="text-gray-600 dark:text-dark-400">
                                 Instructor: {instructorName}
                             </p>

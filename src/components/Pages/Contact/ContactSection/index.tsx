@@ -94,16 +94,12 @@ export default function ContactSection() {
                     {/* Left Column - Contact Info & Map */}
                     <div className="col-span-12 lg:col-span-5">
                        <p className="text-gray-600 dark:text-dark-400 mb-6 max-w-2xl">
-                            Have questions about our French courses, TEF Canada or TCF Canada preparation programs? 
-                            Whether you're learning French for Canada PR, career growth, or personal development, 
-                            our team is here to guide you every step of the way. 
-
-                            Reach out to us for course details, batch schedules, fee structure, demo classes, 
-                            or personalized study plans. We typically respond within 24 hours to ensure you get 
-                            the support you need quickly and efficiently.
+                            Have questions about our French courses, TEF Canada, or TCF Canada preparation programs? Whether you are learning French for Canada PR, work permit pathways, career growth, or personal development, our team is here to support you at every step.
+<br /> <br />
+                            Contact us for detailed course information, upcoming batch schedules, fee structure, or guidance on choosing the right program. You can also request a free live demo class to experience our teaching style, interaction level, and course structure before enrolling.
+<br /> <br />
+                            Simply fill out the contact form, send us a message on WhatsApp, or email us to book your free demo session. We typically respond within 24 hours to ensure you receive quick and clear assistance.
                         </p>
-
-
                         <div className="space-y-3 mb-8">
                             <div className="flex items-center gap-2">
                                 <RiPhoneLine className="w-5 h-5 shrink-0 text-primary-600" />

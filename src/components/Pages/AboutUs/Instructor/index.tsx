@@ -59,39 +59,42 @@ export default function AboutUsInstructor() {
                 <div className="grid grid-cols-12 gap-6 items-center">
                     {/* Left Column - Content */}
                     <div className="col-span-12 lg:col-span-6">
-                        <h2 className="lg:text-4xl text-primary-950 dark:text-primary-100 mb-6 leading-snug">
-                            Meet Our French Language Experts
-                        </h2>
-                        <p className="text-gray-600 mb-3 dark:text-white/50">
-                            Our trainers are experienced French language professionals dedicated to helping students
-                            achieve fluency and exam success. With structured teaching methods and real-world exposure,
-                            they guide learners from beginner to advanced levels with clarity and confidence.
-                        </p>
-                        <ul className="list-disc pl-5 text-gray-600 dark:text-white/50 mb-3 space-y-1">
-                            <li>
-                                Certified instructors specializing in <span className="font-semibold text-primary-700">TEF & TCF Canada</span>
-                            </li>
-                            <li>
-                                Average of <span className="font-semibold text-primary-700">7+ years</span> of French teaching experience
-                            </li>
-                            <li>Personalized speaking corrections and detailed writing feedback</li>
-                            <li>Regular mock tests and performance tracking for measurable improvement</li>
-                        </ul>
-                        <p className="text-gray-600 dark:text-white/50 mb-3">
-                            Our mentors focus on building strong grammar foundations, accurate pronunciation,
-                            and practical communication skills. Each session is interactive and results-driven,
-                            ensuring students gain real confidence in speaking and understanding French.
-                        </p>
-                        <p className="text-gray-600 dark:text-white/50 mb-8">
-                            Whether your goal is exam preparation, career growth, or personal development,
-                            our instructors are committed to supporting your journey with consistency,
-                            structure, and encouragement at every step.
-                        </p>
-                        <Link href="#!" className="btn btn-primary inline-flex items-center gap-1">
-                            <RiUserLine className="size-5" />
-                            Meet the Trainers
-                        </Link>
-                    </div>
+                            <h2 className="lg:text-4xl text-primary-950 dark:text-primary-100 mb-6 leading-snug">
+                                Our Story & Mission
+                            </h2>
+
+                            <p className="text-gray-600 mb-3 dark:text-white/50">
+                                PrepFrench Classes was founded with one clear goal — to make French education affordable, practical, 
+                                and accessible for students planning their future in Canada. Our founder was once an international 
+                                student who immigrated to Canada eight years ago and understands firsthand the pressure of improving 
+                                CRS scores, preparing for language exams, and balancing part-time work while studying.
+                            </p>
+
+                            <ul className="list-disc pl-5 text-gray-600 dark:text-white/50 mb-3 space-y-1">
+                                <li>
+                                    Structured programs focused on <span className="font-semibold text-primary-700">TEF & TCF Canada</span> success
+                                </li>
+                                <li>
+                                    Small batch sizes for <span className="font-semibold text-primary-700">personalized attention</span>
+                                </li>
+                                <li>English to French and Hindi to French learning support</li>
+                                <li>Clear, immigration-focused learning paths aligned with CRS goals</li>
+                                <li>Regular practice sessions, mock exams, and performance tracking</li>
+                            </ul>
+
+                            <p className="text-gray-600 dark:text-white/50 mb-3">
+                                We understand how important every CRS point is in Express Entry and how critical deadlines can be 
+                                for PR applications and work permit extensions. That is why our teaching approach is structured, 
+                                transparent, and built specifically for students and professionals in Canada.
+                            </p>
+
+                            <p className="text-gray-600 dark:text-white/50 mb-8">
+                                At PrepFrench Classes, we are not just teaching French. We are supporting real immigration journeys 
+                                with clarity, consistency, and honest guidance — no shortcuts, no unrealistic promises, just 
+                                practical strategies and steady progress.
+                            </p>
+                        </div>
+
 
                     {/* Right Column - Instructor Cards */}
                     <div className="col-span-12 lg:col-span-6 xl:col-span-5 xl:col-end-13">
