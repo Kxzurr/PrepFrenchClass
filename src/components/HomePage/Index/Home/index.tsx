@@ -30,8 +30,8 @@ export default function LanguageHomeSection() {
                                 French for Canada PR & Immigration
                             </span>
 
-                            <h1 className="xl:text-6xl md:text-6xl lg:text-4xl text-primary-700 mb-6 leading-snug">
-                                Learn French for Canada PR – TEF & TCF Expert Online Classes
+                            <h1 className="xl:text-5xl md:text-5xl lg:text-3    xl text-primary-700 mb-6 leading-snug">
+                                Learn French for Canada PR, Work Permits & Immigration – TEF & TCF Online Experts
                             </h1>
 
                             <p className="text-gray-600 dark:text-dark-400 mb-9">

@@ -16,7 +16,7 @@ export default function LanguageStatusSection() {
     const statusItems: StatusItem[] = useMemo(
         () => [
             {
-                target: 3500,
+                target: 300,
                 label: 'Students Trained for TEF & TCF Canada',
                 hasOffset: false,
             },
