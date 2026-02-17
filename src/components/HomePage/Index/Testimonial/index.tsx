@@ -135,15 +135,7 @@ export default function LanguageTestimonialSection() {
                                 className={`bg-white dark:bg-black shadow-xl rounded-xl border border-black/30 dark:border-white/30 p-6 ${testimonial.rotation} hover:rotate-0 transition-transform duration-500 h-full`}
                             >
                                 <div className="flex gap-2 items-center mb-4">
-                                    <div className="size-12 rounded-full overflow-hidden">
-                                        <Image
-                                            src={testimonial.avatar}
-                                            alt={testimonial.alt}
-                                            className="w-full h-full object-cover"
-                                            width={48}
-                                            height={48}
-                                        />
-                                    </div>
+                                    
                                     <div>
                                         <h5>
                                             <Link href="#!" className="hover:text-primary-600 transition-colors">
