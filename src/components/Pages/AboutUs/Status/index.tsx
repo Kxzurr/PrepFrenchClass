@@ -17,19 +17,19 @@ export default function AboutUsStatus() {
     const statusItems: StatusItem[] = useMemo(
         () => [
             {
-                target: 5000,
+                target: 350,
                 suffix: '+',
                 label: 'Students Trained',
             },
             {
-                target: 25,
+                target: 60,
                 suffix: '+',
                 label: 'French Batches Running',
             },
             {
-                target: 12,
+                target: 600,
                 suffix: '+',
-                label: 'Certified French Trainers',
+                label: 'Live Classes Conducted Annually',
             },
             {
                 target: 4.9,

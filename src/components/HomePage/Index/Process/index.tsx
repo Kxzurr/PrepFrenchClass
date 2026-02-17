@@ -64,11 +64,10 @@ export default function LanguageProcessSection() {
                             </div>
                             <div>
                                 <h4 className="mb-1 font-semibold text-lg">
-                                    Choose Your Level
+                                    Select the Right Program
                                 </h4>
                                 <p className="text-black/60 dark:text-white/60 text-sm leading-relaxed">
-                                    Take a quick assessment to determine your level (A1–C1)
-                                    and join the right batch for structured growth.
+                                    Choose from A1–B2 level courses, 6–10 month TEF/TCF Canada programs (CLB 5 or CLB 7), or intensive 1-month exam prep batches based on your objective.
                                 </p>
                             </div>
                         </div>
@@ -82,12 +81,10 @@ export default function LanguageProcessSection() {
                             </div>
                             <div>
                                 <h4 className="mb-1 font-semibold text-lg">
-                                    Learn with Expert Trainers
+                                    Train with a Clear Strategy
                                 </h4>
                                 <p className="text-black/60 dark:text-white/60 text-sm leading-relaxed">
-                                    Attend live interactive sessions focused on grammar clarity,
-                                    pronunciation improvement, vocabulary building, and
-                                    real-life conversation practice.
+                                    Attend focused live sessions covering essential grammar, pronunciation accuracy, vocabulary expansion, and immigration-oriented exam techniques.
                                 </p>
                             </div>
                         </div>
@@ -101,12 +98,10 @@ export default function LanguageProcessSection() {
                             </div>
                             <div>
                                 <h4 className="mb-1 font-semibold text-lg">
-                                    Practice & Strengthen Fluency
+                                    Build Real Exam & Speaking Confidence
                                 </h4>
                                 <p className="text-black/60 dark:text-white/60 text-sm leading-relaxed">
-                                    Participate in guided speaking sessions, listening exercises,
-                                    structured assignments, and mock tests (for TEF/TCF learners)
-                                    to reinforce real confidence.
+                                    Strengthen fluency through structured speaking drills, listening practice, writing tasks, and targeted TEF/TCF preparation exercises.
                                 </p>
                             </div>
                         </div>
@@ -120,12 +115,10 @@ export default function LanguageProcessSection() {
                             </div>
                             <div>
                                 <h4 className="mb-1 font-semibold text-lg">
-                                    Achieve Your Goal
+                                    Reach Your Immigration or Career Target
                                 </h4>
                                 <p className="text-black/60 dark:text-white/60 text-sm leading-relaxed">
-                                    Whether your goal is career growth, academic admission,
-                                    exam success, or confident communication — we guide you
-                                    until you reach your target.
+                                   Improve your CLB score, strengthen your Express Entry profile, or advance academically with a clear roadmap and consistent progress throughout your training
                                 </p>
                             </div>
                         </div>

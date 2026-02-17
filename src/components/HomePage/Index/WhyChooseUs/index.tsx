@@ -83,7 +83,7 @@ export default function LanguageWhyChooseSection() {
                             </div>
                             <h4 className="mb-3 font-semibold text-lg">
                                
-Performance Tracking & Score Improvement Plans
+                                Performance Tracking & Score Improvement Plans
 
                             </h4>
                             <p className="text-gray-600 dark:text-dark-400 text-sm leading-relaxed">
@@ -104,7 +104,7 @@ Performance Tracking & Score Improvement Plans
                             </div>
                             <h4 className="mb-3 font-semibold text-lg">
                                 
-Clear Roadmap from A1 to CLB 7
+                                Clear Roadmap from A1 to CLB 7
 
                             </h4>
                             <p className="text-gray-600 dark:text-dark-400 text-sm leading-relaxed">

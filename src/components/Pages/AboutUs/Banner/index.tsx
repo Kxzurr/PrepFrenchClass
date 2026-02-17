@@ -32,8 +32,9 @@ export default function AboutUsBanner() {
                         <p className="text-gray-600 dark:text-dark-400 text-xl mb-4">
                             About Prep French Classes
                         </p>
-                        <h2 className="lg:text-5xl text-primary-950 dark:text-primary-100 leading-snug">
-                            Helping Students Speak French <br /> with Confidence and Clarity
+                        <h2 className="lg:text-4xl text-primary-950 dark:text-primary-100 leading-snug">
+                            Helping Students Achieve French Fluency
+ <br /> with Confidence, Clarity, and Real Results
                         </h2>
                     </div>
                 </div>
@@ -51,21 +52,15 @@ export default function AboutUsBanner() {
                                 <div className="flex-1">
                                     <span className="bg-primary-600 rounded-full text-white p-1 px-3">Our Mission</span>
                                     <p className="text-gray-600 dark:text-dark-400 mb-6 leading-relaxed mt-7">
-                                        We empower individuals worldwide to achieve their Canadian immigration dreams through expert French language training. Specializing in TEF, TCF, DELF, and DALF exam preparation, we provide proven strategies that help students score higher and secure their PR faster.
+                                        We help students strengthen their Canadian immigration profiles through focused French language training. Specializing in TEF Canada and TCF Canada preparation, along with structured A1–B2 programs, we provide practical strategies that improve CLB scores, boost CRS points, and move you closer to your PR or work permit goals with confidence.
                                     </p>
 
-                                    <Link
-                                        href="#!"
-                                        className="flex items-center gap-1 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 group hover:text-primary-600"
-                                    >
-                                        Learn More About Us
-                                        <RiArrowRightLine className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary-600" />
-                                    </Link>
+                                  
                                 </div>
                                 <div className="shrink-0 text-center">
                                     <div className="relative">
                                         <div className="absolute inset-0 bg-primary-100 dark:bg-primary-900 rounded-full blur-2xl opacity-40"></div>
-                                        <h2 className="text-[10rem] font-bold text-primary-600 relative z-10 leading-none">5</h2>
+                                        <h2 className="text-[10rem] font-bold text-primary-600 relative z-10 leading-none">2</h2>
                                     </div>
                                     <p className="text-gray-600 dark:text-dark-400 mt-2">Years Helping Dreams</p>
                                 </div>

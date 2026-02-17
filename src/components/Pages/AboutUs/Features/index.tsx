@@ -21,33 +21,33 @@ export default function AboutUsFeatures() {
     const features: Feature[] = [
         {
             id: '1',
-            title: 'Certified French Trainers',
+            title: '98% Class Attendance Rate',
             description:
-                'Learn from experienced and certified French instructors who specialize in TEF, TCF Canada, and structured language progression from A1 to C2.',
+                'High-engagement live sessions that keep students consistent, motivated, and steadily moving toward their French goals.',
             icon: RiGraduationCapLine,
             href: '#!',
         },
         {
             id: '2',
-            title: 'Structured Learning Method',
+            title: 'Maximum 6 Students per Batch',
             description:
-                'Our step-by-step curriculum focuses on grammar clarity, vocabulary building, pronunciation improvement, and real-life conversation practice.',
+                'A focused learning environment where every student speaks, participates actively, and receives direct interaction in each class.',
             icon: RiPaletteLine,
             href: '#!',
         },
         {
             id: '3',
-            title: 'Personalized Guidance',
+            title: 'Dedicated Speaking Practice in Every Session',
             description:
-                'Receive individual feedback, speaking corrections, mock tests, and performance tracking to ensure measurable progress at every stage.',
+                'Regular conversation drills and pronunciation refinement built into each class to strengthen real communication ability.',
             icon: RiHeadphoneLine,
             href: '#!',
         },
         {
             id: '4',
-            title: 'Flexible Online Batches',
+            title: 'Students Across 10+ Nationalities',
             description:
-                'Choose from weekday, weekend, and intensive batches designed for working professionals, students, and exam aspirants.',
+                'A diverse community of PR applicants, international students, and skilled professionals preparing for opportunities across Canada.',
             icon: RiTimeLine,
             href: '#!',
         },
@@ -64,8 +64,7 @@ export default function AboutUsFeatures() {
                     </div>
                     <div className="col-span-12 lg:col-span-4 lg:col-end-13">
                         <p className="text-gray-600 dark:text-dark-400">
-                            We combine structured methodology, expert instruction, and consistent practice
-                            to help learners build strong French communication skills and exam confidence.
+                            Our programs are built around clear score goals, limited class sizes, and focused preparation techniques. With hands-on speaking drills, module-wise exam strategy, and continuous guidance, students gain the accuracy, confidence, and readiness needed to perform strongly in TEF/TCF Canada and advance their Canadian immigration plans.
                         </p>
                     </div>
                 </div>

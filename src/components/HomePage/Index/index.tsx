@@ -23,10 +23,9 @@ export default function LanguageAcademyIndex() {
       <WhyChooseSection />
       <Process />
       <LanguageTestimonialSection />
-      <LanguageFacultySection />
       <LanguageBlogSection />
       <CTASection />
       
-    </>
+    </> 
   );
 }
