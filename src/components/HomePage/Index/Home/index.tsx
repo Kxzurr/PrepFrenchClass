@@ -35,10 +35,7 @@ export default function LanguageHomeSection() {
                             </h1>
 
                             <p className="text-gray-600 dark:text-dark-400 mb-9">
-                                Boost your CRS score and strengthen your Express Entry profile with structured French training 
-                                designed specifically for TEF Canada and TCF Canada exams. Prep French Classes offers expert-led 
-                                online coaching, real exam simulations, speaking practice, pronunciation correction, and 
-                                personalized guidance to help you achieve Canada Permanent Residency faster and confidently.
+                                Boost your CRS score and strengthen your Express Entry profile with structured French training tailored for TEF Canada and TCF Canada exams. PrepFrench Classes offers expert-led live online coaching, real exam simulations, focused speaking practice, pronunciation correction, and personalized feedback to help you achieve CLB 5 or CLB 7 with confidence. Whether for Permanent Residence or work permit pathways, our results-driven French programs are designed to support your Canadian immigration goals efficiently.
                             </p>
 
                             <Link
