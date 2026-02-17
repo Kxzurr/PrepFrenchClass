@@ -16,22 +16,22 @@ export default function LanguageStatusSection() {
     const statusItems: StatusItem[] = useMemo(
         () => [
             {
-                target: 300,
+                target: 350,
                 label: 'Students Trained for TEF & TCF Canada',
                 hasOffset: false,
             },
             {
-                target: 92,
-                label: 'Students Improved CRS Score',
+                target: 88,
+                label: 'Students Achieved Target CLB',
                 hasOffset: true,
             },
             {
-                target: 15,
-                label: 'Certified French Trainers',
+                target: 6/1,
+                label: 'Maximum Batch Size for Personal Attention',
                 hasOffset: true,
             },
             {
-                target: 5,
+                target: 2,
                 label: 'Years of Canada PR Coaching Experience',
                 hasOffset: false,
             },

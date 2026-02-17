@@ -111,9 +111,7 @@ export default function LanguageCoursesSection() {
                         French Courses for Every Goal
                     </h2>
                     <p className="text-gray-600 dark:text-dark-400">
-                        Whether you're learning French for career growth, academic opportunities, travel, or Canada PR,
-                        our structured programs are designed to help you build confidence, fluency, and real-world communication skills.
-                        Learn online with expert trainers and personalized guidance at every stage.
+                        Whether you are learning French for Canada PR, work permits, career advancement, or academic growth, our structured programs are designed to build fluency, confidence, and practical communication skills. Study live online with expert instructors, small batch sizes, and personalized guidance at every level.
                     </p>
                 </div>
 
@@ -123,8 +121,7 @@ export default function LanguageCoursesSection() {
                     <div className="col-span-12 lg:col-span-4">
                         <h3 className="mb-2 leading-snug">Start Your French Journey</h3>
                         <p className="text-gray-600 dark:text-dark-400 mb-5">
-                            From complete beginners to advanced learners, we help you develop strong speaking,
-                            listening, reading, and writing skills through interactive sessions.
+                            Transform your French with structured, results-focused live training designed to accelerate your speaking, listening, reading, and writing skills. Whether you are starting from zero or aiming for CLB 7, our guided approach helps you progress faster with clarity and confidence.
                         </p>
                         <Image
                             src={lngCourseGirl}
