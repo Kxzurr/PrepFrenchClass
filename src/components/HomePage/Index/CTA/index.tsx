@@ -21,9 +21,7 @@ export default function LanguageCTASection() {
                             Start Your French Journey with Confidence
                         </h2>
                         <p className="mb-7 text-gray-200">
-                            Join Prep French Classes and build real fluency through structured lessons, interactive practice,
-                            and expert guidance. Whether you're learning French for career growth, academics, travel,
-                            or Canada PR, our programs are designed to deliver measurable progress at every level.
+                            oin PrepFrench Classes and elevate your French through guided live sessions, practical conversation drills, and goal-oriented preparation. Whether you are targeting Canada PR, extending your work permit, or advancing academically or professionally, our programs are designed to help you progress efficiently and achieve tangible results.
                         </p>
                         <Link
                             href="contact"

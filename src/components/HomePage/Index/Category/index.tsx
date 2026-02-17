@@ -74,9 +74,7 @@ export default function LanguageCategorySection() {
                         Explore Our French Learning Programs
                     </h2>
                     <p className="text-gray-700 dark:text-dark-300">
-                        Discover structured French programs designed for learners at every level — from complete beginners
-                        to advanced speakers. Whether you&apos;re learning for career growth, academics, travel, or Canada PR,
-                        choose the path that fits your goals and start building real confidence in French.
+                        Choose from specialized programs including TEF Canada (CLB 5 & CLB 7), TCF Canada preparation, A1–B2 level courses, and intensive 1-month exam prep batches. Whether your goal is Canada PR, work permit extension, or structured language progression, our live online programs are designed to deliver measurable results and real confidence in French.
                     </p>
                 </div>
 

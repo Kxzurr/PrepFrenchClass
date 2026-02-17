@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { RiArrowRightUpLine } from '@remixicon/react';
 import lngAdmission from '../../../../assets/images/language/lng-admission.png';
-import lngAbout from '../../../../assets/images/language/lng-about.png';
+import lngAbout from '../../../../assets/images/language/space.jpg';
 import lngTeacher1 from '../../../../assets/images/language/lng-teacher-1.jpg';
 import lngTeacher2 from '../../../../assets/images/language/lng-teacher-2.jpg';
 import lngTeacher3 from '../../../../assets/images/language/lng-teacher-3.jpg';
@@ -28,9 +28,7 @@ export default function LanguageAboutSection() {
                     </div>
                     <div className="col-span-12 lg:col-span-6 lg:col-end-13 xl:col-span-4 xl:col-end-13">
                         <p className="text-gray-600 dark:text-dark-400">
-                            Prep French Classes is dedicated to helping learners build real fluency and confidence in French.
-                            With structured programs, expert trainers, and interactive online sessions, we make learning
-                            practical, engaging, and results-driven.
+                           PrepFrench Classes specializes in structured French training for Canada immigration and academic goals. With focused TEF Canada, TCF Canada, and A1–B2 level programs, our live online classes combine expert instruction, small batch sizes, and exam-oriented strategies to deliver measurable progress, higher CLB scores, and real confidence in French.
                         </p>
                     </div>
                 </div>
@@ -40,10 +38,7 @@ export default function LanguageAboutSection() {
                     {/* Left Column */}
                     <div className="col-span-12 lg:col-span-4">
                         <p className="text-gray-600 dark:text-dark-400 mb-6">
-                            Whether you're learning French for career growth, academic opportunities, travel,
-                            or preparing for exams like TEF Canada and TCF Canada, our mission is to guide you
-                            with clarity, structure, and personalized attention. We focus on strong fundamentals,
-                            real conversation practice, and measurable progress at every level.
+                           Whether you are learning French for Canada PR, work permit pathways, career advancement, or preparing for TEF Canada and TCF Canada, our mission is to guide you with structured lessons and personalized support. We focus on strong grammar foundations, intensive speaking practice, exam-focused strategies, and measurable CLB improvement at every stage.
                         </p>
                         <Link
                             href="about-us"
@@ -56,7 +51,7 @@ export default function LanguageAboutSection() {
                             <span className="absolute inset-0 h-full w-0 bg-primary-800 rounded-full transition-all duration-400 ease-out -z-10 group-hover:w-full"></span>
                         </Link>
                         <div className="flex items-center gap-3 mt-9">
-                            <h3 className="text-4xl">100+</h3>
+                            <h3 className="text-4xl">350+</h3>
                             <p className="text-gray-600 dark:text-dark-400">Students Trained in French</p>
                         </div>
                     </div>
@@ -94,10 +89,9 @@ export default function LanguageAboutSection() {
                                     </Link>
                                 ))}
                             </div>
-                            <h4 className="mb-2 mt-4 leading-snug">Certified French Trainers</h4>
+                            <h4 className="mb-2 mt-4 leading-snug">Multilingual Learning Batches</h4>
                             <p className="text-gray-600 dark:text-dark-400">
-                                Learn from experienced instructors specializing in conversational French,
-                                exam preparation, and structured level-based training from A1 to C1.
+                                Join English-to-French and Hindi-to-French live batches designed for clearer understanding and faster progress. Our structured programs ensure concepts are explained in your preferred support language while building strong, independent fluency in French.
                             </p>
                         </div>
                     </div>
@@ -114,11 +108,9 @@ export default function LanguageAboutSection() {
                                     height={316}
                                 />
                             </div>
-                            <h3 className="mb-2 leading-snug">A Structured & Supportive Learning Environment</h3>
+                            <h3 className="mb-2 leading-snug">A Structured & Results-Focused Learning Environment</h3>
                             <p className="text-gray-600 dark:text-dark-400">
-                                Our academy combines modern online learning tools, interactive practice sessions,
-                                small batch sizes, and continuous feedback. We help learners not just pass exams,
-                                but genuinely communicate with confidence in French.
+                               Our live online academy combines interactive practice, real exam simulations, small batches (max 6 students), and continuous performance tracking. We focus not only on helping you clear TEF and TCF exams, but on building confident, practical French communication that delivers measurable results.
                             </p>
                         </div>
                     </div>

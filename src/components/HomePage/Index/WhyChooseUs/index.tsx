@@ -17,9 +17,7 @@ export default function LanguageWhyChooseSection() {
                             Why Choose Prep French Classes
                         </h2>
                         <p className="text-gray-600 dark:text-dark-400 mt-4">
-                            We combine structured learning, expert trainers, and personalized guidance
-                            to help you build real confidence in French — whether for career growth,
-                            academics, or exam preparation.
+                            We deliver immigration-focused French training with small batches, multilingual support (English-to-French & Hindi-to-French), and clear CLB-target strategies. Our approach is practical, transparent, and results-driven built to help you improve faster, score higher in TEF/TCF, and strengthen your Canadian immigration profile with confidence.
                         </p>
                     </div>
                     <div className="col-span-12 lg:col-span-7 flex lg:justify-end">
@@ -47,12 +45,10 @@ export default function LanguageWhyChooseSection() {
                                 />
                             </div>
                             <h4 className="mb-3 font-semibold text-lg">
-                                Certified & Experienced Trainers
+                                Immigration-Focused French Specialists
                             </h4>
                             <p className="text-gray-600 dark:text-dark-400 text-sm leading-relaxed">
-                                Learn from qualified instructors experienced in conversational French
-                                and structured exam preparation including TEF Canada, TCF Canada,
-                                and A1–C1 level programs.
+                                Dedicated TEF & TCF Canada training with clear CLB 5 and CLB 7 score strategies designed specifically for Express Entry and Canadian immigration pathways
                             </p>
                         </div>
                     </div>
@@ -67,12 +63,11 @@ export default function LanguageWhyChooseSection() {
                                 />
                             </div>
                             <h4 className="mb-3 font-semibold text-lg">
-                                Structured & Interactive Lessons
+                               GTA-Based, Canada-Oriented Approach
                             </h4>
                             <p className="text-gray-600 dark:text-dark-400 text-sm leading-relaxed">
-                                Clear grammar explanations, pronunciation correction,
-                                speaking practice, and real-world communication exercises
-                                designed to build confidence step by step.
+                               Supporting students across Toronto, Mississauga, and the Greater Toronto Area with programs aligned to real Canadian immigration and career goals.
+
                             </p>
                         </div>
                     </div>
@@ -87,12 +82,13 @@ export default function LanguageWhyChooseSection() {
                                 />
                             </div>
                             <h4 className="mb-3 font-semibold text-lg">
-                                Small Batches & Personal Attention
+                               
+Performance Tracking & Score Improvement Plans
+
                             </h4>
                             <p className="text-gray-600 dark:text-dark-400 text-sm leading-relaxed">
-                                Limited batch sizes ensure direct instructor interaction,
-                                continuous feedback, and active participation for faster
-                                language improvement.
+                               Regular mock exams, speaking evaluations, and structured feedback systems to ensure measurable improvement and exam readiness.
+
                             </p>
                         </div>
                     </div>
@@ -107,11 +103,13 @@ export default function LanguageWhyChooseSection() {
                                 />
                             </div>
                             <h4 className="mb-3 font-semibold text-lg">
-                                Flexible Online Scheduling
+                                
+Clear Roadmap from A1 to CLB 7
+
                             </h4>
                             <p className="text-gray-600 dark:text-dark-400 text-sm leading-relaxed">
-                                Weekday, weekend, and fast-track batches designed for
-                                students and working professionals balancing multiple commitments.
+                               Step-by-step progression plans covering foundational grammar, advanced speaking skills, and targeted exam strategies to help you move confidently from beginner levels to immigration-ready proficiency.
+
                             </p>
                         </div>
                     </div>
