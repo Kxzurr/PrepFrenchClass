@@ -31,7 +31,7 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
                 <div className="col-span-12 md:col-span-4">
                     {isStringImage ? (
                         <img
-                            src={post.image as string}
+                            src={post.image as unknown as string}
                             alt={post.imageAlt}
                             className="w-full h-full object-cover rounded-xl"
                         />
@@ -62,7 +62,7 @@ export default function BlogPostCard({ post }: { post: BlogPost }) {
                                 <div className="size-11">
                                     {isStringAvatar ? (
                                         <img
-                                            src={post.authorAvatar as string}
+                                            src={post.authorAvatar as unknown as string}
                                             alt={post.authorAvatarAlt}
                                             className="w-full h-full object-cover rounded-full"
                                         />
