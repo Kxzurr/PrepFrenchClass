@@ -188,8 +188,11 @@ export default function CourseListView() {
 
   return (
     <>
-      <PageHead title="French Courses for Canada PR | TEF & TCF Preparation Classes" 
-       backgroundImage="/uploads/abstract-blur-restaurant.jpg" />
+      <PageHead 
+        title="French Courses for Canada PR | TEF & TCF Preparation Classes" 
+        backgroundImage="/uploads/abstract-blur-restaurant.jpg"
+        showBreadcrumbs={false}
+      />
 
       {/* Course list section */}
       <section className="lg:py-24 py-20">

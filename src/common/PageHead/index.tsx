@@ -8,7 +8,7 @@ interface BreadcrumbItem {
 
 interface PageHeadProps {
     title: string;
-    breadcrumbs: BreadcrumbItem[];
+    breadcrumbs?: BreadcrumbItem[];
     description?: string;
     gradientFrom?: string;
     gradientVia?: string;
@@ -25,7 +25,7 @@ interface PageHeadProps {
 
 export default function PageHead({
     title,
-    breadcrumbs,
+    breadcrumbs = [],
     description,
     gradientFrom = 'from-primary-50',
     gradientVia = 'via-primary-100',
