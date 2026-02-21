@@ -275,19 +275,14 @@ export default function CourseGridView() {
                             </Link>
                           </h3>
 
-                          {/* Instructor */}
-                          <div className="flex items-center gap-2 mb-4 pb-4 border-b border-black/10 dark:border-white/10">
-                            <Image
-                              src={course.instructorAvatar.toString()}
-                              alt={course.instructorAvatarAlt}
-                              width={32}
-                              height={32}
-                              className="rounded-full object-cover"
-                            />
-                            <span className="text-xs text-gray-600 dark:text-dark-400">
-                              {course.instructorName}
-                            </span>
-                          </div>
+                          {/* Short Description */}
+                          {course.shortDescription && (
+                            <div className="mb-4 pb-4 border-b border-black/10 dark:border-white/10">
+                              <p className="text-xs text-gray-600 dark:text-dark-400 line-clamp-2">
+                                {course.shortDescription}
+                              </p>
+                            </div>
+                          )}
 
                           {/* Lessons & Price */}
                           <div className="flex justify-between items-center">

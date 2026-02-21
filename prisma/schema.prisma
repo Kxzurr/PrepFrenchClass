@@ -139,6 +139,10 @@ model Course {
   studentsCount Int @default(0)
   rating        Float @default(0)
   
+  // Batch dates
+  hindiBatchDate    DateTime? // Next batch date for Hindi to French
+  englishBatchDate  DateTime? // Next batch date for English to French
+  
   // SEO
   seo           CourseSEO? @relation("CourseSEO")
 
@@ -262,6 +266,7 @@ model CourseLesson {
   description     String?
   videoUrl        String?
   duration        Float? // in minutes
+  dayNumber       Int? // Day 1, Day 2, etc for session-based courses
   order           Int @default(0)
   published       Boolean @default(true)
   

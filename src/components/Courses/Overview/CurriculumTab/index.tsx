@@ -4,14 +4,14 @@ import { useState } from 'react';
 import {
     RiAddLine,
     RiSubtractLine,
-    RiPlayCircleLine,
-    RiBookOpenLine,
+    RiCalendar2Line,
 } from '@remixicon/react';
 
 interface CourseLesson {
     id: string;
     title: string;
     duration?: number;
+    dayNumber?: number;
 }
 
 interface CurriculumTabProps {
@@ -20,65 +20,81 @@ interface CurriculumTabProps {
 
 // Default lessons for fallback
 const defaultLessons: CourseLesson[] = [
-    { id: '1', title: 'Welcome to the Course & Learning Journey', duration: 370 },
-    { id: '2', title: 'Understanding the Course Structure', duration: 505 },
-    { id: '3', title: 'How to Access Materials & Live Sessions', duration: 580 },
-    { id: '4', title: 'Introduction to Basic Concepts', duration: 605 },
-    { id: '5', title: 'Building Your First Project Step-by-Step', duration: 738 },
+    { id: '1', title: 'Welcome to the Course & Learning Journey', duration: 25, dayNumber: 1 },
+    { id: '2', title: 'Understanding the Course Structure', duration: 30, dayNumber: 1 },
+    { id: '3', title: 'How to Access Materials & Live Sessions', duration: 20, dayNumber: 2 },
+    { id: '4', title: 'Introduction to Basic Concepts', duration: 35, dayNumber: 2 },
+    { id: '5', title: 'Building Your First Project Step-by-Step', duration: 45, dayNumber: 3 },
 ];
 
 export default function CurriculumTab({ lessons = defaultLessons }: CurriculumTabProps) {
-    const [openModules, setOpenModules] = useState<number[]>([0]);
+    const [openDays, setOpenDays] = useState<number[]>([1]);
 
-    // Group lessons into modules (5 lessons per module)
-    const modulesPerGroup = 5;
-    const modules = [];
+    // Group lessons by day number
+    const lessonsByDay = new Map<number | string, CourseLesson[]>();
     
-    for (let i = 0; i < lessons.length; i += modulesPerGroup) {
-        const moduleTitle = i === 0 ? 'Course Introduction & Fundamentals' : `Module ${Math.floor(i / modulesPerGroup)}: Advanced Topics`;
-        modules.push({
-            title: moduleTitle,
-            lessons: lessons.slice(i, i + modulesPerGroup),
-        });
-    }
+    lessons.forEach((lesson) => {
+        const day = lesson.dayNumber ?? 'TBD';
+        if (!lessonsByDay.has(day)) {
+            lessonsByDay.set(day, []);
+        }
+        lessonsByDay.get(day)!.push(lesson);
+    });
 
-    const toggleModule = (index: number) => {
-        setOpenModules((prev) =>
-            prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    // Sort days
+    const sortedDays = Array.from(lessonsByDay.keys()).sort((a, b) => {
+        if (a === 'TBD') return 1;
+        if (b === 'TBD') return -1;
+        return Number(a) - Number(b);
+    });
+
+    const toggleDay = (day: number | string) => {
+        const dayNum = typeof day === 'number' ? day : -1;
+        setOpenDays((prev) =>
+            prev.includes(dayNum) ? prev.filter((d) => d !== dayNum) : [...prev, dayNum]
         );
     };
 
-    const formatDuration = (seconds?: number) => {
-        if (!seconds) return 'Duration TBD';
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}m ${remainingSeconds}s`;
+    const formatDuration = (minutes?: number) => {
+        if (!minutes) return 'Duration TBD';
+        return `${minutes} min`;
     };
 
     return (
         <div className="space-y-4">
-            {modules.map((module, index) => {
-                const isOpen = openModules.includes(index);
+            {sortedDays.map((day) => {
+                const dayLessons = lessonsByDay.get(day) || [];
+                const dayNum = typeof day === 'number' ? day : -1;
+                const isOpen = openDays.includes(dayNum);
                 const IconComponent = isOpen ? RiSubtractLine : RiAddLine;
+                const dayTitle = day === 'TBD' ? 'Day To Be Determined' : `Day ${day}`;
 
                 return (
                     <div
-                        key={index}
+                        key={day}
                         className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden"
                     >
                         <button
-                            onClick={() => toggleModule(index)}
+                            onClick={() => toggleDay(day)}
                             className="w-full flex justify-between items-center p-4 font-semibold text-gray-800 dark:text-gray-200 hover:bg-primary-500/10 transition-all duration-300"
                         >
-                            {module.title}
+                            <div className="flex items-center gap-2">
+                                <RiCalendar2Line className="w-5 h-5 text-primary-500" />
+                                <span>{dayTitle}</span>
+                                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                    ({dayLessons.length} {dayLessons.length === 1 ? 'lesson' : 'lessons'})
+                                </span>
+                            </div>
                             <IconComponent className="w-5 h-5" />
                         </button>
                         {isOpen && (
                             <div className="p-4 text-gray-600 dark:text-dark-400 leading-relaxed">
-                                {module.lessons.map((lesson, lessonIndex) => (
+                                {dayLessons.map((lesson, index) => (
                                     <div key={lesson.id} className="flex justify-between items-center p-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0">
                                         <div className="flex items-center gap-3">
-                                            <RiPlayCircleLine className="w-5 h-5 text-primary-500 flex-shrink-0" />
+                                            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm font-semibold">
+                                                {index + 1}
+                                            </span>
                                             <p className="text-sm">{lesson.title}</p>
                                         </div>
                                         <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap ml-4">

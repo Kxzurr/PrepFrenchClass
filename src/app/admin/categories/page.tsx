@@ -7,6 +7,7 @@ interface Category {
     name: string;
     slug: string;
     description?: string;
+    image?: string | null;
     iconKey?: string | null;
     gradientFrom?: string | null;
     gradientTo?: string | null;
@@ -21,7 +22,7 @@ export default function CategoriesPage() {
         name: '',
         slug: '',
         description: '',
-        iconKey: '',
+        image: '',
         gradientFrom: '',
         gradientTo: '',
     });
@@ -59,7 +60,7 @@ export default function CategoriesPage() {
             const data = await response.json();
 
             if (data.success) {
-                setFormData({ name: '', slug: '', description: '', iconKey: '', gradientFrom: '', gradientTo: '' });
+                setFormData({ name: '', slug: '', description: '', image: '', gradientFrom: '', gradientTo: '' });
                 setShowForm(false);
                 fetchCategories();
             } else {
@@ -175,24 +176,46 @@ export default function CategoriesPage() {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Icon Key (for homepage)
+                                Category Image
                             </label>
-                            <select
-                                value={formData.iconKey}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, iconKey: e.target.value })
-                                }
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+                                    try {
+                                        const data = new FormData();
+                                        data.append('file', file);
+                                        const res = await fetch('/api/admin/upload', {
+                                            method: 'POST',
+                                            body: data,
+                                        });
+                                        const json = await res.json();
+                                        if (json.success && json.url) {
+                                            setFormData({ ...formData, image: json.url });
+                                        } else {
+                                            alert(json.error || 'Failed to upload image');
+                                        }
+                                    } catch (err) {
+                                        console.error('Error uploading image:', err);
+                                        alert('Failed to upload image');
+                                    }
+                                }}
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                            >
-                                <option value="">Select icon</option>
-                                <option value="book">Book / Study</option>
-                                <option value="global">Global / Language</option>
-                                <option value="school">School / Academic</option>
-                                <option value="graduation">Graduation / Exam</option>
-                                <option value="sparkling">Special / Premium</option>
-                            </select>
+                            />
+                            {formData.image && (
+                                <div className="mt-3">
+                                    <img 
+                                        src={formData.image} 
+                                        alt="Category preview" 
+                                        className="w-32 h-32 object-cover rounded-lg border border-gray-300 shadow-sm"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-2">Uploaded to Cloudinary</p>
+                                </div>
+                            )}
                             <p className="text-xs text-gray-500 mt-1">
-                                Controls which icon appears in the homepage category slider.
+                                Upload an image for the category (used in homepage slider).
                             </p>
                         </div>
 
@@ -247,6 +270,9 @@ export default function CategoriesPage() {
                         <thead className="bg-gray-50 border-b border-gray-200">
                             <tr>
                                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                                    Image
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
                                     Name
                                 </th>
                                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
@@ -263,6 +289,19 @@ export default function CategoriesPage() {
                         <tbody className="divide-y divide-gray-200">
                             {categories.map((category) => (
                                 <tr key={category.id} className="hover:bg-gray-50">
+                                    <td className="px-6 py-4">
+                                        {category.image ? (
+                                            <img 
+                                                src={category.image} 
+                                                alt={category.name} 
+                                                className="w-12 h-12 object-cover rounded-lg"
+                                            />
+                                        ) : (
+                                            <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                                                No image
+                                            </div>
+                                        )}
+                                    </td>
                                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
                                         {category.name}
                                     </td>
@@ -273,6 +312,12 @@ export default function CategoriesPage() {
                                         {category._count.courses}
                                     </td>
                                     <td className="px-6 py-4 text-sm space-x-2">
+                                        <a
+                                            href={`/admin/categories/${category.id}`}
+                                            className="text-indigo-600 hover:text-indigo-900 font-medium"
+                                        >
+                                            Edit
+                                        </a>
                                         <button
                                             onClick={() => handleDelete(category.id)}
                                             className="text-red-600 hover:text-red-900 font-medium"

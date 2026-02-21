@@ -9,15 +9,9 @@ import {
     RiBankCardLine,
     RiTimeLine,
     RiVideoLine,
-    RiBookOpenLine,
-    RiAwardLine,
-    RiUserLine,
-    RiInfinityLine,
     RiStackLine,
     RiGlobalLine,
     RiCalendarLine,
-    RiHeadphoneLine,
-    RiShareLine,
 } from '@remixicon/react';
 
 interface CourseSidebarProps {
@@ -28,14 +22,10 @@ interface CourseSidebarProps {
     originalPrice: string;
     duration: string;
     lessons: string;
-    studyFiles: string;
-    certificate: string;
-    instructor: string;
-    access: string;
     level: string;
     language: string;
-    nextBatch: string;
-    accessOn: string;
+    hindiBatchDate?: string;
+    englishBatchDate?: string;
     includesItems?: string[];
 }
 
@@ -47,18 +37,13 @@ export default function CourseSidebar({
     originalPrice,
     duration,
     lessons,
-    studyFiles,
-    certificate,
-    instructor,
-    access,
     level,
     language,
-    nextBatch,
-    accessOn,
+    hindiBatchDate,
+    englishBatchDate,
     includesItems,
 }: CourseSidebarProps) {
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-    const [promoCode, setPromoCode] = useState('');
 
     useEffect(() => {
         if (isVideoModalOpen) {
@@ -87,11 +72,6 @@ export default function CourseSidebar({
             window.removeEventListener('keydown', handleEscape);
         };
     }, [isVideoModalOpen]);
-
-    const handleRedeem = () => {
-        // Handle promo code redemption
-        console.log('Redeeming promo code:', promoCode);
-    };
 
     return (
         <>
@@ -134,13 +114,8 @@ export default function CourseSidebar({
                     {[
                         { icon: RiTimeLine, label: 'Duration:', value: duration },
                         { icon: RiVideoLine, label: 'Lessons:', value: lessons },
-                        { icon: RiBookOpenLine, label: 'Study Files:', value: studyFiles },
-                        { icon: RiAwardLine, label: 'Certificate:', value: certificate },
-                        { icon: RiUserLine, label: 'Instructor:', value: instructor },
-                        { icon: RiInfinityLine, label: 'Access:', value: access },
                         { icon: RiStackLine, label: 'Level:', value: level },
                         { icon: RiGlobalLine, label: 'Language:', value: language },
-                        { icon: RiCalendarLine, label: 'Next Batch:', value: nextBatch },
                     ].map((item, index) => {
                         const IconComponent = item.icon;
                         return (
@@ -156,6 +131,28 @@ export default function CourseSidebar({
                             </div>
                         );
                     })}
+
+                    {/* Batch Dates */}
+                    {(hindiBatchDate || englishBatchDate) && (
+                        <div className="border-t border-black/10 dark:border-white/10 pt-4 mt-4">
+                            <h6 className="font-medium mb-3 text-gray-900 dark:text-white flex items-center gap-2">
+                                <RiCalendarLine className="text-primary-500 w-5 h-5" />
+                                Next Batches:
+                            </h6>
+                            {hindiBatchDate && (
+                                <div className="mb-3">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Hindi to French Batch</p>
+                                    <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{hindiBatchDate}</p>
+                                </div>
+                            )}
+                            {englishBatchDate && (
+                                <div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">English to French Batch</p>
+                                    <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{englishBatchDate}</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* Additional Includes from Backend */}
                     {includesItems && includesItems.length > 0 && (

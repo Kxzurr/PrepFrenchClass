@@ -46,11 +46,12 @@ export default function NewCoursePage() {
         order: '',
     });
     const [lessons, setLessons] = useState<
-        { id: string; title: string; duration: string; order: number; published: boolean }[]
+        { id: string; title: string; duration: string; dayNumber: string; order: number; published: boolean }[]
     >([]);
     const [lessonForm, setLessonForm] = useState({
         title: '',
         duration: '',
+        dayNumber: '',
         order: '',
         published: true,
     });
@@ -67,6 +68,8 @@ export default function NewCoursePage() {
         language: 'English',
         duration: '',
         lessonsCount: '',
+        hindiBatchDate: '',
+        englishBatchDate: '',
         status: 'DRAFT',
         featured: false,
         pricing: {
@@ -129,6 +132,8 @@ export default function NewCoursePage() {
                 ...formData,
                 duration: formData.duration ? Number(formData.duration) : null,
                 lessonsCount: formData.lessonsCount ? Number(formData.lessonsCount) : 0,
+                hindiBatchDate: formData.hindiBatchDate ? new Date(formData.hindiBatchDate).toISOString() : null,
+                englishBatchDate: formData.englishBatchDate ? new Date(formData.englishBatchDate).toISOString() : null,
                 pricing: {
                     originalPrice: Number(formData.pricing.originalPrice || 0),
                     discountedPrice: formData.pricing.discountedPrice
@@ -368,7 +373,14 @@ export default function NewCoursePage() {
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                             />
                             {formData.image && (
-                                <p className="text-xs text-gray-500 mt-1">Image uploaded: {formData.image}</p>
+                                <div className="mt-3">
+                                    <img 
+                                        src={formData.image} 
+                                        alt="Course preview" 
+                                        className="w-full max-w-xs h-auto rounded-lg border border-gray-300 shadow-sm"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-2">Uploaded to Cloudinary</p>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -503,6 +515,35 @@ export default function NewCoursePage() {
                                 placeholder="0"
                             />
                         </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Hindi to French Batch Date
+                            </label>
+                            <input
+                                type="date"
+                                value={formData.hindiBatchDate}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, hindiBatchDate: e.target.value })
+                                }
+                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                English to French Batch Date
+                            </label>
+                            <input
+                                type="date"
+                                value={formData.englishBatchDate}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, englishBatchDate: e.target.value })
+                                }
+                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                            />
+                        </div>
+                        
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Status
@@ -595,7 +636,7 @@ export default function NewCoursePage() {
                 <div className="mb-8">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">Curriculum</h2>
                     <div className="space-y-4 mb-6">
-                        <div className="grid grid-cols-4 gap-4">
+                        <div className="grid grid-cols-5 gap-4">
                             <div className="col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Lesson Title
@@ -608,6 +649,20 @@ export default function NewCoursePage() {
                                     }
                                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                                     placeholder="Introduction to French Alphabet"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Day Number
+                                </label>
+                                <input
+                                    type="number"
+                                    value={lessonForm.dayNumber}
+                                    onChange={(e) =>
+                                        setLessonForm({ ...lessonForm, dayNumber: e.target.value })
+                                    }
+                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    placeholder="1"
                                 />
                             </div>
                             <div>
@@ -667,6 +722,7 @@ export default function NewCoursePage() {
                                             id: `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
                                             title: lessonForm.title,
                                             duration: lessonForm.duration,
+                                            dayNumber: lessonForm.dayNumber,
                                             order: nextOrder,
                                             published: lessonForm.published,
                                         },
@@ -674,6 +730,7 @@ export default function NewCoursePage() {
                                     setLessonForm({
                                         title: '',
                                         duration: '',
+                                        dayNumber: '',
                                         order: '',
                                         published: true,
                                     });
@@ -696,6 +753,9 @@ export default function NewCoursePage() {
                                     </th>
                                     <th className="px-4 py-2 text-left font-semibold text-gray-900">
                                         Title
+                                    </th>
+                                    <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                        Day
                                     </th>
                                     <th className="px-4 py-2 text-left font-semibold text-gray-900">
                                         Duration (min)
@@ -741,6 +801,23 @@ export default function NewCoursePage() {
                                                     )
                                                 }
                                                 className="w-full rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 align-middle">
+                                            <input
+                                                type="number"
+                                                value={lesson.dayNumber}
+                                                onChange={(e) =>
+                                                    setLessons((prev) =>
+                                                        prev.map((l) =>
+                                                            l.id === lesson.id
+                                                                ? { ...l, dayNumber: e.target.value }
+                                                                : l
+                                                        )
+                                                    )
+                                                }
+                                                className="w-20 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                                placeholder="Day"
                                             />
                                         </td>
                                         <td className="px-4 py-2 align-middle">
@@ -987,20 +1064,47 @@ export default function NewCoursePage() {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Sidebar Image URL
+                                Sidebar Image
                             </label>
                             <input
-                                type="text"
-                                value={overviewContent.sidebarImage}
-                                onChange={(e) =>
-                                    setOverviewContent({
-                                        ...overviewContent,
-                                        sidebarImage: e.target.value,
-                                    })
-                                }
-                                placeholder="Enter sidebar/preview image URL"
+                                type="file"
+                                accept="image/*"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+                                    try {
+                                        const data = new FormData();
+                                        data.append('file', file);
+                                        const res = await fetch('/api/admin/upload', {
+                                            method: 'POST',
+                                            body: data,
+                                        });
+                                        const json = await res.json();
+                                        if (json.success && json.url) {
+                                            setOverviewContent({
+                                                ...overviewContent,
+                                                sidebarImage: json.url,
+                                            });
+                                        } else {
+                                            alert(json.error || 'Failed to upload image');
+                                        }
+                                    } catch (err) {
+                                        console.error('Error uploading image:', err);
+                                        alert('Failed to upload image');
+                                    }
+                                }}
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
                             />
+                            {overviewContent.sidebarImage && (
+                                <div className="mt-3">
+                                    <img 
+                                        src={overviewContent.sidebarImage} 
+                                        alt="Sidebar preview" 
+                                        className="w-full max-w-xs h-auto rounded-lg border border-gray-300 shadow-sm"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-2">Uploaded to Cloudinary</p>
+                                </div>
+                            )}
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">

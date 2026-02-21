@@ -10,6 +10,52 @@ async function checkAdminAccess() {
   return true;
 }
 
+// Get single category
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!(await checkAdminAccess())) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const { id } = await params;
+
+    const category = await prisma.category.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            courses: true,
+          },
+        },
+      },
+    });
+
+    if (!category) {
+      return NextResponse.json(
+        { success: false, error: "Category not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: category,
+    });
+  } catch (error) {
+    console.error("Error fetching category:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch category" },
+      { status: 500 }
+    );
+  }
+}
+
 // Update category
 export async function PUT(
   request: NextRequest,
@@ -25,7 +71,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, slug, description, image } = body;
+    const { name, slug, description, image, iconKey, gradientFrom, gradientTo } = body;
 
     // Check if category exists
     const category = await prisma.category.findUnique({
@@ -57,8 +103,11 @@ export async function PUT(
       data: {
         ...(name && { name }),
         ...(slug && { slug }),
-        ...(description && { description }),
-        ...(image && { image }),
+        ...(description !== undefined && { description }),
+        ...(image !== undefined && { image }),
+        ...(iconKey !== undefined && { iconKey }),
+        ...(gradientFrom !== undefined && { gradientFrom }),
+        ...(gradientTo !== undefined && { gradientTo }),
       },
     });
 

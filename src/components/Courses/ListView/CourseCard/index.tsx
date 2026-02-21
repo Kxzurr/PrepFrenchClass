@@ -17,9 +17,7 @@ export default function CourseCard({
     reviewCount,
     title,
     titleHref,
-    instructorName,
-    instructorAvatar,
-    instructorAvatarAlt,
+    shortDescription,
     lessonsCount,
     originalPrice,
     discountedPrice,
@@ -29,7 +27,6 @@ export default function CourseCard({
 
     // Handle both StaticImageData and string image sources
     const imageSource = typeof image === 'string' ? image : (image || '/images/placeholder-course.jpg');
-    const avatarSource = typeof instructorAvatar === 'string' ? instructorAvatar : (instructorAvatar || '/images/avatar/default.jpg');
 
     const renderStars = () => {
         const stars = [];
@@ -105,13 +102,14 @@ export default function CourseCard({
                             </Link>
                         </h4>
 
-                        {/* Instructor */}
-                        <div className="flex items-center gap-2 mt-4 border-b border-black/10 dark:border-white/10 pb-4 mb-4">
-                            
-                            <p className="text-gray-600 dark:text-dark-400">
-                                Instructor: {instructorName}
-                            </p>
-                        </div>
+                        {/* Short Description */}
+                        {shortDescription && (
+                            <div className="mt-4 border-b border-black/10 dark:border-white/10 pb-4 mb-4">
+                                <p className="text-gray-600 dark:text-dark-400 text-sm line-clamp-2">
+                                    {shortDescription}
+                                </p>
+                            </div>
+                        )}
 
                         {/* Sessions and Price */}
                         <div className="flex justify-between">

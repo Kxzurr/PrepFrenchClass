@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/src/lib/auth";
-import fs from "fs/promises";
-import path from "path";
+import cloudinary from "@/src/lib/cloudinary";
 
 async function checkAdminAccess() {
   const session = await auth() as any;
@@ -33,17 +32,25 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "courses");
-    await fs.mkdir(uploadDir, { recursive: true });
+    // Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "courses",
+          resource_type: "auto",
+          // Generate a unique public_id for the file
+          public_id: `course_${Date.now()}`,
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
 
-    const ext = path.extname(file.name) || ".png";
-    const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const fileName = `${Date.now()}-${safeName}${ext}`;
-    const filePath = path.join(uploadDir, fileName);
+      uploadStream.end(buffer);
+    });
 
-    await fs.writeFile(filePath, buffer);
-
-    const url = `/uploads/courses/${fileName}`;
+    const url = (result as any).secure_url;
 
     return NextResponse.json({ success: true, url });
   } catch (error) {

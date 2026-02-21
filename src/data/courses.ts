@@ -7,14 +7,6 @@ import courseLearning from '@/src/assets/images/course/course-learning.png';
 import coursePhotography from '@/src/assets/images/course/course-photography.png';
 import courseYoga from '@/src/assets/images/course/course-yoga.png';
 import courseActing from '@/src/assets/images/course/course-acting.png';
-import user01 from '@/src/assets/images/avatar/user-01.jpg';
-import user02 from '@/src/assets/images/avatar/user-02.jpg';
-import user03 from '@/src/assets/images/avatar/user-03.jpg';
-import user04 from '@/src/assets/images/avatar/user-04.jpg';
-import user05 from '@/src/assets/images/avatar/user-05.jpg';
-import user06 from '@/src/assets/images/avatar/user-06.jpg';
-import user07 from '@/src/assets/images/avatar/user-07.jpg';
-import user08 from '@/src/assets/images/avatar/user-08.jpg';
 
 export const courses: Course[] = [
     {
@@ -27,9 +19,7 @@ export const courses: Course[] = [
         reviewCount: 120,
         title: 'Master the Art of Hip-Hop Dance in 4 Weeks',
         titleHref: '/courses/single',
-        instructorName: 'Sophia Turner',
-        instructorAvatar: user02,
-        instructorAvatarAlt: 'Instructor',
+        shortDescription: 'Learn advanced hip-hop techniques and choreography from beginner to professional level.',
         lessonsCount: 15,
         originalPrice: '$79',
         discountedPrice: '$49',
@@ -44,9 +34,7 @@ export const courses: Course[] = [
         reviewCount: 80,
         title: 'Acoustic Guitar Mastery for Beginners',
         titleHref: '/courses/single',
-        instructorName: 'David Miller',
-        instructorAvatar: user04,
-        instructorAvatarAlt: 'Instructor',
+        shortDescription: 'Start your musical journey with comprehensive guitar lessons covering chords, strumming, and songs.',
         lessonsCount: 12,
         originalPrice: '$65',
         discountedPrice: '$39',
@@ -61,9 +49,7 @@ export const courses: Course[] = [
         reviewCount: 150,
         title: 'Master English Communication in 30 Days',
         titleHref: '/courses/single',
-        instructorName: 'Emily Carter',
-        instructorAvatar: user06,
-        instructorAvatarAlt: 'Instructor',
+        shortDescription: 'Enhance your English speaking, writing, and listening skills with practical daily lessons.',
         lessonsCount: 18,
         originalPrice: '$75',
         discountedPrice: '$49',
@@ -78,9 +64,7 @@ export const courses: Course[] = [
         reviewCount: 210,
         title: 'Culinary Arts: Learn to Cook Like a Chef',
         titleHref: '/courses/single',
-        instructorName: 'Chef Isabella',
-        instructorAvatar: user08,
-        instructorAvatarAlt: 'Instructor',
+        shortDescription: 'Discover professional cooking techniques, recipes, and plating skills used in top restaurants.',
         lessonsCount: 14,
         originalPrice: '$90',
         discountedPrice: '$59',
@@ -95,9 +79,7 @@ export const courses: Course[] = [
         reviewCount: 130,
         title: 'Personal Growth & Productivity Masterclass',
         titleHref: '/courses/single',
-        instructorName: 'Leena Anderson',
-        instructorAvatar: user07,
-        instructorAvatarAlt: 'Instructor',
+        shortDescription: 'Transform your life with proven strategies for personal development, goal setting, and time management.',
         lessonsCount: 20,
         originalPrice: '$85',
         discountedPrice: '$55',
@@ -112,9 +94,7 @@ export const courses: Course[] = [
         reviewCount: 95,
         title: 'Professional Photography: From Basics to Mastery',
         titleHref: '/courses/single',
-        instructorName: 'James Wilson',
-        instructorAvatar: user01,
-        instructorAvatarAlt: 'Instructor',
+        shortDescription: 'Master camera settings, composition, lighting, and post-processing for stunning photographs.',
         lessonsCount: 16,
         originalPrice: '$88',
         discountedPrice: '$59',
@@ -129,9 +109,7 @@ export const courses: Course[] = [
         reviewCount: 175,
         title: 'Yoga & Mindfulness: Complete Wellness Journey',
         titleHref: '/courses/single',
-        instructorName: 'Sarah Johnson',
-        instructorAvatar: user03,
-        instructorAvatarAlt: 'Instructor',
+        shortDescription: 'Experience physical and mental transformation through yoga poses, breathing exercises, and meditation.',
         lessonsCount: 22,
         originalPrice: '$92',
         discountedPrice: '$64',
@@ -146,9 +124,7 @@ export const courses: Course[] = [
         reviewCount: 60,
         title: 'Acting for Screen: Build Stage Confidence',
         titleHref: '/courses/single',
-        instructorName: 'Ethan Gray',
-        instructorAvatar: user05,
-        instructorAvatarAlt: 'Instructor',
+        shortDescription: 'Develop acting skills for film and television with improvisation, script analysis, and audition techniques.',
         lessonsCount: 9,
         originalPrice: '$50',
         discountedPrice: '$35',

@@ -13,6 +13,7 @@ interface ApiCategory {
     name: string;
     slug: string;
     description?: string | null;
+    image?: string | null;
     iconKey?: string | null;
     gradientFrom?: string | null;
     gradientTo?: string | null;
@@ -102,9 +103,17 @@ export default function LanguageCategorySection() {
                             <SwiperSlide key={index}>
                                 <div className="border border-white/20 rounded-2xl p-8 text-center bg-white/30 dark:bg-gray-800/40 backdrop-blur-md hover:shadow-xl">
                                     <div
-                                        className={`bg-gradient-to-tr ${category.gradientFrom || 'from-blue-500'} ${category.gradientTo || 'to-blue-600'} text-white rounded-full size-23 flex items-center justify-center mx-auto mb-7`}
+                                        className={`bg-gradient-to-tr ${category.gradientFrom || 'from-blue-500'} ${category.gradientTo || 'to-blue-600'} text-white rounded-full size-23 flex items-center justify-center mx-auto mb-7 overflow-hidden`}
                                     >
-                                        {getIcon(category.iconKey, index)}
+                                        {category.image ? (
+                                            <img 
+                                                src={category.image} 
+                                                alt={category.name} 
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            getIcon(category.iconKey, index)
+                                        )}
                                     </div>
                                     <h3 className="mb-4">
                                         <Link href={`/courses?category=${category.slug}`} className="hover:text-primary-600 transition-colors">

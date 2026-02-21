@@ -25,7 +25,7 @@ export async function PUT(
   try {
     const { lessonId } = await params;
     const body = await request.json();
-    const { title, description, videoUrl, duration, order, published } = body;
+    const { title, description, videoUrl, duration, dayNumber, order, published } = body;
 
     const existing = await prisma.courseLesson.findUnique({
       where: { id: lessonId },
@@ -45,6 +45,7 @@ export async function PUT(
         ...(description !== undefined && { description }),
         ...(videoUrl !== undefined && { videoUrl }),
         ...(duration !== undefined && { duration }),
+        ...(dayNumber !== undefined && { dayNumber }),
         ...(order !== undefined && { order }),
         ...(published !== undefined && { published }),
       },

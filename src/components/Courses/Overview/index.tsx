@@ -35,7 +35,9 @@ interface CourseData {
     lessonsCount: number;
     language: string;
     level: string;
-    lessons?: Array<{ id: string; title: string; duration?: number }>;
+    hindiBatchDate?: string;
+    englishBatchDate?: string;
+    lessons?: Array<{ id: string; title: string; duration?: number; dayNumber?: number }>;
     reviews?: Array<{
         id: string;
         rating: number;
@@ -343,14 +345,10 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                                     originalPrice={`$${course.pricing.originalPrice}`}
                                     duration={course.duration ? `${course.duration} Weeks` : '12 Weeks'}
                                     lessons={`${course.lessonsCount}+ Sessions`}
-                                    studyFiles={`${course.lessons?.length || 0} Files`}
-                                    certificate="Included"
-                                    instructor={instructorName}
-                                    access="Lifetime"
-                                    accessOn="Immediate"
                                     level={course.level}
                                     language={course.language}
-                                    nextBatch="Nov 15, 2025"
+                                    hindiBatchDate={course.hindiBatchDate ? new Date(course.hindiBatchDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : undefined}
+                                    englishBatchDate={course.englishBatchDate ? new Date(course.englishBatchDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : undefined}
                                     includesItems={parseStringArray(course.content?.includes)}
                                 />
                             </div>

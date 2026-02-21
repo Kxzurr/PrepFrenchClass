@@ -14,9 +14,7 @@ export interface Course {
     reviewCount: number;
     title: string;
     titleHref: string;
-    instructorName: string;
-    instructorAvatar: StaticImageData;
-    instructorAvatarAlt: string;
+    shortDescription?: string;
     lessonsCount: number;
     originalPrice: string;
     discountedPrice: string;
@@ -44,9 +42,7 @@ export interface CourseCardProps {
     reviewCount: number;
     title: string;
     titleHref: string;
-    instructorName: string;
-    instructorAvatar: StaticImageData;
-    instructorAvatarAlt: string;
+    shortDescription?: string;
     lessonsCount: number;
     originalPrice: string;
     discountedPrice: string;
@@ -63,9 +59,7 @@ export interface CourseGridCardProps {
     reviewCount: number;
     title: string;
     titleHref: string;
-    instructorName: string;
-    instructorAvatar: StaticImageData;
-    instructorAvatarAlt: string;
+    shortDescription?: string;
     lessonsCount: number;
     originalPrice: string;
     discountedPrice: string;

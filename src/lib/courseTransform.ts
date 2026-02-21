@@ -23,11 +23,7 @@ export function transformApiCourseToUI(apiCourse: any): Course {
     reviewCount: apiCourse._count?.reviews || 0,
     title: apiCourse.title,
     titleHref: `/course/${apiCourse.slug}`,
-    instructorName: apiCourse.instructor?.firstName 
-      ? `${apiCourse.instructor.firstName} ${apiCourse.instructor.lastName || ""}`
-      : "Unknown Instructor",
-    instructorAvatar: apiCourse.instructor?.avatar || "/images/avatar/default.jpg",
-    instructorAvatarAlt: apiCourse.instructor?.firstName || "Instructor",
+    shortDescription: apiCourse.shortDescription || "",
     lessonsCount: apiCourse._count?.lessons || 0,
     originalPrice: `$${apiCourse.pricing?.originalPrice || 0}`,
     discountedPrice: `$${apiCourse.pricing?.discountedPrice || apiCourse.pricing?.originalPrice || 0}`,
