@@ -9,37 +9,14 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'lavenderblush-camel-117734.hostingersite.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
-  async rewrites() {
-  return [
-    {
-      source: "/blog",
-      destination:
-        "https://darkseagreen-turtle-359545.hostingersite.com",
-    },
-    {
-      source: "/blog/:path*",
-      destination:
-        "https://darkseagreen-turtle-359545.hostingersite.com/:path*",
-    },
-    {
-      source: "/wp-admin/:path*",
-      destination:
-        "https://darkseagreen-turtle-359545.hostingersite.com/wp-admin/:path*",
-    },
-    {
-      source: "/wp-login.php",
-      destination:
-        "https://darkseagreen-turtle-359545.hostingersite.com/wp-login.php",
-    },
-    {
-      source: "/wp-json/:path*",
-      destination:
-        "https://darkseagreen-turtle-359545.hostingersite.com/wp-json/:path*",
-    },
-  ];
-}
 };
 
 export default nextConfig;

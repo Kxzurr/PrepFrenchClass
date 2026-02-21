@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { RiFacebookFill, RiTwitterXLine, RiLinkedinFill, RiInstagramLine } from '@remixicon/react';
 import Button from '../../../common/Button';
 import lightLogo from '../../../assets/images/light-logo.png';
@@ -13,22 +14,52 @@ interface FooterLink {
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
+    const [learningLinks, setLearningLinks] = useState<FooterLink[]>([
+        { label: 'All French Courses', href: '/courses' },
+        { label: 'TEF Canada Preparation', href: '/course-category/tef' },
+        { label: 'TCF Canada Preparation', href: '/course-category/tcf' },
+        { label: 'Beginner to Advanced Levels', href: '/courses' },
+        { label: 'Pricing & Batches', href: '/courses' },
+    ]);
 
     const companyLinks: FooterLink[] = [
-        { label: 'About Us', href: '#!' },
-        { label: 'Our Trainers', href: '#!' },
-        { label: 'Success Stories', href: '#!' },
-        { label: 'Contact', href: '#!' },
-        { label: 'Privacy Policy', href: '#!' },
+        { label: 'About Us', href: '/about-us' },
+        { label: 'Blog', href: '/Blog' },
+        { label: 'Contact', href: '/contact' },
+        { label: 'Privacy Policy', href: '/privacy-policy' },
     ];
 
-    const learningLinks: FooterLink[] = [
-        { label: 'All French Courses', href: '#!' },
-        { label: 'TEF Canada Preparation', href: '#!' },
-        { label: 'TCF Canada Preparation', href: '#!' },
-        { label: 'Beginner to Advanced Levels', href: '#!' },
-        { label: 'Pricing & Batches', href: '#!' },
-    ];
+    // Fetch courses from backend
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await fetch('/api/courses?limit=5');
+                if (response.ok) {
+                    const data = await response.json();
+                    const courses = Array.isArray(data.data) ? data.data : data.courses || [];
+                    
+                    if (courses.length > 0) {
+                        const courseLinks = courses
+                            .filter((course: Record<string, unknown>) => course?.id && course?.title)
+                            .slice(0, 5)
+                            .map((course: Record<string, unknown>) => ({
+                                label: String(course.title),
+                                href: `/course/${course.slug || course.id}`,
+                            }));
+                        
+                        if (courseLinks.length > 0) {
+                            setLearningLinks(courseLinks);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching courses for footer:', error);
+                // Keep default links if fetch fails
+            }
+        };
+
+        fetchCourses();
+    }, []);
 
     const socialLinks = [
         { icon: RiFacebookFill, href: '#!' },
