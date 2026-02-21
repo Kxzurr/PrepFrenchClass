@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import BlogGridCard from '../../GridView/BlogGridCard';
 import Pagination from '@/src/common/Pagination';
 import { blogPosts } from '@/src/data/blogPosts';
 import { POSTS_PER_PAGE_GRID } from '@/src/constants/blog';
