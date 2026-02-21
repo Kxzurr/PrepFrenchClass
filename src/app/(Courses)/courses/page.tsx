@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import CourseListView from "@/src/components/Courses/ListView";
 
 export const metadata = {
-  title: "Course List View | Prep French Classes",
+  title: "Courses | Prep French Classes",
   description: "Browse all our French courses in list view format",
 };
 

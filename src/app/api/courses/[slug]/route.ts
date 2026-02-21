@@ -65,16 +65,24 @@ export async function GET(
     }
 
     // Build review rating breakdown (1-5 stars) based on all reviews for this course
+    const allReviews = await prisma.courseReview.findMany({
+      where: { courseId: course.id },
+      select: { rating: true },
+    });
+
+    const totalReviews = allReviews.length;
+    
+    // Calculate average rating from all reviews
+    const averageRating = totalReviews > 0
+      ? allReviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
+      : 0;
+
+    // Get rating breakdown stats
     const ratingStats = await prisma.courseReview.groupBy({
       by: ["rating"],
       where: { courseId: course.id },
       _count: { rating: true },
     });
-
-    const totalRatings = ratingStats.reduce(
-      (sum: number, stat: { rating: number; _count: { rating: number } }) => sum + stat._count.rating,
-      0
-    );
 
     const breakdownBase = {
       five: 0,
@@ -85,8 +93,8 @@ export async function GET(
     };
 
     const ratingBreakdown = ratingStats.reduce((acc: { five: number; four: number; three: number; two: number; one: number }, stat: { rating: number; _count: { rating: number } }) => {
-      const percentage = totalRatings
-        ? (stat._count.rating / totalRatings) * 100
+      const percentage = totalReviews
+        ? (stat._count.rating / totalReviews) * 100
         : 0;
 
       switch (stat.rating) {
@@ -116,6 +124,7 @@ export async function GET(
       success: true,
       data: {
         ...course,
+        rating: parseFloat(averageRating.toFixed(1)),
         ratingBreakdown,
       },
     });

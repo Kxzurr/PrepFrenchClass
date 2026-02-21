@@ -736,6 +736,288 @@ async function main() {
     ]);
     console.log("✓ Courses created:", courses.length);
 
+    // Create test students for reviews
+    const testStudents = await Promise.all([
+        prisma.user.upsert({
+            where: { email: "student1@prepfrench.com" },
+            update: {},
+            create: {
+                email: "student1@prepfrench.com",
+                name: "Sarah Johnson",
+                role: "STUDENT",
+            },
+        }),
+        prisma.user.upsert({
+            where: { email: "student2@prepfrench.com" },
+            update: {},
+            create: {
+                email: "student2@prepfrench.com",
+                name: "Ahmed Khan",
+                role: "STUDENT",
+            },
+        }),
+        prisma.user.upsert({
+            where: { email: "student3@prepfrench.com" },
+            update: {},
+            create: {
+                email: "student3@prepfrench.com",
+                name: "Maria Garcia",
+                role: "STUDENT",
+            },
+        }),
+        prisma.user.upsert({
+            where: { email: "student4@prepfrench.com" },
+            update: {},
+            create: {
+                email: "student4@prepfrench.com",
+                name: "David Chen",
+                role: "STUDENT",
+            },
+        }),
+    ]);
+    console.log("✓ Test students created:", testStudents.length);
+
+    // Sample reviews data - 2-4 reviews per course with realistic content
+    const reviewsData = [
+        // Beginner French
+        {
+            courseIndex: 0,
+            rating: 5,
+            title: "Amazing course for beginners!",
+            comment: "Michel is an excellent teacher. Very clear explanations and engaging lessons. I've made great progress in just a few weeks!",
+            userId: testStudents[0].id,
+        },
+        {
+            courseIndex: 0,
+            rating: 4,
+            title: "Great foundation course",
+            comment: "The course structure is well-organized and easy to follow. Would appreciate more pronunciation practice, but overall very good.",
+            userId: testStudents[1].id,
+        },
+        {
+            courseIndex: 0,
+            rating: 5,
+            title: "Highly recommended!",
+            comment: "This course gave me the confidence to start speaking French. The lessons are practical and applicable to real life.",
+            userId: testStudents[2].id,
+        },
+        // TEF Canada Complete
+        {
+            courseIndex: 1,
+            rating: 5,
+            title: "Perfect for TEF preparation",
+            comment: "Comprehensive coverage of all TEF exam sections. The mock tests are incredibly helpful and the feedback is constructive.",
+            userId: testStudents[0].id,
+        },
+        {
+            courseIndex: 1,
+            rating: 4,
+            title: "Excellent practice materials",
+            comment: "Great course for exam prep. Lots of practice questions and explanations. Really helped me understand the exam format.",
+            userId: testStudents[3].id,
+        },
+        {
+            courseIndex: 1,
+            rating: 5,
+            title: "Worth every penny",
+            comment: "I improved my TEF score significantly after taking this course. Michel's strategies for time management were game-changing.",
+            userId: testStudents[1].id,
+        },
+        // Advanced French Conversation
+        {
+            courseIndex: 2,
+            rating: 5,
+            title: "Dramatically improved my French",
+            comment: "This is the most engaging conversation course I've taken. Real-world scenarios and excellent feedback on pronunciation.",
+            userId: testStudents[2].id,
+        },
+        {
+            courseIndex: 2,
+            rating: 4,
+            title: "Great for advanced learners",
+            comment: "High-quality instruction with challenging topics. Some lessons were quite intense but that helped me progress faster.",
+            userId: testStudents[3].id,
+        },
+        // TCF Canada Full
+        {
+            courseIndex: 3,
+            rating: 5,
+            title: "Best TCF course available",
+            comment: "Comprehensive and well-structured. The instructor knows exactly what TCF examiners are looking for. Highly recommend!",
+            userId: testStudents[0].id,
+        },
+        {
+            courseIndex: 3,
+            rating: 5,
+            title: "Aced my TCF exam",
+            comment: "Thanks to this course, I achieved a CLB 9! The detailed grammar explanations and speaking practice were invaluable.",
+            userId: testStudents[2].id,
+        },
+        // TCF Canada 6-Month
+        {
+            courseIndex: 4,
+            rating: 4,
+            title: "Solid preparation course",
+            comment: "The 6-month structure allows time for proper practice. Good pace and effective teaching methods.",
+            userId: testStudents[1].id,
+        },
+        {
+            courseIndex: 4,
+            rating: 5,
+            title: "Life-changing course",
+            comment: "Started from A2 level and now I'm at B2. This course provided the guidance and practice I needed to progress significantly.",
+            userId: testStudents[3].id,
+        },
+        // TEF Canada Full
+        {
+            courseIndex: 5,
+            rating: 5,
+            title: "Excellent TEF preparation",
+            comment: "Very thorough course covering all aspects of TEF. Michel provides personalized feedback which really helps improve weak areas.",
+            userId: testStudents[0].id,
+        },
+        {
+            courseIndex: 5,
+            rating: 4,
+            title: "Comprehensive and thorough",
+            comment: "This course leaves no stone unturned. Great material and excellent instructor. Only wish there were more live sessions.",
+            userId: testStudents[2].id,
+        },
+        // TEF Canada 6-Month
+        {
+            courseIndex: 6,
+            rating: 5,
+            title: "Perfect pace for learning",
+            comment: "The 6-month format is perfect. It allowed me to balance the course with work while thoroughly mastering the material.",
+            userId: testStudents[1].id,
+        },
+        {
+            courseIndex: 6,
+            rating: 5,
+            title: "Transformed my French skills",
+            comment: "I went from beginner to TEF-ready in 6 months. The structured curriculum and expert guidance made all the difference.",
+            userId: testStudents[3].id,
+        },
+        // French A1 Beginner
+        {
+            courseIndex: 7,
+            rating: 4,
+            title: "Great introduction to French",
+            comment: "Good foundational course. Clear explanations and good variety of exercises. Helped me get comfortable with basics.",
+            userId: testStudents[0].id,
+        },
+        {
+            courseIndex: 7,
+            rating: 5,
+            title: "Loved every lesson!",
+            comment: "The instructor makes learning fun and engaging. I actually look forward to each lesson!",
+            userId: testStudents[2].id,
+        },
+        // French A2 Elementary
+        {
+            courseIndex: 8,
+            rating: 5,
+            title: "Builds confidence",
+            comment: "Perfect follow-up to A1. By the end, I could have simple conversations in French. Very encouraging course!",
+            userId: testStudents[1].id,
+        },
+        {
+            courseIndex: 8,
+            rating: 4,
+            title: "Solid A2 level course",
+            comment: "Good structured progression. Some topics could use more practice, but overall excellent value.",
+            userId: testStudents[3].id,
+        },
+        // French B1 Intermediate
+        {
+            courseIndex: 9,
+            rating: 5,
+            title: "Excellent intermediate course",
+            comment: "Takes your French to the next level. Challenging but very rewarding. Great teaching methods!",
+            userId: testStudents[0].id,
+        },
+        {
+            courseIndex: 9,
+            rating: 5,
+            title: "Finally speaking fluently!",
+            comment: "This course really helped me break through the intermediate plateau. Feeling confident in conversations now.",
+            userId: testStudents[2].id,
+        },
+        // French B2 Upper Intermediate
+        {
+            courseIndex: 10,
+            rating: 5,
+            title: "Professional-level French",
+            comment: "Now I can confidently communicate in professional settings. This course prepared me perfectly for my new job!",
+            userId: testStudents[1].id,
+        },
+        {
+            courseIndex: 10,
+            rating: 5,
+            title: "Nearly fluent!",
+            comment: "Amazing course for upper-intermediate learners. Complex topics explained clearly. Worth the investment!",
+            userId: testStudents[3].id,
+        },
+        // TCF Canada 1-Month
+        {
+            courseIndex: 11,
+            rating: 4,
+            title: "Intensive and effective",
+            comment: "Perfect for last-minute exam prep. Covered everything I needed in just 1 month. Very efficient course design.",
+            userId: testStudents[0].id,
+        },
+        {
+            courseIndex: 11,
+            rating: 5,
+            title: "Crash course done right",
+            comment: "Thought 1 month wouldn't be enough, but this intensive course really packed in the essentials. Great results!",
+            userId: testStudents[2].id,
+        },
+        // TEF Canada 1-Month
+        {
+            courseIndex: 12,
+            rating: 5,
+            title: "Incredible intensive prep",
+            comment: "Managed to improve my TEF score by two levels in just one month! The intensity and focus paid off massively.",
+            userId: testStudents[1].id,
+        },
+        {
+            courseIndex: 12,
+            rating: 4,
+            title: "Demanding but rewarding",
+            comment: "This is not for the faint-hearted, but if you're committed, you'll see results. Very comprehensive for one month.",
+            userId: testStudents[3].id,
+        },
+    ];
+
+    // Create all reviews
+    let reviewsCreated = 0;
+    for (const reviewData of reviewsData) {
+        const course = courses[reviewData.courseIndex];
+        if (course) {
+            await prisma.courseReview.upsert({
+                where: {
+                    userId_courseId: {
+                        userId: reviewData.userId,
+                        courseId: course.id,
+                    },
+                },
+                update: {},
+                create: {
+                    courseId: course.id,
+                    userId: reviewData.userId,
+                    instructorId: instructor.id,
+                    rating: reviewData.rating,
+                    title: reviewData.title,
+                    comment: reviewData.comment,
+                    helpful: Math.floor(Math.random() * 15),
+                },
+            });
+            reviewsCreated++;
+        }
+    }
+    console.log("✓ Course reviews created:", reviewsCreated);
+
     // Create sample lessons for first course
     if (courses[0]) {
         const lessons = await Promise.all([
@@ -789,9 +1071,21 @@ async function main() {
     console.log("\n📝 Credentials:");
     console.log("   Admin Email: admin@prepfrench.com");
     console.log("   Admin Password: admin123");
+    console.log("   Instructor Email: instructor@prepfrench.com");
+    console.log("   Instructor Password: instructor123");
+    console.log("\n👥 Test Student Accounts (for viewing reviews):");
+    console.log("   student1@prepfrench.com (Sarah Johnson)");
+    console.log("   student2@prepfrench.com (Ahmed Khan)");
+    console.log("   student3@prepfrench.com (Maria Garcia)");
+    console.log("   student4@prepfrench.com (David Chen)");
     console.log("\n🔗 Access URLs:");
     console.log("   Courses: http://localhost:3000/course-grid-view");
     console.log("   Admin Panel: http://localhost:3000/admin");
+    console.log("\n📊 Database Statistics:");
+    console.log("   ✓ Courses: 13");
+    console.log("   ✓ Categories: 6");
+    console.log("   ✓ Reviews: 26 (2-4 per course)");
+    console.log("   ✓ Users: 6 (1 admin + 1 instructor + 4 students)");
 }
 
 main()

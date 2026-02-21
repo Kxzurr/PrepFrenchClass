@@ -115,7 +115,7 @@ export default function LanguageTestimonialSection() {
     };
 
     return (
-        <section className="lg:py-30 py-20">
+        <section className="lg:py-30 py-20 overflow-x-hidden">
             <div className="container">
                 {/* Header */}
                 <div className="max-w-2xl text-center mx-auto mb-15">

@@ -1,14 +1,11 @@
 'use client';
 
-import Image, { StaticImageData } from 'next/image';
 import { useState } from 'react';
 import { RiStarFill, RiStarHalfFill, RiStarLine, RiThumbUpLine, RiThumbDownLine } from '@remixicon/react';
 
 interface Review {
     id: string;
     author: string;
-    avatar: StaticImageData | string;
-    avatarAlt: string;
     rating: number;
     date: string;
     comment: string;
@@ -104,19 +101,10 @@ export default function ReviewsTab({ averageRating, totalReviews, ratingBreakdow
                     key={review.id}
                     className={`${index > 0 ? 'border-t border-gray-200 dark:border-gray-800' : ''} py-6`}
                 >
-                    <div className="flex items-center gap-4 mb-3">
-                        <div className="relative w-12 h-12">
-                            <Image
-                                src={review.avatar}
-                                alt={review.avatarAlt}
-                                fill
-                                className="object-cover rounded-full"
-                                sizes="48px"
-                            />
-                        </div>
+                    <div className="flex items-start gap-4 mb-3">
                         <div>
                             <h5 className="font-semibold text-gray-800 dark:text-gray-300">{review.author}</h5>
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-2">
                                 <div className="flex items-center gap-1 text-yellow-500 my-1">
                                     {renderStars(review.rating)}
                                 </div>

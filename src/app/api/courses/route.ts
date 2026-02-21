@@ -82,9 +82,28 @@ export async function GET(request: NextRequest) {
 
     const totalPages = Math.ceil(totalCourses / limit);
 
+    // Calculate average rating for each course from reviews
+    const coursesWithRatings = await Promise.all(
+      courses.map(async (course) => {
+        const reviews = await prisma.courseReview.findMany({
+          where: { courseId: course.id },
+          select: { rating: true },
+        });
+
+        const averageRating = reviews.length > 0
+          ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+          : 0;
+
+        return {
+          ...course,
+          rating: parseFloat(averageRating.toFixed(1)),
+        };
+      })
+    );
+
     return NextResponse.json({
       success: true,
-      data: courses,
+      data: coursesWithRatings,
       pagination: {
         page,
         limit,

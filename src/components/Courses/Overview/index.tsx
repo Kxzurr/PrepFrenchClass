@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { RiStarFill, RiStarHalfFill, RiStarLine } from '@remixicon/react';
 import CourseOverviewTab from './CourseOverviewTab';
 import CurriculumTab from './CurriculumTab';
-import InstructorTab from './InstructorTab';
 import ReviewsTab from './ReviewsTab';
 import FAQTab from './FAQTab';
 import CourseSidebar from './CourseSidebar';
@@ -102,36 +101,11 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
     const tabs = [
         { id: 'Course', label: 'Course Overview' },
         { id: 'Curriculum', label: 'Curriculum' },
-        { id: 'instructor', label: 'Instructor' },
         { id: 'Reviews', label: 'Reviews' },
         { id: 'FAQ', label: 'FAQ' },
     ];
 
-    // Get instructor info from courseData
-    const instructorName = course.instructor?.user?.name || 
-                          `${course.instructor?.firstName || ''} ${course.instructor?.lastName || ''}`.trim() ||
-                          'Instructor';
-    const instructorImage = course.instructor?.user?.image || course.instructor?.avatar;
-    const instructorBio = course.instructor?.bio || 'Experienced instructor';
 
-    // Create instructor object for InstructorTab
-    const social = (course.instructor?.socialLinks as Record<string, string | undefined> | null) || {};
-
-    const instructorsForTab = [
-        {
-            name: instructorName,
-            role: 'Course Instructor',
-            avatar: instructorImage,
-            avatarAlt: instructorName,
-            bio: instructorBio,
-            socialLinks: {
-                facebook: social.facebook,
-                twitter: social.twitter,
-                instagram: social.instagram,
-                linkedin: social.linkedin,
-            },
-        },
-    ];
 
     const parseStringArray = (value: unknown): string[] | undefined => {
         if (!value) return undefined;
@@ -179,28 +153,6 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                         </h1>
 
                         <div className="flex items-center justify-between flex-wrap gap-6">
-
-                            {/* Instructor */}
-                            <div className="flex items-center gap-3">
-                                <div className="size-10 relative">
-                                    <Image
-                                        src={instructorImage || '/images/avatar/default.jpg'}
-                                        alt={instructorName}
-                                        fill
-                                        className="object-cover rounded-full"
-                                        sizes="40px"
-                                    />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-300">Instructor</p>
-                                    <Link
-                                        href="#!"
-                                        className="text-lg font-semibold hover:text-primary-500 transition"
-                                    >
-                                        {instructorName}
-                                    </Link>
-                                </div>
-                            </div>
 
                             {/* Category */}
                             <div>
@@ -297,7 +249,6 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                                     />
                                 )}
                                 {activeTab === 'Curriculum' && course.lessons && <CurriculumTab lessons={course.lessons} />}
-                                {activeTab === 'instructor' && <InstructorTab instructors={instructorsForTab} />}
                                 {activeTab === 'Reviews' && (
                                     <ReviewsTab
                                         averageRating={course.rating}
@@ -314,8 +265,6 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                                         reviews={(course.reviews || []).map((review) => ({
                                             id: review.id,
                                             author: review.user?.name || 'Learner',
-                                            avatar: review.user?.image || '/images/avatar/default.jpg',
-                                            avatarAlt: review.user?.name || 'Learner',
                                             rating: review.rating,
                                             date: new Date(review.createdAt).toLocaleDateString(),
                                             comment: review.comment || '',
@@ -355,26 +304,13 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                         </div>
 
                         {/* Mobile Sticky Bottom CTA */}
-                        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-900 border-t border-black/10 dark:border-white/10 p-4 flex items-center justify-between gap-4 lg:hidden z-50">
-
-                            <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 line-through">
-                                    ${course.pricing.originalPrice}
-                                </p>
-                                <p className="text-xl font-bold text-gray-900 dark:text-white">
-                                    ${course.pricing.discountedPrice || course.pricing.originalPrice}
-                                </p>
-                            </div>
-
-                            <div className="flex gap-2 w-full">
-                                <button className="flex-1 py-3 rounded-lg border border-primary-500 text-primary-500 font-semibold hover:bg-primary-50 transition">
-                                    Add to Cart
-                                </button>
-
-                                <button className="flex-1 py-3 rounded-lg bg-primary-500 text-white font-semibold hover:bg-primary-600 transition">
-                                    Buy Now
-                                </button>
-                            </div>
+                        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-900 border-t border-black/10 dark:border-white/10 p-4 lg:hidden z-50">
+                            <Link
+                                href="/contact"
+                                className="block w-full py-3 rounded-lg bg-primary-500 text-white font-semibold hover:bg-primary-600 transition text-center"
+                            >
+                                Inquiry Now
+                            </Link>
                         </div>
 
                     </div>

@@ -1,10 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { RiArrowDownSLine } from '@remixicon/react';
-import bannerShape1 from '../../assets/images/banner-shape-1.webp';
-import bannerShape2 from '../../assets/images/banner-shape-2.webp';
-import bannerShape3 from '../../assets/images/banner-shape-3.webp';
-import bannerShape4 from '../../assets/images/banner-shape-4.png';
 
 interface BreadcrumbItem {
     label: string;
@@ -46,7 +41,7 @@ export default function PageHead({
 }: PageHeadProps) {
     return (
         <section
-            className={`py-20 lg:py-40 bg-gradient-to-r ${gradientFrom} ${gradientVia} ${gradientTo} ${darkGradientFrom} ${darkGradientVia} ${darkGradientTo} relative overflow-hidden`}
+            className={`py-20 lg:py-30 bg-gradient-to-r ${gradientFrom} ${gradientVia} ${gradientTo} ${darkGradientFrom} ${darkGradientVia} ${darkGradientTo} relative overflow-hidden`}
             style={
                 backgroundImage
                     ? {
@@ -60,7 +55,7 @@ export default function PageHead({
         >
             {/* Background Overlay for Image */}
             {backgroundImage && (
-                <div className="absolute inset-0 bg-black/40 dark:bg-black/60 z-0"></div>
+                <div className="absolute inset-0 bg-black/50 dark:bg-black/70 z-0"></div>
             )}
 
             
@@ -69,14 +64,14 @@ export default function PageHead({
                 <div className="text-center max-w-3xl mx-auto">
                     {/* Breadcrumb Navigation */}
                     {showBreadcrumbs && (
-                        <div className="flex gap-2 items-center justify-center mb-6 text-gray-600 dark:text-dark-400 flex-wrap">
+                        <div className="flex gap-2 items-center justify-center mb-6 text-gray-200 dark:text-gray-300 flex-wrap">
                             {breadcrumbs.map((item, index) => (
                                 <div key={index} className="flex items-center gap-2">
                                     {index > 0 && <span>/</span>}
                                     {item.href ? (
                                         <Link
                                             href={item.href}
-                                            className="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300"
+                                            className="text-sm font-medium hover:text-white dark:hover:text-white transition-all duration-300"
                                         >
                                             {item.label}
                                         </Link>
@@ -89,20 +84,20 @@ export default function PageHead({
                     )}
 
                     {/* Title */}
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight text-primary-950 dark:text-primary-100">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight text-white">
                         {title}
                     </h1>
 
                     {/* Description */}
                     {description && (
-                        <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+                        <p className="text-lg md:text-xl text-gray-100 mb-8 leading-relaxed">
                             {description}
                         </p>
                     )}
 
                     {/* Bouncing Chevron Icon */}
                     {showChevron && (
-                        <RiArrowDownSLine className="w-8 h-8 mx-auto animate-bounce text-primary-950 dark:text-primary-100 mt-8" />
+                        <RiArrowDownSLine className="w-8 h-8 mx-auto animate-bounce text-white mt-8" />
                     )}
                 </div>
             </div>
