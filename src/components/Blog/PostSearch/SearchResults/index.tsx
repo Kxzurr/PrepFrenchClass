@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, startTransition } from 'react';
 import Pagination from '@/src/common/Pagination';
+import BlogPostCard from '@/src/components/Blog/ListView/BlogPostCard';
 import { blogPosts } from '@/src/data/blogPosts';
 import { POSTS_PER_PAGE_GRID } from '@/src/constants/blog';
 
@@ -76,7 +77,7 @@ export default function SearchResults({ searchQuery }: SearchResultsProps) {
                 )}
                 <div className="grid grid-cols-12 gap-6">
                     {currentPosts.map((post) => (
-                        <BlogGridCard key={post.id} post={post} />
+                        <BlogPostCard key={post.id} post={post} />
                     ))}
                 </div>
 
