@@ -85,20 +85,18 @@ export default function CurriculumTab({ lessons = defaultLessons }: CurriculumTa
                         {isOpen && (
                             <div className="p-4 text-gray-600 dark:text-dark-400 leading-relaxed">
                                 {monthLessons.map((lesson, index) => (
-                                    <div key={lesson.id} className="flex justify-between items-start p-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0">
-                                        <div className="flex items-start gap-3 flex-1">
-                                            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm font-semibold mt-0.5">
+                                    <div key={lesson.id} className="flex justify-between items-center p-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0">
+                                        <div className="flex items-center gap-3 flex-1">
+                                            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm font-semibold">
                                                 {index + 1}
                                             </span>
-                                            <div className="flex-1">
-                                                <p className="text-sm font-medium text-gray-900 dark:text-white">{lesson.title}</p>
-                                                {lesson.duration && (
-                                                    <p className="text-xs text-primary-600 dark:text-primary-400 mt-1">
-                                                        Category: {lesson.duration}
-                                                    </p>
-                                                )}
-                                            </div>
+                                            <p className="text-sm font-medium text-gray-900 dark:text-white">{lesson.title}</p>
                                         </div>
+                                        {lesson.duration && (
+                                            <span className="text-xs text-primary-600 dark:text-primary-400 whitespace-nowrap ml-4">
+                                                {lesson.duration}
+                                            </span>
+                                        )}
                                     </div>
                                 ))}
                             </div>
