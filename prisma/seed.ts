@@ -207,7 +207,7 @@ async function main() {
                 pricingId: pricing.id,
                 level: data.level,
                 language: "English",
-                duration: data.duration,
+                duration: data.duration ? parseFloat(data.duration) : null,
                 lessonsCount: data.lessonsCount || 0,
                 rating: 0,
                 status: "PUBLISHED",
