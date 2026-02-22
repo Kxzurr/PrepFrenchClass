@@ -168,7 +168,7 @@ async function main() {
         shortDescription: string;
         categoryId?: string;
         level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
-        duration: number | null;
+        duration: string | null;
         lessonsCount?: number;
         content?: {
             whatYouWillLearn?: string[];
@@ -264,7 +264,7 @@ async function main() {
                     pricingId: pricing.id,
                     level: "BEGINNER",
                     language: "English",
-                    duration: 8,
+                    duration: "8",
                     lessonsCount: 24,
                     rating: 4.8,
                     status: "PUBLISHED",
@@ -303,7 +303,7 @@ async function main() {
                     pricingId: pricing.id,
                     level: "INTERMEDIATE",
                     language: "English",
-                    duration: 12,
+                    duration: " 12\,
                     lessonsCount: 45,
                     rating: 4.9,
                     status: "PUBLISHED",
@@ -342,7 +342,7 @@ async function main() {
                     pricingId: pricing.id,
                     level: "ADVANCED",
                     language: "English",
-                    duration: 10,
+                    duration: " 10\,
                     lessonsCount: 30,
                     rating: 4.7,
                     status: "PUBLISHED",
@@ -366,7 +366,7 @@ async function main() {
             shortDescription: "Full TCF Canada prep to reach CLB 7 (B2) with live classes and mock exams.",
             categoryId: categories[4].id,
             level: "INTERMEDIATE",
-            duration: 200,
+            duration: " 200\,
             content: {
                 whatYouWillLearn: [
                     "Listening, speaking, reading, and writing to B2 (CLB 7)",
@@ -412,7 +412,7 @@ async function main() {
             shortDescription: "Accelerated TCF Canada course targeting CLB 5 (B1).",
             categoryId: categories[4].id,
             level: "INTERMEDIATE",
-            duration: 120,
+            duration: " 120\,
             content: {
                 whatYouWillLearn: [
                     "Core French skills up to B1",
@@ -454,7 +454,7 @@ async function main() {
             shortDescription: "Comprehensive TEF Canada prep to reach CLB 7 (B2).",
             categoryId: categories[3].id,
             level: "INTERMEDIATE",
-            duration: 200,
+            duration: " 200\,
             content: {
                 whatYouWillLearn: [
                     "French proficiency from A1 to B2",
@@ -496,7 +496,7 @@ async function main() {
             shortDescription: "Accelerated TEF Canada prep targeting CLB 5 (B1).",
             categoryId: categories[3].id,
             level: "INTERMEDIATE",
-            duration: 120,
+            duration: " 120\,
             content: {
                 whatYouWillLearn: [
                     "Practical French skills up to B1",
@@ -537,7 +537,7 @@ async function main() {
             shortDescription: "Beginner French foundations with speaking practice from day one.",
             categoryId: categories[0].id,
             level: "BEGINNER",
-            duration: 40,
+            duration: " 40\,
             content: {
                 whatYouWillLearn: [
                     "French alphabet and pronunciation basics",
@@ -571,7 +571,7 @@ async function main() {
             shortDescription: "Expand your French skills with A2 grammar and speaking practice.",
             categoryId: categories[0].id,
             level: "BEGINNER",
-            duration: 40,
+            duration: " 40\,
             content: {
                 whatYouWillLearn: [
                     "Passe compose, imparfait, and near future",
@@ -605,7 +605,7 @@ async function main() {
             shortDescription: "Gain independence in French with B1 speaking and writing skills.",
             categoryId: categories[1].id,
             level: "INTERMEDIATE",
-            duration: 60,
+            duration: " 60\,
             content: {
                 whatYouWillLearn: [
                     "Confident use of past, present, and future tenses",
@@ -639,7 +639,7 @@ async function main() {
             shortDescription: "Reach B2 fluency with advanced grammar and real-world practice.",
             categoryId: categories[1].id,
             level: "INTERMEDIATE",
-            duration: 60,
+            duration: " 60\,
             content: {
                 whatYouWillLearn: [
                     "Advanced grammar including subjunctive and conditionals",
@@ -673,7 +673,7 @@ async function main() {
             shortDescription: "Intensive TCF exam strategies and mock tests in 1 month.",
             categoryId: categories[4].id,
             level: "INTERMEDIATE",
-            duration: 20,
+            duration: " 20\,
             content: {
                 whatYouWillLearn: [
                     "TCF exam format, timing, and scoring",
@@ -707,7 +707,7 @@ async function main() {
             shortDescription: "Intensive TEF exam strategies and mock tests in 1 month.",
             categoryId: categories[3].id,
             level: "INTERMEDIATE",
-            duration: 20,
+            duration: " 20\,
             content: {
                 whatYouWillLearn: [
                     "TEF exam structure and timing",
@@ -1027,7 +1027,7 @@ async function main() {
                     title: "Introduction to French Alphabet",
                     description: "Learn the French alphabet and basic pronunciation rules",
                     order: 1,
-                    duration: 25,
+                    duration: "25",
                 },
             }),
             prisma.courseLesson.create({
@@ -1036,7 +1036,7 @@ async function main() {
                     title: "Basic Greetings and Introductions",
                     description: "Master essential greetings and how to introduce yourself in French",
                     order: 2,
-                    duration: 30,
+                    duration: "30",
                 },
             }),
             prisma.courseLesson.create({
@@ -1045,7 +1045,7 @@ async function main() {
                     title: "Numbers and Counting",
                     description: "Learn French numbers and basic counting",
                     order: 3,
-                    duration: 20,
+                    duration: "20",
                 },
             }),
         ]);
