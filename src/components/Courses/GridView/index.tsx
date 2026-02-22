@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PageHead from '@/src/common/PageHead';
 import Filter from '../ListView/Filter';
 import { transformApiCourseToUI } from '@/src/lib/courseTransform';
@@ -39,6 +39,16 @@ export default function CourseGridView() {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const inFlightRef = useRef(false);
+  const cacheRef = useRef(
+    new Map<
+      string,
+      { data: Course[]; totalCourses: number; totalPages: number; timestamp: number }
+    >()
+  );
+  const CACHE_TTL_MS = 2 * 60 * 1000;
 
   // Fetch categories
   useEffect(() => {
@@ -59,12 +69,20 @@ export default function CourseGridView() {
 
   // Fetch courses
   useEffect(() => {
+    let isActive = true;
+    const controller = new AbortController();
+
     const fetchCourses = async () => {
+      if (inFlightRef.current) return;
+      inFlightRef.current = true;
       setLoading(true);
+
       try {
         const params = new URLSearchParams();
-        params.append('page', '1');
-        params.append('limit', '1000');
+        params.append('page', String(currentPage));
+        params.append('limit', String(COURSES_PER_PAGE_LIST * 3));
+        params.append('sortBy', 'createdAt');
+        params.append('order', 'desc');
 
         if (selectedCategories.length > 0) {
           params.append('categoryId', selectedCategories[0]);
@@ -77,46 +95,78 @@ export default function CourseGridView() {
           }
         }
 
-        const response = await fetch(`/api/courses?${params.toString()}`);
-        if (response.ok) {
-          const data = await response.json();
-          const rawCourses = Array.isArray(data.data) ? data.data : data.courses || [];
-          const transformedCourses = rawCourses.map(transformApiCourseToUI);
-          setCourses(transformedCourses);
-          setError(null);
-        } else {
+        const cacheKey = params.toString();
+        const cached = cacheRef.current.get(cacheKey);
+        const now = Date.now();
+
+        if (cached && now - cached.timestamp < CACHE_TTL_MS) {
+          if (isActive) {
+            setCourses(cached.data);
+            setTotalCourses(cached.totalCourses);
+            setTotalPages(cached.totalPages);
+            setError(null);
+            setLoading(false);
+          }
+          inFlightRef.current = false;
+          return;
+        }
+
+        const response = await fetch(`/api/courses?${params.toString()}`, {
+          cache: 'no-store',
+          signal: controller.signal,
+        });
+        if (!response.ok) {
           throw new Error('Failed to fetch courses');
         }
+
+        const data = await response.json();
+        const rawCourses = Array.isArray(data.data) ? data.data : data.courses || [];
+        const transformedCourses = rawCourses.map(transformApiCourseToUI);
+        const pagination = data.pagination || {};
+        const nextTotal = pagination.totalCourses || transformedCourses.length;
+        const nextTotalPages = pagination.totalPages || 1;
+
+        cacheRef.current.set(cacheKey, {
+          data: transformedCourses,
+          totalCourses: nextTotal,
+          totalPages: nextTotalPages,
+          timestamp: now,
+        });
+
+        if (isActive) {
+          setCourses(transformedCourses);
+          setTotalCourses(nextTotal);
+          setTotalPages(nextTotalPages);
+          setError(null);
+        }
       } catch (err) {
+        if ((err as Error).name === 'AbortError') return;
         console.error('Error fetching courses:', err);
-        setError('Failed to load courses. Please try again later.');
+        if (isActive) {
+          setError('Failed to load courses. Please try again later.');
+        }
       } finally {
-        setLoading(false);
+        if (isActive) {
+          setLoading(false);
+        }
+        inFlightRef.current = false;
       }
     };
 
     fetchCourses();
-  }, [selectedCategories, selectedLevels]);
+
+    return () => {
+      isActive = false;
+      controller.abort();
+    };
+  }, [selectedCategories, selectedLevels, currentPage]);
 
   // Pagination
-  const { totalCourses, totalPages, showingFrom, showingTo, displayedCourses } = (() => {
-    const total = courses.length;
-    const totalPages = Math.ceil(total / (COURSES_PER_PAGE_LIST * 3)); // 3 columns
-    const showingFrom = (currentPage - 1) * COURSES_PER_PAGE_LIST * 3 + 1;
-    const showingTo = Math.min(currentPage * COURSES_PER_PAGE_LIST * 3, total);
-    const displayed = courses.slice(
-      (currentPage - 1) * COURSES_PER_PAGE_LIST * 3,
-      currentPage * COURSES_PER_PAGE_LIST * 3
-    );
-
-    return {
-      totalCourses: total,
-      totalPages,
-      showingFrom,
-      showingTo,
-      displayedCourses: displayed,
-    };
-  })();
+  const showingFrom = totalCourses === 0
+    ? 0
+    : (currentPage - 1) * COURSES_PER_PAGE_LIST * 3 + 1;
+  const showingTo = Math.min(currentPage * COURSES_PER_PAGE_LIST * 3, totalCourses);
+  const displayedCourses = courses;
 
   const handleCategoryChange = (value: string) => {
     setCurrentPage(1);
@@ -174,6 +224,27 @@ export default function CourseGridView() {
     return stars;
   };
 
+  const GridCourseImage = ({ src, alt }: { src: string; alt: string }) => {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+      <div className="relative h-48 bg-gray-200">
+        {!loaded && (
+          <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        )}
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className={`object-cover ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+          loading="lazy"
+          sizes="(max-width: 1024px) 100vw, 33vw"
+          onLoadingComplete={() => setLoaded(true)}
+        />
+      </div>
+    );
+  };
+
   return (
     <>
       <PageHead title="Course grid view" breadcrumbs={breadcrumbs} />
@@ -207,9 +278,24 @@ export default function CourseGridView() {
             {/* Grid View */}
             <div className="col-span-12 lg:col-span-9">
               {loading ? (
-                <div className="text-center py-12">
-                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                  <p className="mt-4 text-gray-600 dark:text-dark-400">Loading courses...</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="rounded-xl bg-white dark:bg-dark-950 shadow-md dark:shadow-dark-800/50 border border-black/10 dark:border-white/10 overflow-hidden"
+                    >
+                      <div className="h-48 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                      <div className="p-4 space-y-3">
+                        <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        <div className="h-5 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        <div className="flex justify-between">
+                          <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                          <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : displayedCourses.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 dark:bg-dark-900 rounded-lg">
@@ -229,12 +315,10 @@ export default function CourseGridView() {
                         className="rounded-xl bg-white dark:bg-dark-950 shadow-md dark:shadow-dark-800/50 border border-black/10 dark:border-white/10 overflow-hidden hover:shadow-lg transition-shadow"
                       >
                         {/* Image */}
-                        <div className="relative h-48 bg-gray-200">
-                          <Image
-                            src={course.image.toString()}
+                        <div className="relative">
+                          <GridCourseImage
+                            src={typeof course.image === 'string' ? course.image : course.image.toString()}
                             alt={course.imageAlt}
-                            fill
-                            className="object-cover"
                           />
                           <div className="flex justify-between items-start p-3 absolute w-full">
                             <div className="bg-primary-600 text-white px-2 py-1 rounded text-xs font-semibold">

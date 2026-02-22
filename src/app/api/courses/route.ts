@@ -28,7 +28,11 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search");
     const level = searchParams.get("level");
     const featured = searchParams.get("featured");
-    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const requestedSortBy = searchParams.get("sortBy") || "createdAt";
+    const allowedSortFields = new Set(["createdAt", "title"]);
+    const sortBy = allowedSortFields.has(requestedSortBy)
+      ? requestedSortBy
+      : "createdAt";
     const order = (searchParams.get("order") || "desc") as "asc" | "desc";
 
     const skip = (page - 1) * limit;
@@ -64,30 +68,40 @@ export async function GET(request: NextRequest) {
     // Get total count
     const totalCourses = await prisma.course.count({ where });
 
-    // Get courses with relations
+    // Get courses with minimal fields
     const courses = await prisma.course.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        shortDescription: true,
+        image: true,
+        createdAt: true,
+        level: true,
+        language: true,
+        duration: true,
+        lessonsCount: true,
         categories: {
           include: {
-            category: true,
-          },
-        },
-        instructor: {
-          include: {
-            user: {
-              select: {
-                name: true,
-                image: true,
-              },
+            category: {
+              select: { id: true, name: true },
             },
           },
         },
-        pricing: true,
+        pricing: {
+          select: {
+            originalPrice: true,
+            discountedPrice: true,
+            currency: true,
+          },
+        },
         _count: {
           select: {
             enrollments: true,
             reviews: true,
+            lessons: true,
           },
         },
       },
@@ -100,29 +114,21 @@ export async function GET(request: NextRequest) {
 
     const totalPages = Math.ceil(totalCourses / limit);
 
-    // Calculate average rating for each course from reviews
-    const coursesWithRatings = await Promise.all(
-      courses.map(async (course) => {
-        const reviews = await prisma.courseReview.findMany({
-          where: { courseId: course.id },
-          select: { rating: true },
-        });
-
-        const averageRating = reviews.length > 0
-          ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
-          : 0;
-
-        return {
-          ...course,
-          rating: parseFloat(averageRating.toFixed(1)),
-        };
-      })
+    const courseIds = courses.map((course) => course.id);
+    const ratingRows = await prisma.courseReview.groupBy({
+      by: ["courseId"],
+      where: { courseId: { in: courseIds } },
+      _avg: { rating: true },
+    });
+    const ratingMap = new Map(
+      ratingRows.map((row) => [row.courseId, row._avg.rating || 0])
     );
 
     const response = NextResponse.json({
       success: true,
-      data: coursesWithRatings.map((course) => ({
+      data: courses.map((course) => ({
         ...course,
+        rating: parseFloat((ratingMap.get(course.id) || 0).toFixed(1)),
         imageOptimized: buildOptimizedImageUrl(course.image),
       })),
       pagination: {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PageHead from '@/src/common/PageHead';
 import Filter from './Filter';
@@ -45,6 +45,17 @@ export default function CourseListView() {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSort, setSelectedSort] = useState('Newest First');
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const inFlightRef = useRef(false);
+
+  const cacheRef = useRef(
+    new Map<
+      string,
+      { data: any[]; totalCourses: number; totalPages: number; timestamp: number }
+    >()
+  );
+  const CACHE_TTL_MS = 2 * 60 * 1000;
 
   // Fetch categories
   useEffect(() => {
@@ -74,44 +85,96 @@ export default function CourseListView() {
 
   // Fetch courses
   useEffect(() => {
+    let isActive = true;
+    const controller = new AbortController();
+
     const fetchCourses = async () => {
+      if (inFlightRef.current) return;
+      inFlightRef.current = true;
       setLoading(true);
+
       try {
-        // Build query parameters
         const params = new URLSearchParams();
-        params.append('page', '1');
-        params.append('limit', '1000'); // Get all courses for client-side filtering
+        params.append('page', String(currentPage));
+        params.append('limit', String(COURSES_PER_PAGE_LIST));
+        params.append('sortBy', 'createdAt');
+        params.append('order', 'desc');
 
         if (selectedCategories.length > 0) {
-          params.append('categoryId', selectedCategories[0]); // API supports single category
+          params.append('categoryId', selectedCategories[0]);
         }
 
         if (selectedLevels.length > 0) {
           const apiLevel = levelMap[selectedLevels[0]];
           if (apiLevel) {
-            params.append('level', apiLevel); // API supports single level
+            params.append('level', apiLevel);
           }
         }
 
-        const response = await fetch(`/api/courses?${params.toString()}`);
-        if (response.ok) {
-          const data = await response.json();
-          const rawCourses = Array.isArray(data.data) ? data.data : data.courses || [];
-          setRawCourses(rawCourses);
-          setError(null);
-        } else {
+        const cacheKey = params.toString();
+        const cached = cacheRef.current.get(cacheKey);
+        const now = Date.now();
+
+        if (cached && now - cached.timestamp < CACHE_TTL_MS) {
+          if (isActive) {
+            setRawCourses(cached.data);
+            setTotalCourses(cached.totalCourses);
+            setTotalPages(cached.totalPages);
+            setError(null);
+            setLoading(false);
+          }
+          inFlightRef.current = false;
+          return;
+        }
+
+        const response = await fetch(`/api/courses?${params.toString()}`, {
+          cache: 'no-store',
+          signal: controller.signal,
+        });
+        if (!response.ok) {
           throw new Error('Failed to fetch courses');
         }
+
+        const data = await response.json();
+        const rawCourses = Array.isArray(data.data) ? data.data : data.courses || [];
+        const pagination = data.pagination || {};
+        const nextTotal = pagination.totalCourses || rawCourses.length;
+        const nextTotalPages = pagination.totalPages || 1;
+
+        cacheRef.current.set(cacheKey, {
+          data: rawCourses,
+          totalCourses: nextTotal,
+          totalPages: nextTotalPages,
+          timestamp: now,
+        });
+
+        if (isActive) {
+          setRawCourses(rawCourses);
+          setTotalCourses(nextTotal);
+          setTotalPages(nextTotalPages);
+          setError(null);
+        }
       } catch (err) {
+        if ((err as Error).name === 'AbortError') return;
         console.error('Error fetching courses:', err);
-        setError('Failed to load courses. Please try again later.');
+        if (isActive) {
+          setError('Failed to load courses. Please try again later.');
+        }
       } finally {
-        setLoading(false);
+        if (isActive) {
+          setLoading(false);
+        }
+        inFlightRef.current = false;
       }
     };
 
     fetchCourses();
-  }, [selectedCategories, selectedLevels]);
+
+    return () => {
+      isActive = false;
+      controller.abort();
+    };
+  }, [selectedCategories, selectedLevels, currentPage]);
 
   const getCoursePrice = (course: any) =>
     course.pricing?.discountedPrice ?? course.pricing?.originalPrice ?? 0;
@@ -140,25 +203,11 @@ export default function CourseListView() {
 
   const courses = sortedRawCourses.map(transformApiCourseToUI);
 
-  // Filter and pagination calculations
-  const { totalCourses, totalPages, showingFrom, showingTo, displayedCourses } = (() => {
-    const total = courses.length;
-    const totalPages = Math.ceil(total / COURSES_PER_PAGE_LIST);
-    const showingFrom = (currentPage - 1) * COURSES_PER_PAGE_LIST + 1;
-    const showingTo = Math.min(currentPage * COURSES_PER_PAGE_LIST, total);
-    const displayed = courses.slice(
-      (currentPage - 1) * COURSES_PER_PAGE_LIST,
-      currentPage * COURSES_PER_PAGE_LIST
-    );
-
-    return {
-      totalCourses: total,
-      totalPages,
-      showingFrom,
-      showingTo,
-      displayedCourses: displayed,
-    };
-  })();
+  const showingFrom = totalCourses === 0
+    ? 0
+    : (currentPage - 1) * COURSES_PER_PAGE_LIST + 1;
+  const showingTo = Math.min(currentPage * COURSES_PER_PAGE_LIST, totalCourses);
+  const displayedCourses = courses;
 
   // Filter handlers
   const handleCategoryChange = (value: string) => {

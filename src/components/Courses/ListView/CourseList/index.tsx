@@ -35,10 +35,30 @@ export default function CourseList({
   if (loading) {
     return (
       <div className="col-span-12 lg:col-span-9 flex flex-col gap-6">
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600 dark:text-dark-400">Loading courses...</p>
-        </div>
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div
+            key={index}
+            className="rounded-xl bg-white dark:bg-dark-950 dark:shadow-dark-800/50 shadow-md border border-black/10 dark:border-white/10 overflow-hidden"
+          >
+            <div className="grid grid-cols-12">
+              <div className="col-span-12 md:col-span-4">
+                <div className="h-full min-h-[200px] bg-gray-200 dark:bg-gray-700 animate-pulse" />
+              </div>
+              <div className="col-span-12 md:col-span-8">
+                <div className="p-5 space-y-3">
+                  <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                  <div className="h-6 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                  <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                  <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                  <div className="flex justify-between">
+                    <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                    <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }

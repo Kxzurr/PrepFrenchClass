@@ -15,7 +15,7 @@ export function transformApiCourseToUI(apiCourse: any): Course {
 
   return {
     id: apiCourse.id,
-    image: apiCourse.image || "/images/placeholder-course.jpg",
+    image: apiCourse.imageOptimized || apiCourse.image || "/images/placeholder-course.jpg",
     imageAlt: apiCourse.title,
     category: categoryName,
     categoryColor: getCategoryColor(categoryId),

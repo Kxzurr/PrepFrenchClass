@@ -23,6 +23,7 @@ export default function CourseCard({
     discountedPrice,
 }: CourseCardProps) {
     const [isFavorite, setIsFavorite] = useState(false);
+    const [imageLoaded, setImageLoaded] = useState(false);
     const colors = courseColorClasses[categoryColor] || courseColorClasses['primary'];
 
     // Handle both StaticImageData and string image sources
@@ -53,12 +54,17 @@ export default function CourseCard({
                 {/* Image Column */}
                 <div className="col-span-12 md:col-span-4">
                     <div className="relative h-full min-h-[200px] md:min-h-full">
+                        {!imageLoaded && (
+                            <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                        )}
                         <Image
                             src={imageSource}
                             alt={imageAlt}
                             fill
-                            className="object-cover"
+                            className={`object-cover ${imageLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
                             sizes="(max-width: 768px) 100vw, 33vw"
+                            loading="lazy"
+                            onLoadingComplete={() => setImageLoaded(true)}
                         />
                         <div className="flex justify-between items-center p-5 absolute w-full top-0 left-0">
                             <p className={`${colors.badge} p-1 px-3 text-sm rounded-sm text-white`}>
