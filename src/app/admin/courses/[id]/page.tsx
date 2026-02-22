@@ -384,7 +384,7 @@ export default function EditCoursePage() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 title: lesson.title,
-                duration: lesson.duration ? Number(lesson.duration) : null,
+                duration: lesson.duration || null,
                 monthNumber: lesson.monthNumber ? Number(lesson.monthNumber) : null,
                 order: lesson.order,
                 published: lesson.published,
@@ -836,16 +836,16 @@ export default function EditCoursePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Duration (minutes)
+                  Duration (custom text)
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   value={lessonForm.duration}
                   onChange={(e) =>
                     setLessonForm({ ...lessonForm, duration: e.target.value })
                   }
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                  placeholder="25"
+                  placeholder="e.g., 25 mins, 2 hours, Flexible"
                 />
               </div>
               <div>
