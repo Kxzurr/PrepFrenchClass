@@ -11,7 +11,7 @@ interface CourseLesson {
     id: string;
     title: string;
     duration?: number;
-    dayNumber?: number;
+    monthNumber?: number;
 }
 
 interface CurriculumTabProps {
@@ -20,38 +20,38 @@ interface CurriculumTabProps {
 
 // Default lessons for fallback
 const defaultLessons: CourseLesson[] = [
-    { id: '1', title: 'Welcome to the Course & Learning Journey', duration: 25, dayNumber: 1 },
-    { id: '2', title: 'Understanding the Course Structure', duration: 30, dayNumber: 1 },
-    { id: '3', title: 'How to Access Materials & Live Sessions', duration: 20, dayNumber: 2 },
-    { id: '4', title: 'Introduction to Basic Concepts', duration: 35, dayNumber: 2 },
-    { id: '5', title: 'Building Your First Project Step-by-Step', duration: 45, dayNumber: 3 },
+    { id: '1', title: 'Welcome to the Course & Learning Journey', duration: 25, monthNumber: 1 },
+    { id: '2', title: 'Understanding the Course Structure', duration: 30, monthNumber: 1 },
+    { id: '3', title: 'How to Access Materials & Live Sessions', duration: 20, monthNumber: 2 },
+    { id: '4', title: 'Introduction to Basic Concepts', duration: 35, monthNumber: 2 },
+    { id: '5', title: 'Building Your First Project Step-by-Step', duration: 45, monthNumber: 3 },
 ];
 
 export default function CurriculumTab({ lessons = defaultLessons }: CurriculumTabProps) {
-    const [openDays, setOpenDays] = useState<number[]>([1]);
+    const [openMonths, setOpenMonths] = useState<number[]>([1]);
 
-    // Group lessons by day number
-    const lessonsByDay = new Map<number | string, CourseLesson[]>();
+    // Group lessons by month number
+    const lessonsByMonth = new Map<number | string, CourseLesson[]>();
     
     lessons.forEach((lesson) => {
-        const day = lesson.dayNumber ?? 'TBD';
-        if (!lessonsByDay.has(day)) {
-            lessonsByDay.set(day, []);
+        const month = lesson.monthNumber ?? 'TBD';
+        if (!lessonsByMonth.has(month)) {
+            lessonsByMonth.set(month, []);
         }
-        lessonsByDay.get(day)!.push(lesson);
+        lessonsByMonth.get(month)!.push(lesson);
     });
 
-    // Sort days
-    const sortedDays = Array.from(lessonsByDay.keys()).sort((a, b) => {
+    // Sort months
+    const sortedMonths = Array.from(lessonsByMonth.keys()).sort((a, b) => {
         if (a === 'TBD') return 1;
         if (b === 'TBD') return -1;
         return Number(a) - Number(b);
     });
 
-    const toggleDay = (day: number | string) => {
-        const dayNum = typeof day === 'number' ? day : -1;
-        setOpenDays((prev) =>
-            prev.includes(dayNum) ? prev.filter((d) => d !== dayNum) : [...prev, dayNum]
+    const toggleMonth = (month: number | string) => {
+        const monthNum = typeof month === 'number' ? month : -1;
+        setOpenMonths((prev) =>
+            prev.includes(monthNum) ? prev.filter((m) => m !== monthNum) : [...prev, monthNum]
         );
     };
 
@@ -62,34 +62,34 @@ export default function CurriculumTab({ lessons = defaultLessons }: CurriculumTa
 
     return (
         <div className="space-y-4">
-            {sortedDays.map((day) => {
-                const dayLessons = lessonsByDay.get(day) || [];
-                const dayNum = typeof day === 'number' ? day : -1;
-                const isOpen = openDays.includes(dayNum);
+            {sortedMonths.map((month) => {
+                const monthLessons = lessonsByMonth.get(month) || [];
+                const monthNum = typeof month === 'number' ? month : -1;
+                const isOpen = openMonths.includes(monthNum);
                 const IconComponent = isOpen ? RiSubtractLine : RiAddLine;
-                const dayTitle = day === 'TBD' ? 'Day To Be Determined' : `Day ${day}`;
+                const monthTitle = month === 'TBD' ? 'Month To Be Determined' : `Month ${month}`;
 
                 return (
                     <div
-                        key={day}
+                        key={month}
                         className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden"
                     >
                         <button
-                            onClick={() => toggleDay(day)}
+                            onClick={() => toggleMonth(month)}
                             className="w-full flex justify-between items-center p-4 font-semibold text-gray-800 dark:text-gray-200 hover:bg-primary-500/10 transition-all duration-300"
                         >
                             <div className="flex items-center gap-2">
                                 <RiCalendar2Line className="w-5 h-5 text-primary-500" />
-                                <span>{dayTitle}</span>
+                                <span>{monthTitle}</span>
                                 <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                    ({dayLessons.length} {dayLessons.length === 1 ? 'lesson' : 'lessons'})
+                                    ({monthLessons.length} {monthLessons.length === 1 ? 'lesson' : 'lessons'})
                                 </span>
                             </div>
                             <IconComponent className="w-5 h-5" />
                         </button>
                         {isOpen && (
                             <div className="p-4 text-gray-600 dark:text-dark-400 leading-relaxed">
-                                {dayLessons.map((lesson, index) => (
+                                {monthLessons.map((lesson, index) => (
                                     <div key={lesson.id} className="flex justify-between items-center p-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0">
                                         <div className="flex items-center gap-3">
                                             <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm font-semibold">

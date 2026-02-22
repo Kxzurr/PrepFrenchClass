@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { RiFacebookFill, RiTwitterXLine, RiLinkedinFill, RiInstagramLine } from '@remixicon/react';
 import Button from '../../../common/Button';
 import lightLogo from '../../../assets/images/light-logo.png';
@@ -13,6 +14,13 @@ interface FooterLink {
 }
 
 export default function Footer() {
+    const pathname = usePathname();
+    
+    // Don't show footer on admin pages
+    if (pathname.startsWith('/admin')) {
+        return null;
+    }
+    
     const currentYear = new Date().getFullYear();
     const [learningLinks, setLearningLinks] = useState<FooterLink[]>([
         { label: 'All French Courses', href: '/courses' },

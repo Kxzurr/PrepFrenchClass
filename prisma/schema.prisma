@@ -265,8 +265,8 @@ model CourseLesson {
   title           String
   description     String?
   videoUrl        String?
-  duration        Float? // in minutes
-  dayNumber       Int? // Day 1, Day 2, etc for session-based courses
+  duration        String? // custom text (e.g., "25 mins", "2 hours", "Flexible")
+  monthNumber     Int? // Month 1, Month 2, etc for session-based courses
   order           Int @default(0)
   published       Boolean @default(true)
   

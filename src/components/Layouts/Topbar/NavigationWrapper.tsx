@@ -12,6 +12,11 @@ const navigationConfig: Record<string, 'style-1' | 'style-2'> = {
 export default function NavigationWrapper() {
     const pathname = usePathname();
     
+    // Don't show navigation on admin pages
+    if (pathname.startsWith('/admin')) {
+        return null;
+    }
+    
     const navStyle = navigationConfig[pathname] || 'style-1';
     
     if (navStyle === 'style-2') {

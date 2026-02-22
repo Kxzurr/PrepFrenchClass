@@ -28,7 +28,7 @@ interface LessonRow {
   id: string;
   title: string;
   duration: string;
-  dayNumber: string;
+  monthNumber: string;
   order: number;
   published: boolean;
 }
@@ -123,7 +123,7 @@ export default function EditCoursePage() {
   const [lessonForm, setLessonForm] = useState({
     title: '',
     duration: '',
-    dayNumber: '',
+    monthNumber: '',
     order: '',
     published: true,
   });
@@ -237,7 +237,7 @@ export default function EditCoursePage() {
               id: l.id,
               title: l.title,
               duration: (l.duration ?? '').toString(),
-              dayNumber: (l.dayNumber ?? '').toString(),
+              monthNumber: (l.monthNumber ?? '').toString(),
               order: l.order,
               published: l.published,
             }))
@@ -376,6 +376,25 @@ export default function EditCoursePage() {
       });
       const json = await res.json();
       if (json.success) {
+        // Save all lessons
+        for (const lesson of lessons) {
+          try {
+            await fetch(`/api/admin/lessons/${lesson.id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                title: lesson.title,
+                duration: lesson.duration ? Number(lesson.duration) : null,
+                monthNumber: lesson.monthNumber ? Number(lesson.monthNumber) : null,
+                order: lesson.order,
+                published: lesson.published,
+              }),
+            });
+          } catch (err) {
+            console.error('Error saving lesson:', lesson.id, err);
+          }
+        }
+
         // Sync overview content
         try {
           const toArray = (value: string) =>
@@ -428,10 +447,10 @@ export default function EditCoursePage() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Course</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 max-w-4xl">
+      <form id="course-edit-form" onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 max-w-4xl flex-1 overflow-y-auto">
         {/* Basic Information */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Basic Information</h2>
@@ -803,13 +822,13 @@ export default function EditCoursePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Day Number
+                  Month Number
                 </label>
                 <input
                   type="number"
-                  value={lessonForm.dayNumber}
+                  value={lessonForm.monthNumber}
                   onChange={(e) =>
-                    setLessonForm({ ...lessonForm, dayNumber: e.target.value })
+                    setLessonForm({ ...lessonForm, monthNumber: e.target.value })
                   }
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   placeholder="1"
@@ -872,8 +891,8 @@ export default function EditCoursePage() {
                         duration: lessonForm.duration
                           ? Number(lessonForm.duration)
                           : null,
-                        dayNumber: lessonForm.dayNumber
-                          ? Number(lessonForm.dayNumber)
+                        monthNumber: lessonForm.monthNumber
+                          ? Number(lessonForm.monthNumber)
                           : null,
                         order: lessonForm.order
                           ? Number(lessonForm.order)
@@ -889,7 +908,7 @@ export default function EditCoursePage() {
                           id: json.data.id,
                           title: json.data.title,
                           duration: (json.data.duration ?? '').toString(),
-                          dayNumber: (json.data.dayNumber ?? '').toString(),
+                          monthNumber: (json.data.monthNumber ?? '').toString(),
                           order: json.data.order,
                           published: json.data.published,
                         },
@@ -897,7 +916,7 @@ export default function EditCoursePage() {
                       setLessonForm({
                         title: '',
                         duration: '',
-                        dayNumber: '',
+                        monthNumber: '',
                         order: '',
                         published: true,
                       });
@@ -980,18 +999,18 @@ export default function EditCoursePage() {
                     <td className="px-4 py-2 align-middle">
                       <input
                         type="number"
-                        value={lesson.dayNumber}
+                        value={lesson.monthNumber}
                         onChange={(e) =>
                           setLessons((prev) =>
                             prev.map((l) =>
                               l.id === lesson.id
-                                ? { ...l, dayNumber: e.target.value }
+                                ? { ...l, monthNumber: e.target.value }
                                 : l
                             )
                           )
                         }
                         className="w-20 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
-                        placeholder="Day"
+                        placeholder="Month"
                       />
                     </td>
                     <td className="px-4 py-2 align-middle">
@@ -1027,38 +1046,6 @@ export default function EditCoursePage() {
                       />
                     </td>
                     <td className="px-4 py-2 align-middle space-x-2">
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          try {
-                            const res = await fetch(`/api/admin/lessons/${lesson.id}`, {
-                              method: 'PUT',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                title: lesson.title,
-                                duration: lesson.duration
-                                  ? Number(lesson.duration)
-                                  : null,
-                                dayNumber: lesson.dayNumber
-                                  ? Number(lesson.dayNumber)
-                                  : null,
-                                order: lesson.order,
-                                published: lesson.published,
-                              }),
-                            });
-                            const json = await res.json();
-                            if (!json.success) {
-                              alert(json.error || 'Failed to update lesson');
-                            }
-                          } catch (err) {
-                            console.error('Error updating lesson:', err);
-                            alert('Failed to update lesson');
-                          }
-                        }}
-                        className="text-indigo-600 hover:text-indigo-900 font-medium text-xs"
-                      >
-                        Save
-                      </button>
                       <button
                         type="button"
                         onClick={async () => {
@@ -1733,11 +1720,14 @@ export default function EditCoursePage() {
             </div>
           </div>
         </div>
+      </form>
 
-        {/* Form Actions */}
+      {/* Sticky Action Buttons */}
+      <div className="sticky bottom-0 bg-white border-t border-gray-200 shadow-lg p-4 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <button
             type="submit"
+            form="course-edit-form"
             disabled={saving}
             className="rounded-md bg-indigo-600 px-6 py-2 text-white font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
@@ -1751,7 +1741,7 @@ export default function EditCoursePage() {
             Cancel
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

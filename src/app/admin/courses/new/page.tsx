@@ -72,12 +72,12 @@ export default function NewCoursePage() {
         order: '',
     });
     const [lessons, setLessons] = useState<
-        { id: string; title: string; duration: string; dayNumber: string; order: number; published: boolean }[]
+        { id: string; title: string; duration: string; monthNumber: string; order: number; published: boolean }[]
     >([]);
     const [lessonForm, setLessonForm] = useState({
         title: '',
         duration: '',
-        dayNumber: '',
+        monthNumber: '',
         order: '',
         published: true,
     });
@@ -308,10 +308,10 @@ export default function NewCoursePage() {
     };
 
     return (
-        <div>
+        <div className="flex flex-col h-screen">
             <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Course</h1>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 max-w-4xl">
+            <form id="course-create-form" onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 max-w-4xl flex-1 overflow-y-auto">
                 {/* Basic Information */}
                 <div className="mb-8">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -711,13 +711,13 @@ export default function NewCoursePage() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Day Number
+                                    Month Number
                                 </label>
                                 <input
                                     type="number"
-                                    value={lessonForm.dayNumber}
+                                    value={lessonForm.monthNumber}
                                     onChange={(e) =>
-                                        setLessonForm({ ...lessonForm, dayNumber: e.target.value })
+                                        setLessonForm({ ...lessonForm, monthNumber: e.target.value })
                                     }
                                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                                     placeholder="1"
@@ -780,7 +780,7 @@ export default function NewCoursePage() {
                                             id: `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
                                             title: lessonForm.title,
                                             duration: lessonForm.duration,
-                                            dayNumber: lessonForm.dayNumber,
+                                            monthNumber: lessonForm.monthNumber,
                                             order: nextOrder,
                                             published: lessonForm.published,
                                         },
@@ -788,7 +788,7 @@ export default function NewCoursePage() {
                                     setLessonForm({
                                         title: '',
                                         duration: '',
-                                        dayNumber: '',
+                                        monthNumber: '',
                                         order: '',
                                         published: true,
                                     });
@@ -864,18 +864,18 @@ export default function NewCoursePage() {
                                         <td className="px-4 py-2 align-middle">
                                             <input
                                                 type="number"
-                                                value={lesson.dayNumber}
+                                                value={lesson.monthNumber}
                                                 onChange={(e) =>
                                                     setLessons((prev) =>
                                                         prev.map((l) =>
                                                             l.id === lesson.id
-                                                                ? { ...l, dayNumber: e.target.value }
+                                                                ? { ...l, monthNumber: e.target.value }
                                                                 : l
                                                         )
                                                     )
                                                 }
                                                 className="w-20 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
-                                                placeholder="Day"
+                                                placeholder="Month"
                                             />
                                         </td>
                                         <td className="px-4 py-2 align-middle">
@@ -1511,11 +1511,14 @@ export default function NewCoursePage() {
                         </div>
                     </div>
                 </div>
+            </form>
 
-                {/* Form Actions */}
+            {/* Sticky Action Buttons */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 shadow-lg p-4 flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                     <button
                         type="submit"
+                        form="course-create-form"
                         disabled={loading}
                         className="rounded-md bg-indigo-600 px-6 py-2 text-white font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
                     >
@@ -1529,7 +1532,7 @@ export default function NewCoursePage() {
                         Cancel
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     );
 }

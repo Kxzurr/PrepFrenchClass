@@ -55,7 +55,7 @@ export async function POST(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, description, videoUrl, duration, dayNumber, order, published } = body;
+    const { title, description, videoUrl, duration, monthNumber, order, published } = body;
 
     if (!title) {
       return NextResponse.json(
@@ -80,7 +80,7 @@ export async function POST(
         description,
         videoUrl,
         duration,
-        dayNumber,
+        monthNumber,
         order: order ?? 0,
         published: published ?? true,
       },

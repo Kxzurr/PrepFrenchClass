@@ -270,7 +270,7 @@ export default function LanguageCoursesSection() {
                                 </div>
                             </div>
 
-                            <div className="col-span-12 md:col-span-5">
+                            <div className="col-span-12 md:col-span-5 hidden md:block">
                                 {secondaryCourse && (
                                     <div className="relative w-full h-full">
                                         {!imageLoaded[secondaryCourse.id] && (
@@ -292,7 +292,7 @@ export default function LanguageCoursesSection() {
                                 )}
                             </div>
 
-                            <div className="col-span-12 md:col-span-5">
+                            <div className="col-span-12 md:col-span-5 hidden md:block">
                                 {tertiaryCourse && (
                                     <div className="relative w-full h-full">
                                         {!imageLoaded[tertiaryCourse.id] && (
