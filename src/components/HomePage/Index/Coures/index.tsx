@@ -176,9 +176,9 @@ export default function LanguageCoursesSection() {
                     {/* Left Column - Primary Featured Course */}
                     <div className="col-span-12 lg:col-span-4">
                         <h3 className="mb-2 leading-snug">Start Your French Journey</h3>
-                        <p className="text-gray-600 dark:text-dark-400 mb-5">
+                       {/*  <p className="text-gray-600 dark:text-dark-400 mb-5">
                             Transform your French with structured, results-focused live training designed to accelerate your speaking, listening, reading, and writing skills. Whether you are starting from zero or aiming for CLB 7, our guided approach helps you progress faster with clarity and confidence.
-                        </p>
+                        </p>*/}
                         <Image
                             src={lngCourseGirl}
                             alt="Student learning French online"
