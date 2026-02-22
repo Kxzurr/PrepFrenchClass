@@ -45,6 +45,12 @@ export default function CourseSidebar({
 }: CourseSidebarProps) {
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
+    const hasVideoPreview = videoUrl.trim().length > 0;
+    const isImageUrl = (url: string) =>
+        /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(url) || url.includes('/image/upload/');
+
+    const isImagePreview = hasVideoPreview && isImageUrl(videoUrl);
+
     useEffect(() => {
         if (isVideoModalOpen) {
             document.body.style.overflow = 'hidden';
@@ -84,15 +90,17 @@ export default function CourseSidebar({
                         width={400}
                         height={250}
                     />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <button
-                            onClick={() => setIsVideoModalOpen(true)}
-                            className="bg-white/80 hover:bg-white text-primary-600 rounded-full p-4 transition shadow-lg"
-                            aria-label="Play video"
-                        >
-                            <RiPlayFill className="w-7 h-7" />
-                        </button>
-                    </div>
+                    {hasVideoPreview && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <button
+                                onClick={() => setIsVideoModalOpen(true)}
+                                className="bg-white/80 hover:bg-white text-primary-600 rounded-full p-4 transition shadow-lg"
+                                aria-label={isImagePreview ? 'View image' : 'Play video'}
+                            >
+                                <RiPlayFill className="w-7 h-7" />
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="p-5">
@@ -173,7 +181,7 @@ export default function CourseSidebar({
             </div>
 
             {/* Video Modal */}
-            {isVideoModalOpen && (
+            {isVideoModalOpen && hasVideoPreview && (
                 <div
                     className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
                     onClick={() => setIsVideoModalOpen(false)}
@@ -190,13 +198,23 @@ export default function CourseSidebar({
                             <RiCloseLine className="w-5 h-5" />
                         </button>
                         <div className="aspect-video">
-                            <iframe
-                                src={videoUrl}
-                                className="w-full h-full"
-                                title="Course Preview"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            />
+                            {isImagePreview ? (
+                                <Image
+                                    src={videoUrl}
+                                    alt="Course preview"
+                                    className="w-full h-full object-cover"
+                                    width={1280}
+                                    height={720}
+                                />
+                            ) : (
+                                <iframe
+                                    src={videoUrl}
+                                    className="w-full h-full"
+                                    title="Course Preview"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

@@ -289,7 +289,7 @@ export default function CourseOverview({ courseData }: CourseOverviewProps) {
                                 <CourseSidebar
                                     previewImage={course.content?.sidebarImage || course.image || courseLanguage}
                                     previewImageAlt={course.title}
-                                    videoUrl={course.content?.videoUrl || "https://www.youtube.com/embed/ScMzIvxBSi4?enablejsapi=1"}
+                                    videoUrl={course.content?.videoUrl || ''}
                                     price={`$${course.pricing.discountedPrice || course.pricing.originalPrice}`}
                                     originalPrice={`$${course.pricing.originalPrice}`}
                                     duration={course.duration ? `${course.duration} Weeks` : '12 Weeks'}

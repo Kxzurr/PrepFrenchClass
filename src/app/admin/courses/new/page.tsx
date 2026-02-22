@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface Category {
@@ -13,11 +13,37 @@ interface Instructor {
     user: { name: string; email: string };
 }
 
+interface UploadStatus {
+    loading: boolean;
+    error: string;
+    success: string;
+}
+
+type UploadStatusSetter = Dispatch<SetStateAction<UploadStatus>>;
+
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+const MAX_UPLOAD_MB = 10;
+
 export default function NewCoursePage() {
     const router = useRouter();
     const [categories, setCategories] = useState<Category[]>([]);
     const [instructors, setInstructors] = useState<Instructor[]>([]);
     const [loading, setLoading] = useState(false);
+    const [courseImageStatus, setCourseImageStatus] = useState<UploadStatus>({
+        loading: false,
+        error: '',
+        success: '',
+    });
+    const [sidebarImageStatus, setSidebarImageStatus] = useState<UploadStatus>({
+        loading: false,
+        error: '',
+        success: '',
+    });
+    const [videoPreviewStatus, setVideoPreviewStatus] = useState<UploadStatus>({
+        loading: false,
+        error: '',
+        success: '',
+    });
     const [overviewContent, setOverviewContent] = useState({
         whatYouWillLearn: '',
         courseFeatures: '',
@@ -87,6 +113,41 @@ export default function NewCoursePage() {
             ogDescription: '',
         },
     });
+
+    const uploadImage = async (
+        file: File,
+        onSuccess: (url: string) => void,
+        setStatus: UploadStatusSetter
+    ) => {
+        if (!file.type.startsWith('image/')) {
+            setStatus({ loading: false, error: 'Only image files are allowed.', success: '' });
+            return;
+        }
+        if (file.size > MAX_UPLOAD_BYTES) {
+            setStatus({ loading: false, error: `File too large. Max ${MAX_UPLOAD_MB}MB.`, success: '' });
+            return;
+        }
+
+        setStatus({ loading: true, error: '', success: '' });
+        try {
+            const data = new FormData();
+            data.append('file', file);
+            const res = await fetch('/api/admin/upload', {
+                method: 'POST',
+                body: data,
+            });
+            const json = await res.json();
+            if (res.ok && json.success && json.url) {
+                onSuccess(json.url);
+                setStatus({ loading: false, error: '', success: 'Upload complete.' });
+                return;
+            }
+            setStatus({ loading: false, error: json.error || 'Failed to upload image', success: '' });
+        } catch (err) {
+            console.error('Error uploading image:', err);
+            setStatus({ loading: false, error: 'Failed to upload image', success: '' });
+        }
+    };
 
     useEffect(() => {
         fetchCategories();
@@ -349,29 +410,26 @@ export default function NewCoursePage() {
                             <input
                                 type="file"
                                 accept="image/*"
-                                onChange={async (e) => {
+                                onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
-                                    try {
-                                        const data = new FormData();
-                                        data.append('file', file);
-                                        const res = await fetch('/api/admin/upload', {
-                                            method: 'POST',
-                                            body: data,
-                                        });
-                                        const json = await res.json();
-                                        if (json.success && json.url) {
-                                            setFormData({ ...formData, image: json.url });
-                                        } else {
-                                            alert(json.error || 'Failed to upload image');
-                                        }
-                                    } catch (err) {
-                                        console.error('Error uploading image:', err);
-                                        alert('Failed to upload image');
-                                    }
+                                    uploadImage(file, (url) => {
+                                        setFormData({ ...formData, image: url });
+                                    }, setCourseImageStatus);
                                 }}
+                                disabled={courseImageStatus.loading}
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                             />
+                            <p className="text-xs text-gray-500 mt-1">Max file size: {MAX_UPLOAD_MB}MB</p>
+                            {courseImageStatus.loading && (
+                                <p className="text-xs text-indigo-600 mt-1">Uploading...</p>
+                            )}
+                            {courseImageStatus.error && (
+                                <p className="text-xs text-red-600 mt-1">{courseImageStatus.error}</p>
+                            )}
+                            {courseImageStatus.success && (
+                                <p className="text-xs text-green-600 mt-1">{courseImageStatus.success}</p>
+                            )}
                             {formData.image && (
                                 <div className="mt-3">
                                     <img 
@@ -1069,32 +1127,29 @@ export default function NewCoursePage() {
                             <input
                                 type="file"
                                 accept="image/*"
-                                onChange={async (e) => {
+                                onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
-                                    try {
-                                        const data = new FormData();
-                                        data.append('file', file);
-                                        const res = await fetch('/api/admin/upload', {
-                                            method: 'POST',
-                                            body: data,
+                                    uploadImage(file, (url) => {
+                                        setOverviewContent({
+                                            ...overviewContent,
+                                            sidebarImage: url,
                                         });
-                                        const json = await res.json();
-                                        if (json.success && json.url) {
-                                            setOverviewContent({
-                                                ...overviewContent,
-                                                sidebarImage: json.url,
-                                            });
-                                        } else {
-                                            alert(json.error || 'Failed to upload image');
-                                        }
-                                    } catch (err) {
-                                        console.error('Error uploading image:', err);
-                                        alert('Failed to upload image');
-                                    }
+                                    }, setSidebarImageStatus);
                                 }}
+                                disabled={sidebarImageStatus.loading}
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
                             />
+                            <p className="text-xs text-gray-500 mt-1">Max file size: {MAX_UPLOAD_MB}MB</p>
+                            {sidebarImageStatus.loading && (
+                                <p className="text-xs text-indigo-600 mt-1">Uploading...</p>
+                            )}
+                            {sidebarImageStatus.error && (
+                                <p className="text-xs text-red-600 mt-1">{sidebarImageStatus.error}</p>
+                            )}
+                            {sidebarImageStatus.success && (
+                                <p className="text-xs text-green-600 mt-1">{sidebarImageStatus.success}</p>
+                            )}
                             {overviewContent.sidebarImage && (
                                 <div className="mt-3">
                                     <img 
@@ -1108,7 +1163,7 @@ export default function NewCoursePage() {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Video URL
+                                Video URL or Image
                             </label>
                             <input
                                 type="text"
@@ -1122,6 +1177,34 @@ export default function NewCoursePage() {
                                 placeholder="Enter video preview URL"
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
                             />
+                            <div className="mt-3">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+                                        uploadImage(file, (url) => {
+                                            setOverviewContent({
+                                                ...overviewContent,
+                                                videoUrl: url,
+                                            });
+                                        }, setVideoPreviewStatus);
+                                    }}
+                                    disabled={videoPreviewStatus.loading}
+                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">Upload an image instead of a video (max {MAX_UPLOAD_MB}MB)</p>
+                                {videoPreviewStatus.loading && (
+                                    <p className="text-xs text-indigo-600 mt-1">Uploading...</p>
+                                )}
+                                {videoPreviewStatus.error && (
+                                    <p className="text-xs text-red-600 mt-1">{videoPreviewStatus.error}</p>
+                                )}
+                                {videoPreviewStatus.success && (
+                                    <p className="text-xs text-green-600 mt-1">{videoPreviewStatus.success}</p>
+                                )}
+                            </div>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">

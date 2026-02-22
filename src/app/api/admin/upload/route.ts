@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/src/lib/auth";
 import cloudinary from "@/src/lib/cloudinary";
 
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
 async function checkAdminAccess() {
   const session = await auth() as any;
   if (!session?.user || session?.user?.role !== "ADMIN") {
@@ -26,6 +31,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: "No file uploaded" },
         { status: 400 }
+      );
+    }
+
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json(
+        { success: false, error: "Only image uploads are allowed" },
+        { status: 400 }
+      );
+    }
+
+    if (file.size > MAX_UPLOAD_BYTES) {
+      return NextResponse.json(
+        { success: false, error: "File too large. Max 10MB." },
+        { status: 413 }
       );
     }
 
