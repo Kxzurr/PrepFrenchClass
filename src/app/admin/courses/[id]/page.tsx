@@ -836,7 +836,7 @@ export default function EditCoursePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Duration (custom text)
+                  Category (custom text)
                 </label>
                 <input
                   type="text"
@@ -845,7 +845,7 @@ export default function EditCoursePage() {
                     setLessonForm({ ...lessonForm, duration: e.target.value })
                   }
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                  placeholder="e.g., 25 mins, 2 hours, Flexible"
+                  placeholder="e.g., Tech, Science, Arts, Module 1"
                 />
               </div>
               <div>
@@ -888,9 +888,7 @@ export default function EditCoursePage() {
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
                         title: lessonForm.title,
-                        duration: lessonForm.duration
-                          ? Number(lessonForm.duration)
-                          : null,
+                        duration: lessonForm.duration || null,
                         monthNumber: lessonForm.monthNumber
                           ? Number(lessonForm.monthNumber)
                           : null,
@@ -951,7 +949,7 @@ export default function EditCoursePage() {
                     Day
                   </th>
                   <th className="px-4 py-2 text-left font-semibold text-gray-900">
-                    Duration (min)
+                    Category
                   </th>
                   <th className="px-4 py-2 text-left font-semibold text-gray-900">
                     Published
@@ -1015,7 +1013,7 @@ export default function EditCoursePage() {
                     </td>
                     <td className="px-4 py-2 align-middle">
                       <input
-                        type="number"
+                        type="text"
                         value={lesson.duration}
                         onChange={(e) =>
                           setLessons((prev) =>
@@ -1026,7 +1024,8 @@ export default function EditCoursePage() {
                             )
                           )
                         }
-                        className="w-24 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                        className="w-32 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                        placeholder="e.g., Tech, Science"
                       />
                     </td>
                     <td className="px-4 py-2 align-middle">

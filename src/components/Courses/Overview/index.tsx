@@ -36,7 +36,7 @@ interface CourseData {
     level: string;
     hindiBatchDate?: string;
     englishBatchDate?: string;
-    lessons?: Array<{ id: string; title: string; duration?: number; monthNumber?: number }>;
+    lessons?: Array<{ id: string; title: string; duration?: string; monthNumber?: number }>;
     reviews?: Array<{
         id: string;
         rating: number;

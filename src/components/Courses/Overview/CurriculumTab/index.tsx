@@ -10,7 +10,7 @@ import {
 interface CourseLesson {
     id: string;
     title: string;
-    duration?: number;
+    duration?: string;
     monthNumber?: number;
 }
 
@@ -20,11 +20,11 @@ interface CurriculumTabProps {
 
 // Default lessons for fallback
 const defaultLessons: CourseLesson[] = [
-    { id: '1', title: 'Welcome to the Course & Learning Journey', duration: 25, monthNumber: 1 },
-    { id: '2', title: 'Understanding the Course Structure', duration: 30, monthNumber: 1 },
-    { id: '3', title: 'How to Access Materials & Live Sessions', duration: 20, monthNumber: 2 },
-    { id: '4', title: 'Introduction to Basic Concepts', duration: 35, monthNumber: 2 },
-    { id: '5', title: 'Building Your First Project Step-by-Step', duration: 45, monthNumber: 3 },
+    { id: '1', title: 'Welcome to the Course & Learning Journey', duration: 'Tech', monthNumber: 1 },
+    { id: '2', title: 'Understanding the Course Structure', duration: 'Science', monthNumber: 1 },
+    { id: '3', title: 'How to Access Materials & Live Sessions', duration: 'Arts', monthNumber: 2 },
+    { id: '4', title: 'Introduction to Basic Concepts', duration: 'Module 1', monthNumber: 2 },
+    { id: '5', title: 'Building Your First Project Step-by-Step', duration: 'Advanced', monthNumber: 3 },
 ];
 
 export default function CurriculumTab({ lessons = defaultLessons }: CurriculumTabProps) {
@@ -53,11 +53,6 @@ export default function CurriculumTab({ lessons = defaultLessons }: CurriculumTa
         setOpenMonths((prev) =>
             prev.includes(monthNum) ? prev.filter((m) => m !== monthNum) : [...prev, monthNum]
         );
-    };
-
-    const formatDuration = (minutes?: number) => {
-        if (!minutes) return 'Duration TBD';
-        return `${minutes} min`;
     };
 
     return (
@@ -90,16 +85,20 @@ export default function CurriculumTab({ lessons = defaultLessons }: CurriculumTa
                         {isOpen && (
                             <div className="p-4 text-gray-600 dark:text-dark-400 leading-relaxed">
                                 {monthLessons.map((lesson, index) => (
-                                    <div key={lesson.id} className="flex justify-between items-center p-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0">
-                                        <div className="flex items-center gap-3">
-                                            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm font-semibold">
+                                    <div key={lesson.id} className="flex justify-between items-start p-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0">
+                                        <div className="flex items-start gap-3 flex-1">
+                                            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm font-semibold mt-0.5">
                                                 {index + 1}
                                             </span>
-                                            <p className="text-sm">{lesson.title}</p>
+                                            <div className="flex-1">
+                                                <p className="text-sm font-medium text-gray-900 dark:text-white">{lesson.title}</p>
+                                                {lesson.duration && (
+                                                    <p className="text-xs text-primary-600 dark:text-primary-400 mt-1">
+                                                        Category: {lesson.duration}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap ml-4">
-                                            {formatDuration(lesson.duration)}
-                                        </span>
                                     </div>
                                 ))}
                             </div>

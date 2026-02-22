@@ -256,7 +256,8 @@ export default function NewCoursePage() {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 title: lesson.title,
-                                duration: lesson.duration ? Number(lesson.duration) : null,
+                                duration: lesson.duration || null,
+                                monthNumber: lesson.monthNumber ? Number(lesson.monthNumber) : null,
                                 order: lesson.order,
                                 published: lesson.published,
                             }),
@@ -725,16 +726,16 @@ export default function NewCoursePage() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Duration (minutes)
+                                    Category (custom text)
                                 </label>
                                 <input
-                                    type="number"
+                                    type="text"
                                     value={lessonForm.duration}
                                     onChange={(e) =>
                                         setLessonForm({ ...lessonForm, duration: e.target.value })
                                     }
                                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                                    placeholder="25"
+                                    placeholder="e.g., Tech, Science, Arts, Module 1"
                                 />
                             </div>
                             <div>
@@ -816,7 +817,7 @@ export default function NewCoursePage() {
                                         Day
                                     </th>
                                     <th className="px-4 py-2 text-left font-semibold text-gray-900">
-                                        Duration (min)
+                                        Category
                                     </th>
                                     <th className="px-4 py-2 text-left font-semibold text-gray-900">
                                         Published
@@ -880,7 +881,7 @@ export default function NewCoursePage() {
                                         </td>
                                         <td className="px-4 py-2 align-middle">
                                             <input
-                                                type="number"
+                                                type="text"
                                                 value={lesson.duration}
                                                 onChange={(e) =>
                                                     setLessons((prev) =>
@@ -891,7 +892,8 @@ export default function NewCoursePage() {
                                                         )
                                                     )
                                                 }
-                                                className="w-24 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                                className="w-32 rounded-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm"
+                                                placeholder="e.g., Tech, Science"
                                             />
                                         </td>
                                         <td className="px-4 py-2 align-middle">
