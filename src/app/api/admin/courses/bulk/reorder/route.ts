@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/src/lib/prisma";
 import { auth } from "@/src/lib/auth";
 
@@ -39,6 +40,13 @@ export async function POST(request: NextRequest) {
     );
 
     await Promise.all(updatePromises);
+
+    // Revalidate all paths that display courses to flush Next.js Data Cache
+    revalidatePath("/courses");
+    revalidatePath("/course");
+    revalidatePath("/");
+    revalidatePath("/courses/list");
+    revalidatePath("/courses/grid");
 
     return NextResponse.json({
       success: true,

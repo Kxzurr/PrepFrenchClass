@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 
-const IMAGE_WIDTH = 800;
+// Force dynamic rendering to prevent static generation
+export const dynamic = "force-dynamic";
+// Disable caching at the route level
+export const revalidate = 0;
 const IMAGE_QUALITY = 80;
 
 const buildOptimizedImageUrl = (url: string) => {
@@ -169,7 +172,7 @@ export async function GET(request: NextRequest) {
     });
     response.headers.set(
       "Cache-Control",
-      "public, s-maxage=300, stale-while-revalidate=600"
+      "no-cache, no-store, must-revalidate"
     );
     return response;
   } catch (error) {

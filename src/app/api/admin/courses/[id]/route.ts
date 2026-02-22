@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/src/lib/prisma";
 import { auth } from "@/src/lib/auth";
 
@@ -238,6 +239,13 @@ export async function PUT(
       }
     }
 
+    // Revalidate all paths that display courses
+    revalidatePath("/courses");
+    revalidatePath("/course");
+    revalidatePath("/");
+    revalidatePath("/courses/list");
+    revalidatePath("/courses/grid");
+
     return NextResponse.json({
       success: true,
       data: updatedCourse,
@@ -297,6 +305,13 @@ export async function DELETE(
     await prisma.course.delete({
       where: { id },
     });
+
+    // Revalidate all paths that display courses
+    revalidatePath("/courses");
+    revalidatePath("/course");
+    revalidatePath("/");
+    revalidatePath("/courses/list");
+    revalidatePath("/courses/grid");
 
     return NextResponse.json({
       success: true,
