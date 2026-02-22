@@ -17,6 +17,7 @@ export const courseLevels: FilterOption[] = [
 ];
 
 export const sortOptions = [
+    'Default Order',
     'Newest First',
     'Most Popular',
     'Top Rated',

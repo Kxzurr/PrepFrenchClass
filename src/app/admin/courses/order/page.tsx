@@ -96,9 +96,13 @@ export default function CourseOrderPage() {
             const data = await response.json();
 
             if (data.success) {
-                alert('Course order saved successfully!');
+                alert('✓ Course order saved successfully! Redirecting...');
                 setHasChanges(false);
                 fetchCourses();
+                // Redirect after a short delay to allow success message to show
+                setTimeout(() => {
+                    router.push('/admin/courses');
+                }, 800);
             } else {
                 alert('Error saving course order: ' + data.error);
             }

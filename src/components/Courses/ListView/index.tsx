@@ -44,7 +44,7 @@ export default function CourseListView() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedSort, setSelectedSort] = useState('Newest First');
+  const [selectedSort, setSelectedSort] = useState('Default Order');
   const [totalCourses, setTotalCourses] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const inFlightRef = useRef(false);
@@ -55,7 +55,7 @@ export default function CourseListView() {
       { data: any[]; totalCourses: number; totalPages: number; timestamp: number }
     >()
   );
-  const CACHE_TTL_MS = 2 * 60 * 1000;
+  const CACHE_TTL_MS = 5 * 1000; // 5 second cache to ensure course order updates appear quickly
 
   // Fetch categories
   useEffect(() => {
@@ -129,6 +129,10 @@ export default function CourseListView() {
         const response = await fetch(`/api/courses?${params.toString()}`, {
           cache: 'no-store',
           signal: controller.signal,
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+          },
         });
         if (!response.ok) {
           throw new Error('Failed to fetch courses');
@@ -180,6 +184,12 @@ export default function CourseListView() {
 
   const sortedRawCourses = (() => {
     const list = [...rawCourses];
+    // When "Default Order" is selected, don't apply any client-side sorting
+    // This preserves the backend displayOrder
+    if (selectedSort === 'Default Order') {
+      return list;
+    }
+    
     switch (selectedSort) {
       case 'Most Popular':
         return list.sort(
@@ -192,11 +202,12 @@ export default function CourseListView() {
       case 'Price (High - Low)':
         return list.sort((a, b) => getCoursePrice(b) - getCoursePrice(a));
       case 'Newest First':
-      default:
         return list.sort(
           (a, b) =>
             new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
         );
+      default:
+        return list;
     }
   })();
 

@@ -33,6 +33,17 @@ export async function GET(request: NextRequest) {
       where.status = status;
     }
 
+    // Build orderBy based on sorting preference
+    let orderBy: any;
+    if (sortByOrder) {
+      orderBy = [
+        { displayOrder: "asc" as const },
+        { createdAt: "desc" as const }
+      ];
+    } else {
+      orderBy = { createdAt: "desc" };
+    }
+
     const courses = await prisma.course.findMany({
       where,
       include: {
@@ -57,9 +68,7 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: sortByOrder 
-        ? [{ displayOrder: "asc" as const }, { createdAt: "desc" as const }]
-        : { createdAt: "desc" },
+      orderBy,
       skip,
       take: limit,
     });

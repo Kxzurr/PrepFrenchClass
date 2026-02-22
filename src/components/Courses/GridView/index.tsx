@@ -48,7 +48,7 @@ export default function CourseGridView() {
       { data: Course[]; totalCourses: number; totalPages: number; timestamp: number }
     >()
   );
-  const CACHE_TTL_MS = 2 * 60 * 1000;
+  const CACHE_TTL_MS = 5 * 1000; // 5 second cache to ensure course order updates appear quickly
 
   // Fetch categories
   useEffect(() => {
@@ -113,6 +113,10 @@ export default function CourseGridView() {
         const response = await fetch(`/api/courses?${params.toString()}`, {
           cache: 'no-store',
           signal: controller.signal,
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+          },
         });
         if (!response.ok) {
           throw new Error('Failed to fetch courses');

@@ -82,6 +82,22 @@ export async function GET(request: NextRequest) {
     // Get total count
     const totalCourses = await prisma.course.count({ where });
 
+    // Build orderBy based on sorting preference
+    let orderBy: any;
+    if (sortBy === "displayOrder") {
+      // Sort by custom order first, then by creation date for unordered courses
+      orderBy = [
+        { displayOrder: "asc" as const },
+        { createdAt: "desc" as const }
+      ];
+    } else if (sortBy === "createdAt") {
+      orderBy = { createdAt: order };
+    } else if (sortBy === "title") {
+      orderBy = { title: order };
+    } else {
+      orderBy = { createdAt: "desc" };
+    }
+
     // Get courses with minimal fields
     const courses = await prisma.course.findMany({
       where,
@@ -120,9 +136,7 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: sortBy === "displayOrder" 
-        ? [{ displayOrder: "asc" as const }, { createdAt: "desc" as const }]
-        : { [sortBy]: order },
+      orderBy,
       skip,
       take: limit,
     });

@@ -26,7 +26,7 @@ interface ApiCourse {
     } | null;
 }
 
-const FEATURED_CACHE_TTL_MS = 5 * 60 * 1000;
+const FEATURED_CACHE_TTL_MS = 5 * 1000; // 5 second cache for faster updates
 let cachedFeaturedCourses: ApiCourse[] | null = null;
 let cachedFeaturedAt = 0;
 
@@ -106,6 +106,10 @@ export default function LanguageCoursesSection() {
                 const response = await fetch('/api/courses?featured=true&limit=3', {
                     cache: 'no-store',
                     signal: controller.signal,
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                    },
                 });
                 const data = await response.json();
 
