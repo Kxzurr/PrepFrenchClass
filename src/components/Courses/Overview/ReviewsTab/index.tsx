@@ -27,6 +27,11 @@ interface ReviewsTabProps {
 export default function ReviewsTab({ averageRating, totalReviews, ratingBreakdown, reviews }: ReviewsTabProps) {
     const [helpfulVotes, setHelpfulVotes] = useState<Record<string, { up: number; down: number }>>({});
 
+    const formatPercent = (value: number) => {
+        const rounded = Math.round(value * 10) / 10;
+        return `${rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(1)}%`;
+    };
+
     const handleHelpful = (reviewId: string, type: 'up' | 'down') => {
         setHelpfulVotes((prev) => ({
             ...prev,
@@ -88,7 +93,9 @@ export default function ReviewsTab({ averageRating, totalReviews, ratingBreakdow
                                         style={{ width: `${item.value}%` }}
                                     />
                                 </div>
-                                <span className="text-sm text-gray-600 dark:text-gray-600 ml-2">{item.value}%</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-600 ml-2">
+                                    {formatPercent(item.value)}
+                                </span>
                             </div>
                         ))}
                     </div>

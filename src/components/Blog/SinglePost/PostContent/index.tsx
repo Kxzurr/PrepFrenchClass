@@ -131,16 +131,7 @@ export default function PostContent({ post }: PostContentProps) {
                     </p>
                 )}
 
-                <div className="bg-primary-100 dark:bg-primary-900 p-6 my-5 flex items-start gap-4 rounded-xl">
-                    <RiDoubleQuotesL className="w-7 h-7 text-primary-600 shrink-0" />
-                    <div>
-                        <p className="text-gray-700 dark:text-dark-400 italic">
-                            &quot;The future belongs to those who learn more skills and combine them in creative ways for
-                            success and growth ahead.&quot;
-                        </p>
-                        <h6 className="mt-3 text-primary-950 dark:text-primary-100">― Robert Greene</h6>
-                    </div>
-                </div>
+               
 
                 <div className="flex items-center gap-4 mt-7 flex-wrap">
                     <h5 className="text-primary-950 dark:text-primary-100">Tags :</h5>

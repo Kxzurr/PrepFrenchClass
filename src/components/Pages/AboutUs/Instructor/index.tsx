@@ -1,58 +1,9 @@
 'use client';
 
-import Image, { StaticImageData } from 'next/image';
-import Link from 'next/link';
-import { RiUserLine } from '@remixicon/react';
+import Image from 'next/image';
 import lngTeacher1 from '../../../../assets/images/language/lng-teacher-1.jpg';
-import lngTeacher2 from '../../../../assets/images/language/lng-teacher-2.jpg';
-import lngTeacher3 from '../../../../assets/images/language/lng-teacher-3.jpg';
-import lngTeacher4 from '../../../../assets/images/language/lng-teacher-4.jpg';
-
-interface Instructor {
-    id: string;
-    name: string;
-    role: string;
-    image: StaticImageData;
-    imageAlt: string;
-    href: string;
-}
 
 export default function AboutUsInstructor() {
-    const instructors: Instructor[] = [
-        {
-            id: '1',
-            name: 'Claire Dubois',
-            role: 'Senior French Language Trainer (DELF/DALF Specialist)',
-            image: lngTeacher3,
-            imageAlt: 'Claire Dubois - Senior French Language Trainer',
-            href: '#!',
-        },
-        {
-            id: '2',
-            name: 'Arjun Mehta',
-            role: 'TEF & TCF Canada Preparation Expert',
-            image: lngTeacher4,
-            imageAlt: 'Arjun Mehta - TEF & TCF Canada Expert',
-            href: '#!',
-        },
-        {
-            id: '3',
-            name: 'Sophie Laurent',
-            role: 'French Conversation & Pronunciation Coach',
-            image: lngTeacher2,
-            imageAlt: 'Sophie Laurent - French Conversation Coach',
-            href: '#!',
-        },
-        {
-            id: '4',
-            name: 'Rohan Desai',
-            role: 'French Grammar & Writing Specialist',
-            image: lngTeacher1,
-            imageAlt: 'Rohan Desai - French Grammar Specialist',
-            href: '#!',
-        },
-    ];
-
     return (
         <section className="lg:py-30 py-20">
             <div className="container">
@@ -96,32 +47,15 @@ export default function AboutUsInstructor() {
                         </div>
 
 
-                    {/* Right Column - Instructor Cards */}
+                    {/* Right Column - Single Image */}
                     <div className="col-span-12 lg:col-span-6 xl:col-span-5 xl:col-end-13">
-                        <div className="grid grid-cols-12 gap-6">
-                            {instructors.map((instructor) => (
-                                <div key={instructor.id} className="col-span-12 md:col-span-6">
-                                    <div className="relative h-75">
-                                        <Image
-                                            src={instructor.image}
-                                            alt={instructor.imageAlt}
-                                            className="w-full h-full object-cover rounded-xl"
-                                            fill
-                                        />
-                                        <div className="absolute bottom-5 left-0 right-0 w-4/5 bg-white/90 dark:bg-black/90 backdrop-blur-sm rounded-lg shadow-md mx-auto p-4 text-center">
-                                            <Link
-                                                href={instructor.href}
-                                                className="font-semibold text-xl text-primary-950 dark:text-primary-100/80"
-                                            >
-                                                {instructor.name}
-                                            </Link>
-                                            <p className="text-gray-600 dark:text-dark-400 mt-1 text-sm">
-                                                {instructor.role}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                        <div className="relative h-75">
+                            <Image
+                                src={lngTeacher1}
+                                alt="PrepFrench instructor"
+                                className="w-full h-full object-cover rounded-xl"
+                                fill
+                            />
                         </div>
                     </div>
                 </div>

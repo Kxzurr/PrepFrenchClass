@@ -1,6 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 
+const IMAGE_WIDTH = 800;
+const IMAGE_QUALITY = 80;
+
+const buildOptimizedImageUrl = (url: string) => {
+  if (!url) return url;
+  if (url.includes("res.cloudinary.com")) {
+    return url.replace(
+      "/upload/",
+      `/upload/f_auto,q_auto,w_${IMAGE_WIDTH},c_fill/`
+    );
+  }
+  if (url.includes("lavenderblush-camel-117734.hostingersite.com")) {
+    const separator = url.includes("?") ? "&" : "?";
+    return `${url}${separator}w=${IMAGE_WIDTH}&quality=${IMAGE_QUALITY}`;
+  }
+  return url;
+};
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -101,9 +119,12 @@ export async function GET(request: NextRequest) {
       })
     );
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
-      data: coursesWithRatings,
+      data: coursesWithRatings.map((course) => ({
+        ...course,
+        imageOptimized: buildOptimizedImageUrl(course.image),
+      })),
       pagination: {
         page,
         limit,
@@ -111,6 +132,11 @@ export async function GET(request: NextRequest) {
         totalPages,
       },
     });
+    response.headers.set(
+      "Cache-Control",
+      "public, s-maxage=300, stale-while-revalidate=600"
+    );
+    return response;
   } catch (error) {
     console.error("Error fetching courses:", error);
     return NextResponse.json(

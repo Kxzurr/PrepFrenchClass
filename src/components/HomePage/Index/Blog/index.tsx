@@ -1,10 +1,8 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { RiGraduationCapLine, RiUserLine, RiCalendarLine } from '@remixicon/react';
-import { CampusBlogPost } from '@/src/types/blog';
 import campusBlog1 from '../../../../assets/images/campus/campus-blog-1.png';
 
 interface BlogPost {
@@ -21,27 +19,39 @@ interface BlogPost {
 export default function CampusBlogSection() {
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
-    const isMountedRef = useRef(true);
+    const [error, setError] = useState('');
+    const [retryTick, setRetryTick] = useState(0);
 
     useEffect(() => {
-        isMountedRef.current = true;
+        let isActive = true;
+        const controller = new AbortController();
 
         const fetchBlogPosts = async () => {
             try {
+                setLoading(true);
+                setError('');
                 const response = await fetch('/api/blog', {
                     cache: 'no-store',
+                    signal: controller.signal,
                 });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch blog posts');
+                }
                 const data = await response.json();
-                if (isMountedRef.current) {
-                    setPosts(Array.isArray(data) ? data : []);
+                if (!Array.isArray(data)) {
+                    throw new Error('Invalid blog data');
+                }
+                if (isActive) {
+                    setPosts(data);
                 }
             } catch (error) {
+                if (!isActive) return;
+                if ((error as Error).name === 'AbortError') return;
                 console.error('Error fetching blog posts:', error);
-                if (isMountedRef.current) {
-                    setPosts([]);
-                }
+                setPosts([]);
+                setError('Unable to load blog posts right now.');
             } finally {
-                if (isMountedRef.current) {
+                if (isActive) {
                     setLoading(false);
                 }
             }
@@ -50,9 +60,10 @@ export default function CampusBlogSection() {
         fetchBlogPosts();
 
         return () => {
-            isMountedRef.current = false;
+            isActive = false;
+            controller.abort();
         };
-    }, []);
+    }, [retryTick]);
 
     if (loading) {
         return (
@@ -66,6 +77,51 @@ export default function CampusBlogSection() {
                             French Learning Blog
                         </p>
                         <h2 className="md:text-4xl leading-snug">Loading blog posts...</h2>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    if (error) {
+        return (
+            <section className="bg-gradient-to-l from-[#f7fee74f] via-[#f5f3ffc9] to-[#f7fee78a] dark:bg-gradient-to-l dark:from-[#1a2d1a] dark:via-[#2a2338] dark:to-[#1f331f] lg:py-30 py-20">
+                <div className="container">
+                    <div className="max-w-2xl text-center mx-auto mb-12">
+                        <p className="inline-flex gap-2 items-center border border-black/10 dark:border-white/10 p-1 pe-3 rounded-full mb-4">
+                            <span className="rounded-full bg-primary-900 text-white size-8 inline-flex items-center justify-center">
+                                <RiGraduationCapLine className="size-4" />
+                            </span>
+                            French Learning Blog
+                        </p>
+                        <h2 className="md:text-4xl leading-snug">Blog posts unavailable</h2>
+                        <p className="text-gray-600 dark:text-dark-400 mt-3">{error}</p>
+                        <button
+                            type="button"
+                            onClick={() => setRetryTick((prev) => prev + 1)}
+                            className="mt-6 inline-flex items-center justify-center rounded-lg bg-primary-600 px-5 py-2 text-white hover:bg-primary-700 transition"
+                        >
+                            Try again
+                        </button>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    if (posts.length === 0) {
+        return (
+            <section className="bg-gradient-to-l from-[#f7fee74f] via-[#f5f3ffc9] to-[#f7fee78a] dark:bg-gradient-to-l dark:from-[#1a2d1a] dark:via-[#2a2338] dark:to-[#1f331f] lg:py-30 py-20">
+                <div className="container">
+                    <div className="max-w-2xl text-center mx-auto mb-12">
+                        <p className="inline-flex gap-2 items-center border border-black/10 dark:border-white/10 p-1 pe-3 rounded-full mb-4">
+                            <span className="rounded-full bg-primary-900 text-white size-8 inline-flex items-center justify-center">
+                                <RiGraduationCapLine className="size-4" />
+                            </span>
+                            French Learning Blog
+                        </p>
+                        <h2 className="md:text-4xl leading-snug">No blog posts yet</h2>
+                        <p className="text-gray-600 dark:text-dark-400 mt-3">Please check back soon.</p>
                     </div>
                 </div>
             </section>

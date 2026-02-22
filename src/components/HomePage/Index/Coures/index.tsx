@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RiArrowRightUpLine, RiTimeLine, RiBookOpenLine, RiUserLine } from '@remixicon/react';
@@ -14,6 +14,7 @@ interface ApiCourse {
     shortDescription?: string | null;
     Homedescription?: string | null;
     image: string;
+    imageOptimized?: string;
     level: string;
     language: string;
     duration?: number | null;
@@ -24,6 +25,10 @@ interface ApiCourse {
         currency?: string | null;
     } | null;
 }
+
+const FEATURED_CACHE_TTL_MS = 5 * 60 * 1000;
+let cachedFeaturedCourses: ApiCourse[] | null = null;
+let cachedFeaturedAt = 0;
 
 function formatPrice(course?: ApiCourse): string {
     if (!course || !course.pricing) return 'Contact for Fees';
@@ -74,29 +79,80 @@ export default function LanguageCoursesSection() {
     const [courses, setCourses] = useState<ApiCourse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [imageLoaded, setImageLoaded] = useState<Record<string, boolean>>({});
+    const inFlightRef = useRef(false);
 
     useEffect(() => {
+        let isActive = true;
+        const controller = new AbortController();
+
         const fetchFeaturedCourses = async () => {
+            if (inFlightRef.current) return;
+            inFlightRef.current = true;
+
             try {
-                const response = await fetch('/api/courses?featured=true&limit=3');
+                const now = Date.now();
+                if (cachedFeaturedCourses && now - cachedFeaturedAt < FEATURED_CACHE_TTL_MS) {
+                    if (isActive) {
+                        setCourses(cachedFeaturedCourses);
+                        setError(null);
+                        setLoading(false);
+                    }
+                    inFlightRef.current = false;
+                    return;
+                }
+
+                setLoading(true);
+                const response = await fetch('/api/courses?featured=true&limit=3', {
+                    cache: 'no-store',
+                    signal: controller.signal,
+                });
                 const data = await response.json();
 
-                if (data.success && Array.isArray(data.data)) {
+                if (!response.ok || !data.success || !Array.isArray(data.data)) {
+                    throw new Error('Failed to load featured courses');
+                }
+
+                cachedFeaturedCourses = data.data;
+                cachedFeaturedAt = now;
+
+                if (isActive) {
                     setCourses(data.data);
                     setError(null);
-                } else {
-                    setError('Failed to load featured courses');
                 }
             } catch (err) {
+                if ((err as Error).name === 'AbortError') return;
                 console.error('Error fetching featured courses:', err);
-                setError('Failed to load featured courses');
+                if (isActive) {
+                    setError('Failed to load featured courses');
+                }
             } finally {
-                setLoading(false);
+                if (isActive) {
+                    setLoading(false);
+                }
+                inFlightRef.current = false;
             }
         };
 
         fetchFeaturedCourses();
+
+        return () => {
+            isActive = false;
+            controller.abort();
+        };
     }, []);
+
+    const getCourseImage = (course?: ApiCourse) => {
+        if (!course) return '';
+        return course.imageOptimized || course.image;
+    };
+
+    const handleImageLoaded = (id: string) => {
+        setImageLoaded((prev) => ({
+            ...prev,
+            [id]: true,
+        }));
+    };
 
     const primaryCourse = courses[0];
     const secondaryCourse = courses[1];
@@ -216,25 +272,45 @@ export default function LanguageCoursesSection() {
 
                             <div className="col-span-12 md:col-span-5">
                                 {secondaryCourse && (
-                                    <Image
-                                        src={secondaryCourse.image}
-                                        alt={secondaryCourse.title}
-                                        width={600}
-                                        height={400}
-                                        className="rounded-xl w-full h-full object-cover"
-                                    />
+                                    <div className="relative w-full h-full">
+                                        {!imageLoaded[secondaryCourse.id] && (
+                                            <div className="absolute inset-0 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                                        )}
+                                        <Image
+                                            src={getCourseImage(secondaryCourse)}
+                                            alt={secondaryCourse.title}
+                                            width={600}
+                                            height={400}
+                                            className={`rounded-xl w-full h-full object-cover ${
+                                                imageLoaded[secondaryCourse.id] ? 'opacity-100' : 'opacity-0'
+                                            } transition-opacity duration-300`}
+                                            loading="lazy"
+                                            sizes="(max-width: 1024px) 100vw, 50vw"
+                                            onLoadingComplete={() => handleImageLoaded(secondaryCourse.id)}
+                                        />
+                                    </div>
                                 )}
                             </div>
 
                             <div className="col-span-12 md:col-span-5">
                                 {tertiaryCourse && (
-                                    <Image
-                                        src={tertiaryCourse.image}
-                                        alt={tertiaryCourse.title}
-                                        width={600}
-                                        height={400}
-                                        className="rounded-xl w-full h-full object-cover"
-                                    />
+                                    <div className="relative w-full h-full">
+                                        {!imageLoaded[tertiaryCourse.id] && (
+                                            <div className="absolute inset-0 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                                        )}
+                                        <Image
+                                            src={getCourseImage(tertiaryCourse)}
+                                            alt={tertiaryCourse.title}
+                                            width={600}
+                                            height={400}
+                                            className={`rounded-xl w-full h-full object-cover ${
+                                                imageLoaded[tertiaryCourse.id] ? 'opacity-100' : 'opacity-0'
+                                            } transition-opacity duration-300`}
+                                            loading="lazy"
+                                            sizes="(max-width: 1024px) 100vw, 50vw"
+                                            onLoadingComplete={() => handleImageLoaded(tertiaryCourse.id)}
+                                        />
+                                    </div>
                                 )}
                             </div>
 
