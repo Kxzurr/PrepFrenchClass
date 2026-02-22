@@ -543,7 +543,7 @@ export default function NewCoursePage() {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Duration (hours)
+                                Duration (Weeks)
                             </label>
                             <input
                                 type="number"

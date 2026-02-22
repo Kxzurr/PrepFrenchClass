@@ -56,7 +56,7 @@ function buildMeta(course?: ApiCourse) {
 
     meta.push({
         icon: <RiTimeLine className="w-4 h-4" />,
-        text: course.duration ? `${course.duration} hours` : 'Flexible schedule',
+        text: course.duration ? `${course.duration} Weeks` : 'Flexible schedule',
     });
 
     meta.push({
