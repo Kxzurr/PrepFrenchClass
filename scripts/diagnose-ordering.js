@@ -25,7 +25,7 @@ async function checkCourseOrdering() {
       LIMIT 5
     `;
     console.log('Recent migrations:');
-    migrations.forEach((m: any) => console.log(`  - ${m.migration_name}`));
+    migrations.forEach((m) => console.log(`  - ${m.migration_name}`));
 
     // 3. Check courses with displayOrder values
     console.log('\n3. Checking courses and their displayOrder values...');
@@ -40,7 +40,7 @@ async function checkCourseOrdering() {
       orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
     });
     console.log(`Found ${courses.length} courses:`);
-    courses.forEach((c: any) => {
+    courses.forEach((c) => {
       console.log(`  - ${c.title}: displayOrder=${c.displayOrder}`);
     });
 
@@ -67,7 +67,7 @@ async function checkCourseOrdering() {
       take: 5,
     });
     console.log('Query result (first 5 courses):');
-    testQuery.forEach((c: any) => {
+    testQuery.forEach((c) => {
       console.log(`  - ${c.title}: order=${c.displayOrder}`);
     });
 

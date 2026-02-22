@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const updatePromises = orders.map((item: { id: string; displayOrder: number }) =>
       prisma.course.update({
         where: { id: item.id },
-        data: { displayOrder: item.displayOrder },
+        data: { displayOrder: item.displayOrder } as any,
       })
     );
 

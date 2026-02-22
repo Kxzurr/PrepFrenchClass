@@ -5,6 +5,8 @@ import { prisma } from "@/src/lib/prisma";
 export const dynamic = "force-dynamic";
 // Disable caching at the route level
 export const revalidate = 0;
+
+const IMAGE_WIDTH = 800;
 const IMAGE_QUALITY = 80;
 
 const buildOptimizedImageUrl = (url: string) => {
