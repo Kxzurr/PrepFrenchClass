@@ -71,12 +71,20 @@ export default function CoursesPage() {
         <div>
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">Courses</h1>
-                <Link
-                    href="/admin/courses/new"
-                    className="rounded-md bg-indigo-600 px-6 py-2 text-white font-medium hover:bg-indigo-700"
-                >
-                    + New Course
-                </Link>
+                <div className="flex gap-3">
+                    <Link
+                        href="/admin/courses/order"
+                        className="rounded-md bg-blue-600 px-6 py-2 text-white font-medium hover:bg-blue-700"
+                    >
+                        Reorder Courses
+                    </Link>
+                    <Link
+                        href="/admin/courses/new"
+                        className="rounded-md bg-indigo-600 px-6 py-2 text-white font-medium hover:bg-indigo-700"
+                    >
+                        + New Course
+                    </Link>
+                </div>
             </div>
 
             {courses.length === 0 ? (

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import lngTeacher1 from '../../../../assets/images/language/lng-teacher-1.jpg';
+import lngTeacher1 from '../../../../assets/images/language/about.png';
 
 export default function AboutUsInstructor() {
     return (
@@ -49,7 +49,7 @@ export default function AboutUsInstructor() {
 
                     {/* Right Column - Single Image */}
                     <div className="col-span-12 lg:col-span-6 xl:col-span-5 xl:col-end-13">
-                        <div className="relative h-75">
+                        <div className="relative h-100">
                             <Image
                                 src={lngTeacher1}
                                 alt="PrepFrench instructor"

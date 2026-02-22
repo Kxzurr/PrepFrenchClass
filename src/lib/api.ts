@@ -107,6 +107,13 @@ export const adminApi = {
         });
     },
 
+    async reorderCourses(orders: Array<{ id: string; displayOrder: number }>) {
+        return apiCall('/api/admin/courses/bulk/reorder', {
+            method: 'POST',
+            body: { orders },
+        });
+    },
+
     async deleteCourse(courseId: string) {
         return apiCall(`/api/admin/courses/${courseId}`, {
             method: 'DELETE',

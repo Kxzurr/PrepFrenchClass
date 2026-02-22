@@ -97,8 +97,7 @@ export default function CourseListView() {
         const params = new URLSearchParams();
         params.append('page', String(currentPage));
         params.append('limit', String(COURSES_PER_PAGE_LIST));
-        params.append('sortBy', 'createdAt');
-        params.append('order', 'desc');
+        // Don't specify sortBy to use the default ordering (displayOrder)
 
         if (selectedCategories.length > 0) {
           params.append('categoryId', selectedCategories[0]);

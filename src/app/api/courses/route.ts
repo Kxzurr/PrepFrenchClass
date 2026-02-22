@@ -28,12 +28,26 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search");
     const level = searchParams.get("level");
     const featured = searchParams.get("featured");
-    const requestedSortBy = searchParams.get("sortBy") || "createdAt";
+    const requestedSortBy = searchParams.get("sortBy");
     const allowedSortFields = new Set(["createdAt", "title"]);
-    const sortBy = allowedSortFields.has(requestedSortBy)
-      ? requestedSortBy
-      : "createdAt";
-    const order = (searchParams.get("order") || "desc") as "asc" | "desc";
+    
+    // Use custom displayOrder as default sort unless featured filter is applied or specific sort requested
+    let sortBy: string;
+    let order: "asc" | "desc";
+    
+    if (featured === "true") {
+      // If featured filter is applied, use createdAt as default
+      sortBy = "createdAt";
+      order = "desc";
+    } else if (requestedSortBy) {
+      // If specific sort is requested, use it
+      sortBy = allowedSortFields.has(requestedSortBy) ? requestedSortBy : "createdAt";
+      order = (searchParams.get("order") || "desc") as "asc" | "desc";
+    } else {
+      // Use custom displayOrder as default
+      sortBy = "displayOrder";
+      order = "asc";
+    }
 
     const skip = (page - 1) * limit;
 
@@ -79,6 +93,7 @@ export async function GET(request: NextRequest) {
         shortDescription: true,
         image: true,
         createdAt: true,
+        displayOrder: true,
         level: true,
         language: true,
         duration: true,
@@ -105,9 +120,9 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: {
-        [sortBy]: order,
-      },
+      orderBy: sortBy === "displayOrder" 
+        ? [{ displayOrder: "asc" as const }, { createdAt: "desc" as const }]
+        : { [sortBy]: order },
       skip,
       take: limit,
     });

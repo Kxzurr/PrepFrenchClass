@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const status = searchParams.get("status");
+    const sortByOrder = searchParams.get("sortByOrder") === "true";
 
     const skip = (page - 1) * limit;
 
@@ -56,7 +57,9 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: sortByOrder 
+        ? [{ displayOrder: "asc" as const }, { createdAt: "desc" as const }]
+        : { createdAt: "desc" },
       skip,
       take: limit,
     });

@@ -96,6 +96,7 @@ export async function PUT(
       seo,
       status,
       featured,
+      displayOrder,
     } = body;
 
     // Check if course exists
@@ -190,6 +191,7 @@ export async function PUT(
         ...(englishBatchDate !== undefined && { englishBatchDate: englishBatchDate ? new Date(englishBatchDate) : null }),
         ...(status && { status }),
         ...(featured !== undefined && { featured }),
+        ...(displayOrder !== undefined && { displayOrder }),
         ...(pricingId && { pricingId }),
       },
       include: {
